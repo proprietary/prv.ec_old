@@ -1,0 +1,12 @@
+cc_binary(
+    name = "server",
+    srcs = [
+        "main.cc",
+    ],
+    deps = [
+        "@org_libuv_libuv//:libuv",
+    ],
+    linkopts = [
+        "-pthread",
+    ],
+)
