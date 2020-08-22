@@ -5,5 +5,13 @@ http_archive(
     url = "https://dist.libuv.org/dist/v1.38.1/libuv-v1.38.1.tar.gz",
     sha256 = "0ece7d279e480fa386b066130a562ad1a622079d43d1c30731f2f66cd3f5c647",
     strip_prefix = "libuv-v1.38.1",
-    build_file = "//:third_party/libuv.BUILD.bazel",
+    build_file = "//third_party:libuv.BUILD.bazel",
+)
+
+http_archive(
+    name = "com_github_nodejs_http_parser",
+    url = "https://github.com/nodejs/http-parser/archive/v2.9.4.tar.gz",
+    sha256 = "467b9e30fd0979ee301065e70f637d525c28193449e1b13fbcb1b1fab3ad224f",
+    strip_prefix = "http-parser-2.9.4",
+    build_file = "//third_party:http-parser.BUILD.bazel",
 )
