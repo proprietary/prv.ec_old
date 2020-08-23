@@ -1,0 +1,28 @@
+cc_library(
+    name = "b64",
+    srcs = ["b64.h", "b64.cc"],
+    hdrs = ["b64.h"],
+    includes = ["."],
+    deps = [
+        "@com_googlesource_boringssl//:crypto",
+        "@com_googlesource_boringssl//:ssl",
+    ],
+    copts = [
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "b64_test",
+    srcs = ["b64.test.cc"],
+    deps = [
+        ":b64",
+        "@com_googlesource_boringssl//:crypto",
+        "@com_googlesource_boringssl//:ssl",
+        "@com_github_google_googletest//:gtest",
+    ],
+    # visibility = ["//visibility:private"],
+)

@@ -1,4 +1,5 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 http_archive(
     name = "org_libuv_libuv",
@@ -64,3 +65,14 @@ http_archive(
     build_file = "//third_party:rocksdb.BUILD.bazel",
 )
 
+git_repository(
+    name = "com_googlesource_boringssl",
+    remote = "https://boringssl.googlesource.com/boringssl",
+    commit = "8d5a33f6ec0d781a261ecfc7c18981a64452deae",
+)
+
+git_repository(
+    name = "com_github_google_googletest",
+    remote = "https://github.com/google/googletest",
+    commit = "adeef192947fbc0f68fa14a6c494c8df32177508",
+)
