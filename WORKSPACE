@@ -26,12 +26,9 @@ http_archive(
 
 http_archive(
     name = "com_github_facebook_zstd",
-    url = "https://github.com/facebook/zstd/archive/v1.4.3.zip",
-    sha256 = "26fcd509af38789185f250c16caaf45c669f2c484533ad9c46eeceb204c81435",
-    # url = "https://github.com/facebook/zstd/releases/download/v1.4.5/zstd-1.4.5.tar.gz",
-    # sha256 = "98e91c7c6bf162bf90e4e70fdbc41a8188b9fa8de5ad840c401198014406ce9e",
-    # strip_prefix = "zstd-1.4.5",
-    strip_prefix = "zstd-1.4.3/lib",
+    url = "https://github.com/facebook/zstd/releases/download/v1.4.5/zstd-1.4.5.tar.gz",
+    sha256 = "98e91c7c6bf162bf90e4e70fdbc41a8188b9fa8de5ad840c401198014406ce9e",
+    strip_prefix = "zstd-1.4.5/lib",
     build_file = "//third_party:zstd.BUILD.bazel",
 )
 

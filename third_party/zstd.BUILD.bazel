@@ -1,34 +1,215 @@
-# See: https://raw.githubusercontent.com/facebook/zstd/dev/lib/BUCK
+# Adapted from: https://github.com/facebook/zstd/blob/v1.4.5/lib/BUCK
+#
+# If you are trying to port to Bazel using that as a reference, be
+# warned that it won't work easily without trial and error.
+#
+
+
+package(default_visibility = ["//visibility:public"])
 
 cc_library(
     name = "zstd",
-    srcs = glob([
-        "common/*.h",
-        "compress/*.h",
-        "decompress/*.h",
-        "deprecated/*.h",
-        "dictBuilder/*.h",
-        "legacy/*.h",
-        "common/*.c",
-        "compress/*.c",
-        "decompress/*.c",
-        "deprecated/*.c",
-        "dictBuilder/*.c",
-        "legacy/*.c",
-    ]),
     hdrs = ["zstd.h"],
-    defines = [
-        "ZSTD_LEGACY_SUPPORT=4",
-        "ZSTD_MULTITHREAD",
+    deps = [
+        ":common",
+        ":compress",
+        ":decompress",
+        ":deprecated",
+        ":zdict",
     ],
-    includes = [
-        ".",
-        "common",
-        "compress",
-        "decompress",
-        "deprecated",
-        "dictBuilder",
-        "legacy",
+)
+
+cc_library(
+    name = "hist",
+    hdrs = ["compress/hist.h"],
+    strip_include_prefix = "compress",
+)
+
+cc_library(
+    name = "compress",
+    hdrs = glob(["compress/zstd*.h"]),
+    srcs = glob(["compress/zstd*.c", "compress/hist.c"]),
+    deps = [":common", ":mem"],
+)
+
+cc_library(
+    name = "decompress",
+    hdrs = glob(["decompress/*_impl.h"]),
+    srcs = glob(["decompress/zstd*.c"]) + [
+        "decompress/zstd_decompress_block.h",
+        "decompress/zstd_decompress_internal.h",
+        "decompress/zstd_ddict.h",
     ],
-    visibility = ["//visibility:public"],
+    deps = [
+        ":common",
+        ":legacy",
+    ],
+)
+
+cc_library(
+    name = "deprecated",
+    hdrs = glob(["deprecated/*.h"]),
+    srcs = glob(["deprecated/*.c"]),
+    deps = [":common"],
+)
+
+cc_library(
+    name = "legacy",
+    hdrs = glob(["legacy/*.h"]),
+    srcs = glob(["legacy/*.c"]),
+    deps = [":common", ":debug"],
+    copts = [
+        "-DZSTD_LEGACY_SUPPORT=4",
+    ],
+)
+
+cc_library(
+    name = "zdict",
+    hdrs = [
+        "dictBuilder/zdict.h",
+    ],
+    srcs = glob([
+        "dictBuilder/*.c",
+        "dictBuilder/*.h"
+    ]),
+    deps = [":common", ":compress"],
+)
+
+cc_library(
+    name = "compiler",
+    srcs = ["common/compiler.h"],
+    strip_include_prefix = "common",
+)
+
+cc_library(
+    name = "cpu",
+    hdrs = ["common/cpu.h"],
+
+)
+
+cc_library(
+    name="bitstream",
+    srcs = ["common/bitstream.h"],
+)
+
+cc_library(
+    name="entropy",
+    hdrs = [
+        "common/fse.h",
+        "common/huf.h",
+    ],
+    srcs = [
+        "common/entropy_common.c",
+        "common/fse_decompress.c",
+        "compress/fse_compress.c",
+        "compress/huf_compress.c",
+        "decompress/huf_decompress.c",
+    ],
+    deps = [
+        ":debug",
+        ":bitstream",
+        ":compiler",
+        ":errors",
+        ":mem",
+        ":threading",
+        ":xxhash",
+        ":hist",
+    ],
+)
+
+cc_library(
+    name="errors",
+    hdrs = [
+        "common/error_private.h",
+        "common/zstd_errors.h",
+    ],
+    srcs = ["common/error_private.c"],
+)
+
+cc_library(
+    name="mem",
+    hdrs = [
+        "common/mem.h",
+    ],
+)
+
+cc_library(
+    name="pool",
+    hdrs = ["common/pool.h"],
+    srcs = ["common/pool.c", "common/pool.h"],
+    deps = [
+        ":threading",
+        ":zstd_common",
+        ":debug",
+    ],
+)
+
+cc_library(
+    name="threading",
+    hdrs = [
+        "common/threading.h",
+    ],
+    srcs = ["common/threading.c"],
+    copts = [
+        "-DZSTD_MULTITHREAD",
+    ],
+    linkopts = [
+        "-pthread",
+    ],
+    deps = [
+        ":debug",
+    ],
+)
+
+cc_library(
+    name="xxhash",
+    hdrs = [
+        "common/xxhash.h",
+    ],
+    srcs = ["common/xxhash.c"],
+    linkopts = [
+        "-DXXH_NAMESPACE=ZSTD_",
+    ],
+)
+
+cc_library(
+    name="zstd_common",
+    hdrs = [
+        "zstd.h",
+        "common/zstd_internal.h",
+    ],
+    srcs = ["common/zstd_common.c", "common/zstd_internal.h"],
+    deps = [
+        ":compiler",
+        ":errors",
+        ":mem",
+        ":entropy",
+        ":xxhash",
+    ],
+)
+
+cc_library(
+    name = "debug",
+    hdrs = [
+        "common/debug.h",
+    ],
+    srcs = ["common/debug.c", "common/debug.h"],
+    strip_include_prefix = "common",
+)
+
+cc_library(
+    name = "common",
+    deps = [
+        ":debug",
+        ":bitstream",
+        ":compiler",
+        ":cpu",
+        ":entropy",
+        ":errors",
+        ":mem",
+        ":pool",
+        ":threading",
+        ":xxhash",
+        ":zstd_common",
+    ]
 )
