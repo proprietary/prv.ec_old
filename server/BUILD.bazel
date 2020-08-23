@@ -5,8 +5,25 @@ cc_binary(
     ],
     deps = [
         "@org_libuv_libuv//:libuv",
+        "@com_github_nodejs_http_parser//:http-parser",
     ],
     linkopts = [
         "-pthread",
+    ],
+)
+
+cc_binary(
+    name = "db",
+    srcs = [
+        "db.h",
+        "db.cc",
+    ],
+    includes = ["."],
+    linkopts = [
+        "-pthread",
+        "-ldl",
+    ],
+    deps = [
+        "@com_github_facebook_rocksdb//:rocksdb",
     ],
 )

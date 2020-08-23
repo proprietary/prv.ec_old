@@ -1,0 +1,35 @@
+package(default_visibility = ["//visibility:private"])
+
+# .c files that are #included (needed to avoid sandbox issues)
+cc_library(
+    name = "lz4_internal",
+    hdrs = [
+        "lib/lz4.c",
+        "lib/xxhash.c",
+        "lib/xxhash.h",
+    ],
+)
+
+cc_library(
+    name = "lz4",
+    srcs = [
+        "lib/lz4.c",
+        "lib/lz4frame.c",
+        "lib/lz4hc.c",
+    ],
+    hdrs = [
+        "lib/lz4.h",
+        "lib/lz4frame.h",
+        "lib/lz4hc.h",
+    ],
+    includes = ["lib"],
+    local_defines = [
+        # Inline XXH for better performance and to avoid exposing symbols.
+        "XXH_INLINE_ALL",
+    ],
+    strip_include_prefix = "lib",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":lz4_internal",
+    ],
+)

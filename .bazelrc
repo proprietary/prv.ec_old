@@ -1,0 +1,4 @@
+build --cxxopt="-Wall"
+# build --cxxopt="-pedantic"
+build --cxxopt="-Werror"
+build --cxxopt="-std=c++20"
