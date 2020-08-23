@@ -24,5 +24,5 @@ cc_test(
         "@com_googlesource_boringssl//:ssl",
         "@com_github_google_googletest//:gtest",
     ],
-    # visibility = ["//visibility:private"],
+    visibility = ["//visibility:private"],
 )

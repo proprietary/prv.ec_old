@@ -69,10 +69,12 @@ git_repository(
     name = "com_googlesource_boringssl",
     remote = "https://boringssl.googlesource.com/boringssl",
     commit = "8d5a33f6ec0d781a261ecfc7c18981a64452deae",
+    shallow_since = "1598048983 +0000",
 )
 
 git_repository(
     name = "com_github_google_googletest",
     remote = "https://github.com/google/googletest",
     commit = "adeef192947fbc0f68fa14a6c494c8df32177508",
+    shallow_since = "1597389384 -0400",
 )
