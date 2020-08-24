@@ -78,3 +78,10 @@ git_repository(
     commit = "adeef192947fbc0f68fa14a6c494c8df32177508",
     shallow_since = "1597389384 -0400",
 )
+
+git_repository(
+    name = "com_github_google_flatbuffers",
+    remote = "https://github.com/google/flatbuffers",
+    commit = "eeacc53d227038ae404562806f9440b13d594d51",
+    shallow_since = "1598125149 +0300",
+)

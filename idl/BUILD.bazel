@@ -1,0 +1,13 @@
+load("@com_github_google_flatbuffers//:build_defs.bzl", "flatbuffer_cc_library")
+
+flatbuffer_cc_library(
+    name = "fbs",
+    srcs = [
+        "direct_url.fbs",
+        "private_url.fbs",
+        "url_index.fbs",
+        "url_record.fbs",
+    ],
+    out_prefix = "generated/",
+    visibility = ["//visibility:public"],
+)

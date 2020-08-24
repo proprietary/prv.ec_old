@@ -1,25 +1,71 @@
+#include "server/db.h"
+#include "idl/generated/direct_url_generated.h"
 #include <cassert>
 #include <cstdio>
-#include <db.h>
+#include <algorithm>
 
 namespace ec_prv {
 namespace db {
-void put(char const *) {
-	// TODO
-	::puts("");
+
+KVStore::KVStore() {
+	rocksdb::Options options;
+	options.IncreaseParallelism();
+	options.OptimizeLevelStyleCompaction();
+	auto status = rocksdb::DB::Open(options, "/tmp/testdb", &db_);
+	assert(status.ok());
 }
 
-char const *get() {
-	// TODO
-	::puts("");
-	return nullptr;
+KVStore::~KVStore() noexcept {
+	if (db_ != nullptr) {
+		delete db_;
+	}
 }
+
+KVStore::KVStore(KVStore&& other) noexcept {
+	if (this->db_ != nullptr) {
+		delete this->db_;
+	}
+	this->db_ = other.db_;
+	other.db_ = nullptr;
+	other.~KVStore();
+}
+
+KVStore& KVStore::operator=(KVStore&& other) noexcept {
+	if (this->db_ != nullptr) {
+		delete this->db_;
+	}
+	this->db_ = other.db_;
+	other.db_ = nullptr;
+	other.~KVStore();
+	return *this;
+}
+
+void KVStore::put(std::vector<uint8_t>& key, std::vector<uint8_t>& value) {
+	rocksdb::Slice k{reinterpret_cast<char*>(key.data()), key.size()};
+	rocksdb::Slice v{reinterpret_cast<char*>(value.data()), value.size()};
+	db_->Put(rocksdb::WriteOptions(), k, v);
+}
+
+auto KVStore::get(std::vector<uint8_t>& key) -> std::vector<uint8_t> {
+	rocksdb::Slice k{reinterpret_cast<char*>(key.data()), key.size()};
+	std::string v;
+	auto s = db_->Get(rocksdb::ReadOptions(), k, &v);
+	assert(s.ok());
+	if (!s.ok()) {
+		// TODO: think about how to handle this in context of its use
+		return {};
+	}
+	std::vector<uint8_t> out(v.size());
+	std::copy(v.begin(), v.end(), out.begin());
+	return out;
+}
+
 } // namespace db
 } // namespace ec_prv
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 	using namespace rocksdb;
-	DB *db;
+	DB* db;
 	Options options;
 	// Optimize RocksDB. This is the easiest way to get RocksDB to perform well
 	options.IncreaseParallelism();

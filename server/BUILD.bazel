@@ -1,22 +1,30 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
 cc_binary(
     name = "server",
     srcs = [
         "main.cc",
     ],
-    deps = [
-        "@org_libuv_libuv//:libuv",
-        "@com_github_nodejs_http_parser//:http-parser",
-    ],
     linkopts = [
         "-pthread",
+    ],
+    deps = [
+        "@//idl:fbs",
+        "@com_github_nodejs_http_parser//:http-parser",
+        "@org_libuv_libuv//:libuv",
     ],
 )
 
 cc_binary(
     name = "db",
     srcs = [
-        "db.h",
         "db.cc",
+        "db.h",
+    ],
+    copts = [
+        "-Werror",
+        "-Wall",
+        "-pedantic",
     ],
     includes = ["."],
     linkopts = [
@@ -24,6 +32,7 @@ cc_binary(
         "-ldl",
     ],
     deps = [
+        "@//idl:fbs",
         "@com_github_facebook_rocksdb//:rocksdb",
     ],
 )

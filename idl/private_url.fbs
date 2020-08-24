@@ -1,0 +1,9 @@
+namespace ec_prv;
+
+table PrivateURL {
+	salt:[ubyte];
+	iv:[ubyte];
+	blinded_url:[ubyte];
+}
+
+root_type PrivateURL;
