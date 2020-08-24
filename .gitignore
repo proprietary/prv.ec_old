@@ -35,6 +35,9 @@
 *.out
 *.app
 
+# Tooling
+/compile_commands.json
+
 # Secrets
 .env*
 /TODO.org
