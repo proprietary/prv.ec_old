@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#
+# Tool to preview restructured text files
+#
+# Requires:
+# - python3
+#
+
+if [[ $(python3 -c 'import docutils') != 0 ]]
+then
+	python3 -m pip install --user docutils >/dev/null;
+	[[ $? != 0 ]] && exit;
+fi
+
+mkdir -p /tmp/ec_prv_docs/
+
+for f in $(find $(git rev-parse --show-toplevel) -type f -name '*.rst') ; do
+	name=$(basename $f)
+	rst2html $f "/tmp/ec_prv_docs/${name}.html";
+done
+
+python3 -m webbrowser "file:///tmp/ec_prv_docs/"
