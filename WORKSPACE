@@ -1,5 +1,5 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 
 http_archive(
     name = "org_libuv_libuv",
@@ -7,14 +7,6 @@ http_archive(
     sha256 = "0ece7d279e480fa386b066130a562ad1a622079d43d1c30731f2f66cd3f5c647",
     strip_prefix = "libuv-v1.38.1",
     build_file = "//third_party:libuv.BUILD.bazel",
-)
-
-http_archive(
-    name = "com_github_nodejs_http_parser",
-    url = "https://github.com/nodejs/http-parser/archive/v2.9.4.tar.gz",
-    sha256 = "467b9e30fd0979ee301065e70f637d525c28193449e1b13fbcb1b1fab3ad224f",
-    strip_prefix = "http-parser-2.9.4",
-    build_file = "//third_party:http-parser.BUILD.bazel",
 )
 
 http_archive(
@@ -84,4 +76,20 @@ git_repository(
     remote = "https://github.com/google/flatbuffers",
     commit = "eeacc53d227038ae404562806f9440b13d594d51",
     shallow_since = "1598125149 +0300",
+)
+
+new_git_repository(
+    name = "com_github_unetworking_usockets",
+    remote = "https://github.com/uNetworking/uSockets",
+    commit = "c08855070bbd433964a6f0230a91209de6cf6e1f",
+    shallow_since = "1598265449 +0200",
+    build_file = "//third_party:usockets.BUILD.bazel",
+)
+
+new_git_repository(
+    name = "com_github_unetworking_uwebsockets",
+    remote = "https://github.com/uNetworking/uWebSockets",
+    commit = "7420c1a09a7ec34a5b6c6475d24efc5507605d5e",
+    shallow_since = "1598265557 +0200",
+    build_file = "//third_party:uwebsockets.BUILD.bazel",
 )

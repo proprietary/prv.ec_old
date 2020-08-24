@@ -195,7 +195,6 @@ cc_library(
         ],
         "//conditions:default": [
             "-ldl",
-            "-pthread",
         ],
     }),
     visibility = [
