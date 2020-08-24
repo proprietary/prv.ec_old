@@ -1,13 +1,7 @@
 namespace ec_prv;
 
-enum ProtocolKind: byte {
-	Private = 1,
-	Direct
-}
-
 table URLIndex {
 	version:uint8 = 1;
-	kind:ProtocolKind = Private;
 	id:uint64;
 }
 

@@ -1,7 +1,0 @@
-namespace ec_prv;
-
-table DirectURL {
-	url:string;
-}
-
-root_type DirectURL;

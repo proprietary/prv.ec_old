@@ -1,0 +1,29 @@
+include "url_index.fbs";
+include "private_url.fbs";
+
+namespace ec_prv;
+
+table ShorteningRequest {
+	version:uint8 = 1;
+	salt:[ubyte];
+	iv:[ubyte];
+	blinded_url:[ubyte];
+}
+
+table ShorteningResponse {
+	version:uint8 = 1;
+	status:bool;
+	error_message:string;
+	lookup_key:URLIndex;
+}
+
+table LookupRequest {
+	version:uint8 = 1;
+	lookup_key:URLIndex;
+}
+
+table LookupResponse {
+	version:uint8 = 1;
+	found:bool;
+	data:PrivateURL;
+}
