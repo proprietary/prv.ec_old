@@ -5,6 +5,7 @@ namespace ec_prv;
 
 table ShorteningRequest {
 	version:uint8 = 1;
+	expiry:uint64;
 	salt:[ubyte];
 	iv:[ubyte];
 	blinded_url:[ubyte];

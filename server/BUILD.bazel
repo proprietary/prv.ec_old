@@ -1,28 +1,6 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary")
 
 cc_binary(
-    name = "db",
-    srcs = [
-        "db.cc",
-        "db.h",
-    ],
-    copts = [
-        "-Werror",
-        "-Wall",
-        "-pedantic",
-    ],
-    includes = ["."],
-    linkopts = [
-        "-pthread",
-        "-ldl",
-    ],
-    deps = [
-        "@//idl:fbs",
-        "@com_github_facebook_rocksdb//:rocksdb",
-    ],
-)
-
-cc_binary(
     name = "server",
     srcs = [
         "web.cc",
@@ -31,8 +9,55 @@ cc_binary(
     copts = ["-std=c++20"],
     visibility = ["//visibility:public"],
     deps = [
+        # ":shortening_service",
+        # ":private_url",
         "@//idl:fbs",
         "@com_github_unetworking_uwebsockets//:uWebSockets",
+    ],
+)
+
+cc_library(
+    name = "shortening_service",
+    srcs = [
+        "shortening_service.h",
+        "shortening_service.cc",
+    ],
+    hdrs = ["shortening_service.h"],
+    copts = [
+        "-std=c++20",
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":db",
+        ":private_url",
+        "@//idl:fbs",
+        "@com_github_google_flatbuffers//:flatbuffers",
+    ],
+)
+
+
+cc_library(
+    name = "db",
+    srcs = [
+        "db.cc",
+        "db.h",
+    ],
+    hdrs = ["db.h"],
+    copts = [
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+    ],
+    linkopts = [
+        "-pthread",
+        "-ldl",
+    ],
+    deps = [
+        "@//idl:fbs",
+        "@com_github_facebook_rocksdb//:rocksdb",
     ],
 )
 
@@ -72,3 +97,4 @@ cc_test(
         "@com_github_google_googletest//:gtest",
     ],
 )
+

@@ -1,8 +1,8 @@
 #include "server/db.h"
-#include "idl/generated/direct_url_generated.h"
 #include <cassert>
 #include <cstdio>
 #include <algorithm>
+#include <span>
 
 namespace ec_prv {
 namespace db {
@@ -40,10 +40,18 @@ KVStore& KVStore::operator=(KVStore&& other) noexcept {
 	return *this;
 }
 
-void KVStore::put(std::vector<uint8_t>& key, std::vector<uint8_t>& value) {
+bool KVStore::put(std::vector<uint8_t>& key, std::vector<uint8_t>& value) {
 	rocksdb::Slice k{reinterpret_cast<char*>(key.data()), key.size()};
 	rocksdb::Slice v{reinterpret_cast<char*>(value.data()), value.size()};
-	db_->Put(rocksdb::WriteOptions(), k, v);
+	auto s = db_->Put(rocksdb::WriteOptions(), k, v);
+	return s.ok();
+}
+
+bool KVStore::put(std::span<uint8_t> key, std::span<uint8_t> value) {
+	rocksdb::Slice k{reinterpret_cast<char*>(key.data()), key.size()};
+	rocksdb::Slice v{reinterpret_cast<char*>(value.data()), value.size()};
+	auto s = db_->Put(rocksdb::WriteOptions(), k, v);
+	return s.ok();
 }
 
 auto KVStore::get(std::vector<uint8_t>& key) -> std::vector<uint8_t> {
@@ -58,6 +66,15 @@ auto KVStore::get(std::vector<uint8_t>& key) -> std::vector<uint8_t> {
 	std::vector<uint8_t> out(v.size());
 	std::copy(v.begin(), v.end(), out.begin());
 	return out;
+}
+
+void KVStore::get(std::string& dst, std::span<uint8_t> const key) {
+	rocksdb::Slice k{reinterpret_cast<char const*>(key.data()), key.size()}
+	auto s = db_->Get(rocksdb::ReadOptions(), k, &dst);
+	if (!s.ok()) {
+		// TODO
+		assert(false);
+	}
 }
 
 } // namespace db

@@ -3,6 +3,7 @@
 #include <rocksdb/db.h>
 #include <vector>
 #include <cstdint>
+#include <span>
 
 namespace ec_prv {
 namespace db {
@@ -17,8 +18,10 @@ public:
 	KVStore& operator=(KVStore const&) = delete;
 	KVStore(KVStore&&) noexcept;
 	KVStore& operator=(KVStore&&) noexcept;
-	void put(std::vector<uint8_t>& key, std::vector<uint8_t>& value);
+	bool put(std::vector<uint8_t>& key, std::vector<uint8_t>& value);
+	bool put(std::span<uint8_t> key, std::span<uint8_t> value);
 	auto get(std::vector<uint8_t>& key) -> std::vector<uint8_t>;
+	void get(std::string& dst, std::span<uint8_t> const key);
 };
 
 } // namespace db
