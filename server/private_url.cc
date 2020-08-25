@@ -55,7 +55,7 @@ PrivateURL::PrivateURL(std::vector<uint8_t>&& salt, std::vector<uint8_t>&& iv,
     : salt_{std::move(salt)}, iv_{std::move(iv)}, blinded_url_{std::move(blinded_url)} {}
 
 auto PrivateURL::valid() const -> bool {
--	return blinded_url_.size() > 0 && iv_.size() == IV_BYTES && salt_.size() == SALT_BYTES;
+	return blinded_url_.size() > 0 && iv_.size() == IV_BYTES && salt_.size() == SALT_BYTES;
 }
 
 auto PrivateURL::encrypt(std::vector<uint8_t>&& key, std::vector<uint8_t>& iv,
