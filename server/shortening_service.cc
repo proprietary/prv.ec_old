@@ -20,19 +20,19 @@ namespace {
 class XORShift {
 private:
 	uint64_t state_;
-	static std::shared_ptr<XORShift> instance_;
-
+	static std::unique_ptr<XORShift> instance_;
 public:
 	explicit XORShift() {
 		// seed with real randomness from system call
 		std::random_device rd("/dev/urandom");
 		std::uniform_int_distribution<uint64_t> d(0);
 		state_ = d(rd);
+		instance_.reset(this);
 	}
 
-	static auto instance() -> std::shared_ptr<XORShift> {
+	static auto instance() -> std::unique_ptr<XORShift> {
 		if (!instance_) {
-			instance_ = std::make_shared<XORShift>();
+			instance_.reset(new XORShift{});
 		}
 		return instance_;
 	}
