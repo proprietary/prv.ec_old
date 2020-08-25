@@ -35,3 +35,40 @@ cc_binary(
         "@com_github_unetworking_uwebsockets//:uWebSockets",
     ],
 )
+
+cc_library(
+    name = "private_url",
+    srcs = [
+        "private_url.h",
+        "private_url.cc",
+    ],
+    hdrs = ["private_url.h"],
+    copts = [
+        "-std=c++20",
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@//b64:b64",
+        "@com_googlesource_boringssl//:crypto",
+        "@com_googlesource_boringssl//:ssl",
+    ],
+)
+
+cc_test(
+    name = "private_url_test",
+    srcs = ["private_url.test.cc"],
+    copts = [
+        "-std=c++20",
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":private_url",
+        "@com_github_google_googletest//:gtest",
+    ],
+)
