@@ -25,7 +25,7 @@ private:
 	// performance is not critical, an iteration count of 10,000,000
 	// may be appropriate."
 	// https://tools.ietf.org/html/rfc8018#section-4
-	static constexpr uint32_t PBKDF2_ROUNDS = 1'000'000; // yes, seriously
+	static constexpr uint32_t PBKDF2_ROUNDS = 2'000'000; // yes, seriously
 
 	// yes, seriously, just 24 bits of entropy; that's why PBDKF2_ROUNDS is high
 	static constexpr size_t PASS_BYTES = 3;
@@ -44,6 +44,8 @@ private:
 
 	// default tag size for AES-GCM is 128-bits
 	static constexpr size_t TAG_BYTES = 16;
+
+	static constexpr size_t AES_GCM_BLOCK_SIZE = 1; // EVP_CIPHER_block_size(EVP_aes_256_gcm());
 
 	///
 	/// Encrypt plaintext with AES-256-GCM. Crypto parameters are

@@ -43,8 +43,6 @@ void fill_random(std::vector<uint8_t>& v) noexcept {
 	}
 }
 
-static constexpr size_t aes_gcm_block_size = 16;
-
 } // namespace
 
 namespace ec_prv {
@@ -52,7 +50,10 @@ namespace private_url {
 
 PrivateURL::PrivateURL(std::vector<uint8_t>&& salt, std::vector<uint8_t>&& iv,
 		       std::vector<uint8_t>&& blinded_url)
-    : salt_{std::move(salt)}, iv_{std::move(iv)}, blinded_url_{std::move(blinded_url)} {}
+    : salt_{std::move(salt)}, iv_{std::move(iv)}, blinded_url_{std::move(blinded_url)} {
+	assert(::ec_prv::private_url::PrivateURL::AES_GCM_BLOCK_SIZE ==
+	       EVP_CIPHER_block_size(EVP_aes_256_gcm()));
+}
 
 auto PrivateURL::valid() const -> bool {
 	return blinded_url_.size() > 0 && iv_.size() == IV_BYTES && salt_.size() == SALT_BYTES;
@@ -74,7 +75,7 @@ auto PrivateURL::encrypt(std::vector<uint8_t>&& key, std::vector<uint8_t>& iv,
 	// No need to set tag length because it is already configured to the default for AES-GCM:
 	// 128-bits
 	assert(TAG_BYTES == 16);
-	auto const out_sz = plaintext.size() + aes_gcm_block_size - 1;
+	auto const out_sz = plaintext.size() + AES_GCM_BLOCK_SIZE - 1;
 	std::vector<uint8_t> out(out_sz, 0);
 	auto err = EVP_EncryptInit_ex(ctx.get(), EVP_aes_256_gcm(), nullptr, key.data(), iv.data());
 	if (err != 1) {
@@ -130,15 +131,11 @@ auto PrivateURL::derive_secret_key(std::vector<uint8_t>&& pass, std::vector<uint
 
 auto PrivateURL::decrypt(std::vector<uint8_t>&& key, std::vector<uint8_t>& ciphertext,
 			 std::vector<uint8_t>& iv) noexcept -> std::optional<std::vector<uint8_t>> {
-	// assert( static_cast<decltype(::ec_prv::private_url::PrivateURL::KEY_LEN)>(key.size()) ==
-	// ::ec_prv::private_url::PrivateURL::KEY_LEN );
-	if (static_cast<decltype(::ec_prv::private_url::PrivateURL::KEY_LEN)>(key.size()) !=
-	    ::ec_prv::private_url::PrivateURL::KEY_LEN) {
-		assert(false);
-	}
+	assert(static_cast<decltype(::ec_prv::private_url::PrivateURL::KEY_LEN)>(key.size()) ==
+	       ::ec_prv::private_url::PrivateURL::KEY_LEN);
 	assert(iv.size() == IV_BYTES);
 
-	std::vector<uint8_t> out(ciphertext.size() + aes_gcm_block_size, 0);
+	std::vector<uint8_t> out(ciphertext.size() + AES_GCM_BLOCK_SIZE, 0);
 	std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)> ctx{EVP_CIPHER_CTX_new(),
 									    EVP_CIPHER_CTX_free};
 	if (!ctx) {
