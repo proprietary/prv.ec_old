@@ -21,12 +21,18 @@ yet supported.
 Build system
 ~~~~~~~~~~~~
 
-Easiest way to get started with Bazel is Bazelisk. Install Bazelisk
+Go to https://bazel.build and read the installation instructions.
+
+Easiest way to get started with Bazel is Bazelisk, which is a wrapper
+for Bazel versions the same way "gradlew" is for Gradle.
+
 https://github.com/bazelbuild/bazelisk
 
-Then in your shell or in .zshrc/.zshenv/.bashrc/etc.::
+I recommend installing it this way for the least headache::
 
-  alias bazel=bazelisk
+  $ cd /tmp
+  $ curl -L -o bazel <binary download url for bazelisk>
+  $ sudo install bazel /usr/local/bin/bazel
 
 Building the entire project is as easy as::
 
