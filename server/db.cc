@@ -69,11 +69,11 @@ auto KVStore::get(std::vector<uint8_t>& key) -> std::vector<uint8_t> {
 }
 
 void KVStore::get(std::string& dst, std::span<uint8_t> const key) {
-	rocksdb::Slice k{reinterpret_cast<char const*>(key.data()), key.size()}
+	rocksdb::Slice k{reinterpret_cast<char const*>(key.data()), key.size()};
 	auto s = db_->Get(rocksdb::ReadOptions(), k, &dst);
 	if (!s.ok()) {
-		// TODO
 		assert(false);
+		// TODO
 	}
 }
 

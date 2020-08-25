@@ -1,8 +1,36 @@
 load("@com_github_google_flatbuffers//:build_defs.bzl", "flatbuffer_cc_library")
+package(default_visibility = ["//visibility:public"])
 
 flatbuffer_cc_library(
-    name = "fbs",
-    srcs = glob(["*.fbs"]),
-    out_prefix = "generated/",
-    visibility = ["//visibility:public"],
+    name = "private_url",
+    srcs = ["private_url.fbs"],
+    srcs_filegroup_name = "private_url_includes",
 )
+
+flatbuffer_cc_library(
+    name = "url_index",
+    srcs = ["url_index.fbs"],
+    srcs_filegroup_name = "url_index_includes",
+)
+
+flatbuffer_cc_library(
+    name = "shortening_service",
+    srcs = [
+        "lookup_request.fbs",
+        "lookup_response.fbs",
+        "shortening_request.fbs",
+        "shortening_response.fbs",
+    ],
+    includes = [
+        ":url_index_includes",
+        ":private_url_includes",
+    ],
+)
+
+
+# flatbuffer_cc_library(
+#     name = "fbs",
+#     srcs = glob(["*.fbs"]),
+#     out_prefix = "generated/",
+#     visibility = ["//visibility:public"],
+# )

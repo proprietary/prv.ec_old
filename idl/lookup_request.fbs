@@ -1,0 +1,10 @@
+include "url_index.fbs";
+
+namespace ec_prv.fbs;
+
+table LookupRequest {
+	version:uint8 = 1;
+	lookup_key:URLIndex;
+}
+
+root_type LookupRequest;

@@ -1,6 +1,6 @@
 namespace ec_prv.fbs;
 
-table PrivateURL {
+table ShorteningRequest {
 	version:uint8 = 1;
 	expiry:uint64;
 	salt:[ubyte];
@@ -8,4 +8,4 @@ table PrivateURL {
 	blinded_url:[ubyte];
 }
 
-root_type PrivateURL;
+root_type ShorteningRequest;

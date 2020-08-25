@@ -1,0 +1,11 @@
+include "private_url.fbs";
+
+namespace ec_prv.fbs;
+
+table LookupResponse {
+	version:uint8 = 1;
+	error:bool = false;
+	data:PrivateURL;
+}
+
+root_type LookupResponse;
