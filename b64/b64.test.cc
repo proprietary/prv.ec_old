@@ -1,5 +1,6 @@
-#include <b64.h>
+#include "b64/b64.h"
 #include <gtest/gtest.h>
+#include <random>
 
 namespace {
 
@@ -36,6 +37,41 @@ TEST(Base64, Decode) {
 			 .c_str());
 	EXPECT_STREQ("21", test_decode("MjE=").c_str());
 	EXPECT_STREQ("", test_decode("").c_str());
+}
+
+// test encoding/decoding of random strings
+TEST(Base64, Integration) {
+	static constexpr char alphabet[] = {
+	    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+	    'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', '0', '1', '2', '3', '4',
+	    '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+	    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'};
+	std::random_device rd{};
+	std::uniform_int_distribution dist{0UL, std::size(alphabet)};
+	int rounds = 50;
+	while (rounds-- > 0) {
+		constexpr auto len = 100;
+		std::string s(len + 1, '\0');
+		for (int i = 0; i < len; ++i) {
+			auto idx = dist(rd);
+			s[i] = alphabet[idx];
+		}
+		std::vector<uint8_t> buf{s.begin(), s.end()};
+		{
+			auto encoded = ::ec_prv::b64::enc_nonurlsafe(buf);
+			auto decoded = ::ec_prv::b64::dec(encoded);
+			std::string_view decoded_as_string{
+			    reinterpret_cast<char const*>(decoded.data()), decoded.size()};
+			ASSERT_STREQ(s.c_str(), std::string{decoded_as_string}.c_str());
+		}
+		{
+			auto encoded = ::ec_prv::b64::enc(buf);
+			auto decoded = ::ec_prv::b64::dec(encoded);
+			std::string_view decoded_as_string{
+			    reinterpret_cast<char const*>(decoded.data()), decoded.size()};
+			ASSERT_STREQ(s.c_str(), std::string{decoded_as_string}.c_str());
+		}
+	}
 }
 
 } // namespace

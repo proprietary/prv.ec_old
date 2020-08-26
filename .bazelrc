@@ -2,6 +2,8 @@
 # build --cxxopt="-pedantic"
 # build --cxxopt="-Werror"
 # build --cxxopt="-std=c++20"
-build --compilation_mode=dbg
-run --compilation_mode=dbg
-test --compilation_mode=dbg
+build -c dbg
+# build --cxxopt="-fsanitize=address"
+# build --cxxopt="-lasan"
+# build --cxxopt="-fsanitize=undefined"
+build --cxxopt="-march=native" 

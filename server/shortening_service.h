@@ -1,16 +1,6 @@
 #ifndef _INCLUDE_EC_PRV_SERVER_SHORTENING_SERVICE_H
 #define _INCLUDE_EC_PRV_SERVER_SHORTENING_SERVICE_H
-
-// ORDER MATTERS 😢
-// clang-format off
-#include "idl/url_index_generated.h"
-#include "idl/private_url_generated.h"
-#include "idl/trusted_lookup_request_generated.h"
-#include "idl/trusted_lookup_response_generated.h"
-#include "idl/trusted_shortening_request_generated.h"
-#include "idl/trusted_shortening_response_generated.h"
-// /ORDER MATTERS
-
+#include "idl/all_generated_flatbuffers.h"
 #include "server/db.h"
 #include "server/xorshift.h"
 #include <chrono>
@@ -27,7 +17,7 @@ using namespace std::chrono_literals;
 
 class ServiceHandle {
 private:
-	std::shared_ptr<::ec_prv::db::KVStore> store_;
+	::ec_prv::db::KVStore* const store_;
 
 	std::shared_ptr<::ec_prv::xorshift::XORShift> rand_source_;
 
@@ -42,16 +32,19 @@ private:
 	static auto check_expiry(uint64_t input_expiry) -> bool;
 
 public:
-	explicit ServiceHandle(std::shared_ptr<::ec_prv::db::KVStore> store,
+	explicit ServiceHandle(::ec_prv::db::KVStore* store,
 			       std::shared_ptr<::ec_prv::xorshift::XORShift> xorshift =
 				   std::make_shared<::ec_prv::xorshift::XORShift>());
 
-	auto handle_shortening_request(std::span<uint8_t> src) -> ::flatbuffers::DetachedBuffer;
+	auto handle_shortening_request(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> src)
+	    -> ::flatbuffers::DetachedBuffer;
 
-	auto handle_lookup_request(std::span<uint8_t> src) -> ::flatbuffers::DetachedBuffer;
+	auto handle_lookup_request(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
+	    -> ::flatbuffers::DetachedBuffer;
 
-	void handle_trusted_shortening_request(::flatbuffers::FlatBufferBuilder& dst,
-										   std::unique_ptr<::ec_prv::fbs::TrustedShorteningRequestT> src);
+	void handle_trusted_shortening_request(
+	    ::flatbuffers::FlatBufferBuilder& dst,
+	    std::unique_ptr<::ec_prv::fbs::TrustedShorteningRequestT> src);
 
 	void
 	handle_trusted_lookup_request(::flatbuffers::FlatBufferBuilder& dst,

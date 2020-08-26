@@ -1,25 +1,28 @@
 #include "server/db.h"
+#include <algorithm>
 #include <cassert>
 #include <cstdio>
-#include <algorithm>
+#include <cstdlib>
 #include <span>
+#include <exception>
 
 namespace ec_prv {
 namespace db {
 
 KVStore::KVStore() {
 	rocksdb::Options options;
+	options.create_if_missing = true;
 	options.IncreaseParallelism();
 	options.OptimizeLevelStyleCompaction();
-	auto status = rocksdb::DB::Open(options, "/tmp/testdb", &db_);
+	const char* EC_PRV_ROCKSDB_DATADIR_PATH = std::getenv("EC_PRV_ROCKSDB_DATADIR_PATH");
+	if (nullptr == EC_PRV_ROCKSDB_DATADIR_PATH || strlen(EC_PRV_ROCKSDB_DATADIR_PATH) == 0) {
+		throw std::runtime_error{"Environment variable EC_PRV_ROCKSDB_DATADIR_PATH is missing"};
+	}
+	auto status = rocksdb::DB::Open(options, EC_PRV_ROCKSDB_DATADIR_PATH, &db_);
 	assert(status.ok());
 }
 
-KVStore::~KVStore() noexcept {
-	if (db_ != nullptr) {
-		delete db_;
-	}
-}
+KVStore::~KVStore() noexcept { delete db_; }
 
 KVStore::KVStore(KVStore&& other) noexcept {
 	if (this->db_ != nullptr) {
@@ -79,72 +82,3 @@ void KVStore::get(std::string& dst, std::span<uint8_t> const key) {
 
 } // namespace db
 } // namespace ec_prv
-
-int main(int argc, char** argv) {
-	using namespace rocksdb;
-	DB* db;
-	Options options;
-	// Optimize RocksDB. This is the easiest way to get RocksDB to perform well
-	options.IncreaseParallelism();
-	options.OptimizeLevelStyleCompaction();
-	// create the DB if it's not already present
-	options.create_if_missing = true;
-
-	// open DB
-	Status s = DB::Open(options, "/tmp/testdb", &db);
-	assert(s.ok());
-
-	// Put key-value
-	s = db->Put(WriteOptions(), "key1", "value");
-	assert(s.ok());
-	std::string value;
-	// get value
-	s = db->Get(ReadOptions(), "key1", &value);
-	assert(s.ok());
-	assert(value == "value");
-
-	// atomically apply a set of updates
-	{
-		WriteBatch batch;
-		batch.Delete("key1");
-		batch.Put("key2", value);
-		s = db->Write(WriteOptions(), &batch);
-	}
-
-	s = db->Get(ReadOptions(), "key1", &value);
-	assert(s.IsNotFound());
-
-	db->Get(ReadOptions(), "key2", &value);
-	assert(value == "value");
-
-	{
-		PinnableSlice pinnable_val;
-		db->Get(ReadOptions(), db->DefaultColumnFamily(), "key2", &pinnable_val);
-		assert(pinnable_val == "value");
-	}
-
-	{
-		std::string string_val;
-		// If it cannot pin the value, it copies the value to its internal buffer.
-		// The intenral buffer could be set during construction.
-		PinnableSlice pinnable_val(&string_val);
-		db->Get(ReadOptions(), db->DefaultColumnFamily(), "key2", &pinnable_val);
-		assert(pinnable_val == "value");
-		// If the value is not pinned, the internal buffer must have the value.
-		assert(pinnable_val.IsPinned() || string_val == "value");
-	}
-
-	PinnableSlice pinnable_val;
-	s = db->Get(ReadOptions(), db->DefaultColumnFamily(), "key1", &pinnable_val);
-	assert(s.IsNotFound());
-	// Reset PinnableSlice after each use and before each reuse
-	pinnable_val.Reset();
-	db->Get(ReadOptions(), db->DefaultColumnFamily(), "key2", &pinnable_val);
-	assert(pinnable_val == "value");
-	pinnable_val.Reset();
-	// The Slice pointed by pinnable_val is not valid after this point
-
-	delete db;
-
-	return 0;
-}

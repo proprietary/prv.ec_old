@@ -2,6 +2,7 @@ cc_library(
     name = "uSockets",
     srcs = glob(["src/**/*.c", "src/**/*.h"]),
     hdrs = ["src/libusockets.h"],
+    strip_include_prefix = "src",
     includes = [
         "src",
         "src/internal",

@@ -1,12 +1,16 @@
 cc_library(
     name = "uWebSockets",
-    # srcs = glob([
-    #     "src/**/*.h",
-    #     "src/**/*.hpp",
-    # ]),
+    srcs = glob([
+        "src/**/*.h",
+        "src/**/*.hpp",
+    ]),
     hdrs = glob(["src/*.h"]),
     includes = ["src"],
+    strip_include_prefix = "src",
     include_prefix = "uWebSockets",
+    defines = [
+        "UWS_HTTPRESPONSE_NO_WRITEMARK=1",
+    ],
     deps = [
         "@com_github_unetworking_usockets//:uSockets",
         "@net_zlib//:zlib",

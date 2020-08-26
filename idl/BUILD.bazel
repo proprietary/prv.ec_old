@@ -53,9 +53,14 @@ flatbuffer_cc_library(
     flatc_args = FLATC_ARGS,
 )
 
-# flatbuffer_cc_library(
-#     name = "fbs",
-#     srcs = glob(["*.fbs"]),
-#     out_prefix = "generated/",
-#     visibility = ["//visibility:public"],
-# )
+cc_library(
+    name = "all_generated_flatbuffers",
+    srcs = ["all_generated_flatbuffers.h"],
+    hdrs = ["all_generated_flatbuffers.h"],
+    deps = [
+        ":trusted_shortening_service",
+        ":shortening_service",
+        ":url_index",
+        ":private_url",
+     ],
+)

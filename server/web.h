@@ -1,20 +1,27 @@
-#ifndef __INCLUDE_EC_SERVER_PRV_WEB_H
-#define __INCLUDE_EC_SERVER_PRV_WEB_H
-#include <uWebSockets/App.h>
+#ifndef _INCLUDE_EC_PRV_SERVER_WEB_H
+#define _INCLUDE_EC_PRV_SERVER_WEB_H
 #include <string_view>
+#include "db.h"
+#include "server/shortening_service.h"
+#include <uWebSockets/App.h>
 
 namespace ec_prv {
 namespace web {
 
-// class Server {
-// public:
-// 	const char* address;
-// };
+class Server {
+private:
+	int const port_;
+	db::KVStore store_;
+	shortening_service::ServiceHandle svc_;
 
-void rpc_dispatch(std::string_view inbuf);
+public:
+	explicit Server(int const port);
+	void run();
+};
+
 
 } // namespace web
 } // namespace ec_prv
-#endif // __INCLUDE_EC_SERVER_PRV_WEB_H
+#endif // _INCLUDE_EC_PRV_SERVER_WEB_H
 
 

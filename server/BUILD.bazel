@@ -1,16 +1,43 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary")
+package(default_visibility = ["//visibility:public"])
 
 cc_binary(
     name = "server",
+    srcs = ["server.cc"],
+    visibility = ["//visibility:public"],
+    copts = [
+        "-std=c++20",
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+        "-pthread",
+    ],
+    deps = [
+        ":web",
+    ],
+)
+
+cc_library(
+    name = "web",
     srcs = [
         "web.cc",
         "web.h",
     ],
-    copts = ["-std=c++20"],
+    hdrs = ["web.h"],
+    copts = [
+        "-std=c++20",
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+        "-pthread",
+    ],
     visibility = ["//visibility:public"],
     deps = [
-        # ":shortening_service",
-        # ":private_url",
+        ":db",
+        ":shortening_service",
+        "//b64:b64",
+        "//idl:all_generated_flatbuffers",
+        "@com_github_google_flatbuffers//:flatbuffers",
         "@com_github_unetworking_uwebsockets//:uWebSockets",
     ],
 )
@@ -32,15 +59,11 @@ cc_library(
     deps = [
         ":db",
         ":private_url",
-        "//idl:private_url",
-        "//idl:url_index",
-        "//idl:shortening_service",
-        "//idl:trusted_shortening_service",
+        "//idl:all_generated_flatbuffers",
         ":xorshift",
         "@com_github_google_flatbuffers//:flatbuffers",
     ],
 )
-
 
 cc_library(
     name = "db",
@@ -54,10 +77,6 @@ cc_library(
         "-Werror",
         "-Wall",
         "-pedantic",
-    ],
-    linkopts = [
-        "-pthread",
-        "-ldl",
     ],
     deps = [
         "@com_github_facebook_rocksdb//:rocksdb",

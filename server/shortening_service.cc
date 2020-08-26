@@ -1,44 +1,8 @@
 #include "server/shortening_service.h"
 
-// ORDER MATTERS:
-//
-// Unfortunately the build rules for flatc don't
-// #include the generated headers of the *.fbs files that were
-// included in the .fbs schema
-//
-/*	._________________.    	  .____________________.
- * 	|				  |		  |		   	   		   |
- *  | private_url.fbs |	   	  |	  url_index.fbs	   |
- *	|				  |		  |		   	   	   	   |
- *	._________________.	   	  .____________________.
- *				^  					   ^
- *				|	   	   	   	   	   |
- *				|  	   	   	   	   	   |
- * 	   	   	┌──────────────────────────────┐
- * 	   	   	│   	   	   	   	   	   	   |
- *		  	│  shortening service  	   	   |
- *		   	│  ├── lookup_request.fbs      |
- * 	   	   	│  ├── lookup_response.fbs     |
- *	   	   	│  ├── shortening_request.fbs  |
- * 	   	   	│  ├── shortening_response.fbs |
- * 	   	   	│  │   ...   	   	   	   	   |
- * 	   	   	└──────────────────────────────┘
- *
- *
- */
-
-// clang-format off
-#include "idl/private_url_generated.h"
-#include "idl/url_index_generated.h"
-#include "idl/lookup_request_generated.h"
-#include "idl/lookup_response_generated.h"
-#include "idl/shortening_request_generated.h"
-#include "idl/shortening_response_generated.h"
-// clang-format on
-
-// /ORDER MATTERS
-#include "server/private_url.h"
+#include "idl/all_generated_flatbuffers.h"
 #include "server/db.h"
+#include "server/private_url.h"
 #include "server/xorshift.h"
 #include <algorithm>
 #include <chrono>
@@ -60,57 +24,42 @@ std::span<uint8_t> fbspan(::flatbuffers::FlatBufferBuilder& fbb) {
 namespace ec_prv {
 namespace shortening_service {
 
-ServiceHandle::ServiceHandle(std::shared_ptr<::ec_prv::db::KVStore> store,
+ServiceHandle::ServiceHandle(::ec_prv::db::KVStore* store,
 			     std::shared_ptr<xorshift::XORShift> xorshift)
     : store_{store}, rand_source_{xorshift} {}
 
-auto ServiceHandle::handle_shortening_request(std::span<uint8_t> inbuf)
-    -> flatbuffers::DetachedBuffer {
-	bool ok = false;
-	::flatbuffers::Verifier v(inbuf.data(), inbuf.size());
-	ok = ::ec_prv::fbs::VerifyShorteningRequestBuffer(v);
-	if (!ok) {
-		::flatbuffers::FlatBufferBuilder fbb;
-		::ec_prv::fbs::ShorteningResponseBuilder srb{fbb};
-		srb.add_error(true);
-		srb.add_version(1);
-		auto sr = srb.Finish();
-		fbb.Finish(sr);
-		return fbb.Release();
-	}
-	auto* req = flatbuffers::GetRoot<::ec_prv::fbs::ShorteningRequest>(inbuf.data());
-	switch (req->version()) {
+auto ServiceHandle::handle_shortening_request(
+    std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> req) -> ::flatbuffers::DetachedBuffer {
+	switch (req->version) {
 	case 1: {
 		// validate
 		{
-			ok = req->salt()->size() > 0 && req->iv()->size() > 0 &&
-			     req->blinded_url()->size() > 0;
+			bool ok =
+			    !req->salt.empty() && !req->iv.empty() && !req->blinded_url.empty();
 			if (!ok) {
 				break;
 			}
-			if (!check_expiry(req->expiry())) {
+			if (!check_expiry(req->expiry)) {
 				break;
 			}
 		}
 		// Create payload
 		::flatbuffers::FlatBufferBuilder private_url_fbb;
 		{
-			auto iv =
-			    private_url_fbb.CreateVector(req->iv()->data(), req->iv()->size());
+			auto iv = private_url_fbb.CreateVector(req->iv.data(), req->iv.size());
 			auto salt =
-			    private_url_fbb.CreateVector(req->salt()->data(), req->salt()->size());
-			auto blinded_url = private_url_fbb.CreateVector(req->blinded_url()->data(),
-									req->blinded_url()->size());
-			auto p = fbs::CreatePrivateURL(private_url_fbb, 1, req->expiry(), salt, iv,
+			    private_url_fbb.CreateVector(req->salt.data(), req->salt.size());
+			auto blinded_url = private_url_fbb.CreateVector(req->blinded_url.data(),
+									req->blinded_url.size());
+			auto p = fbs::CreatePrivateURL(private_url_fbb, 1, req->expiry, salt, iv,
 						       blinded_url);
 			private_url_fbb.Finish(p);
 		}
-		std::span<uint8_t> private_url_serialized(private_url_fbb.GetBufferPointer(),
-							  private_url_fbb.GetSize());
 
 		// Create key index
 		{
 			// find new index not taken
+			// TODO(zds): factor this out into rocksdb/database module
 			std::string buf;
 			while (true) {
 				::flatbuffers::FlatBufferBuilder url_index_fbb;
@@ -120,14 +69,13 @@ auto ServiceHandle::handle_shortening_request(std::span<uint8_t> inbuf)
 				url_index_builder.add_id(rand_index);
 				auto url_index = url_index_builder.Finish();
 				::ec_prv::fbs::FinishURLIndexBuffer(url_index_fbb, url_index);
-				std::span<uint8_t> url_index_bytes(url_index_fbb.GetBufferPointer(),
-								   url_index_fbb.GetSize());
+				auto url_index_bytes = fbspan(url_index_fbb);
 				store_->get(buf, url_index_bytes);
 				// generated an random index that doesn't exist already--good!
 				if (buf.length() == 0) {
 					::flatbuffers::FlatBufferBuilder err_fbb;
 					auto ok =
-					    store_->put(url_index_bytes, private_url_serialized);
+					    store_->put(url_index_bytes, fbspan(private_url_fbb));
 					auto resp = ::ec_prv::fbs::CreateShorteningResponse(
 					    err_fbb, 1, ok, url_index);
 					err_fbb.Finish(resp);
@@ -150,29 +98,25 @@ auto ServiceHandle::handle_shortening_request(std::span<uint8_t> inbuf)
 	return fbb.Release();
 }
 
-auto ServiceHandle::handle_lookup_request(std::span<uint8_t> src) -> ::flatbuffers::DetachedBuffer {
-	::flatbuffers::Verifier v{src.data(), src.size()};
-	if (!::ec_prv::fbs::VerifyLookupRequestBuffer(v)) {
-		::flatbuffers::FlatBufferBuilder fbb;
-		auto resp = ::ec_prv::fbs::CreateLookupResponse(fbb, 1, true);
-		fbb.Finish(resp);
-		return fbb.Release();
-	}
-	auto* req = ::flatbuffers::GetRoot<::ec_prv::fbs::LookupRequest>(src.data());
-	switch (req->version()) {
+auto ServiceHandle::handle_lookup_request(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
+    -> ::flatbuffers::DetachedBuffer {
+	switch (req->version) {
 	case 1: {
-		auto* url_index = req->lookup_key();
-		if (url_index == nullptr) {
+		auto url_index = std::move(req->lookup_key);
+		if (!url_index) {
 			break;
 		}
-		if (url_index->version() != 1) {
+		if (url_index->version != 1) {
+			break;
+		}
+		if (url_index->id <= 0) {
 			break;
 		}
 		std::string rocksdb_result_buf;
 		{
 			::flatbuffers::FlatBufferBuilder url_index_fbb;
 			url_index_fbb.Finish(
-			    ::ec_prv::fbs::URLIndex::Pack(url_index_fbb, url_index->UnPack()));
+			    ::ec_prv::fbs::URLIndex::Pack(url_index_fbb, url_index.get()));
 			store_->get(rocksdb_result_buf, fbspan(url_index_fbb));
 			// TODO(zds): if failure... resp = ::ec_prv::fbs::CreateLookupResponse(fbb,
 			// 1, false);

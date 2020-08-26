@@ -9,3 +9,4 @@ Required environment variables
 
 - EC_PRV_HCAPTCHA_SITEKEY — API token from hcaptcha.com
 - EC_PRV_HCAPTCHA_SECRET — API token from hcaptcha.com
+- EC_PRV_ROCKSDB_DATADIR_PATH — absolute path to a directory which will hold the embedded database
