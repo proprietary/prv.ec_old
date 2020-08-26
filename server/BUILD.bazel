@@ -35,6 +35,7 @@ cc_library(
         "//idl:private_url",
         "//idl:url_index",
         "//idl:shortening_service",
+        "//idl:trusted_shortening_service",
         ":xorshift",
         "@com_github_google_flatbuffers//:flatbuffers",
     ],

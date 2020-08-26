@@ -1,16 +1,27 @@
 load("@com_github_google_flatbuffers//:build_defs.bzl", "flatbuffer_cc_library")
 package(default_visibility = ["//visibility:public"])
 
+FLATC_ARGS = [
+    "--gen-object-api",
+    "--gen-compare",
+    "--no-includes",
+    "--gen-mutable",
+    "--reflect-names",
+    "--cpp-ptr-type std::unique_ptr",
+]
+
 flatbuffer_cc_library(
     name = "private_url",
     srcs = ["private_url.fbs"],
     srcs_filegroup_name = "private_url_includes",
+    flatc_args = FLATC_ARGS,
 )
 
 flatbuffer_cc_library(
     name = "url_index",
     srcs = ["url_index.fbs"],
     srcs_filegroup_name = "url_index_includes",
+    flatc_args = FLATC_ARGS,
 )
 
 flatbuffer_cc_library(
@@ -25,8 +36,22 @@ flatbuffer_cc_library(
         ":url_index_includes",
         ":private_url_includes",
     ],
+    flatc_args = FLATC_ARGS,
 )
 
+flatbuffer_cc_library(
+    name = "trusted_shortening_service",
+    srcs = [
+        "trusted_lookup_request.fbs",
+        "trusted_lookup_response.fbs",
+        "trusted_shortening_request.fbs",
+        "trusted_shortening_response.fbs",
+    ],
+    includes = [
+        ":url_index_includes",
+    ],
+    flatc_args = FLATC_ARGS,
+)
 
 # flatbuffer_cc_library(
 #     name = "fbs",

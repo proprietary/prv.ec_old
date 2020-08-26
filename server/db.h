@@ -1,9 +1,9 @@
 #ifndef __INCLUDE_EC_PRV_DB_H
 #define __INCLUDE_EC_PRV_DB_H
-#include <rocksdb/db.h>
-#include <vector>
 #include <cstdint>
+#include <rocksdb/db.h>
 #include <span>
+#include <vector>
 
 namespace ec_prv {
 namespace db {
@@ -11,6 +11,7 @@ namespace db {
 class KVStore {
 private:
 	rocksdb::DB* db_ = nullptr;
+
 public:
 	explicit KVStore();
 	~KVStore() noexcept;

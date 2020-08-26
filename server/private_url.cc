@@ -250,5 +250,11 @@ auto PrivateURL::generate(std::string const& plaintext_url) noexcept
 	    std::move(b64_pass));
 }
 
+auto PrivateURL::iv() const -> std::vector<uint8_t> const& { return iv_; }
+
+auto PrivateURL::salt() const -> std::vector<uint8_t> const& { return salt_; }
+
+auto PrivateURL::blinded_url() const -> std::vector<uint8_t> const& { return blinded_url_; }
+
 } // namespace private_url
 } // namespace ec_prv

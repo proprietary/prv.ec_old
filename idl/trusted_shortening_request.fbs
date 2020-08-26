@@ -1,0 +1,8 @@
+namespace ec_prv.fbs;
+
+table TrustedShorteningRequest {
+	version:uint8 = 1;
+	url:string;
+}
+
+root_type TrustedShorteningRequest;

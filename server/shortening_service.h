@@ -1,5 +1,16 @@
-#ifndef _INCLUDE_EC_PRV_SHORTENING_SERVICE_H
-#define _INCLUDE_EC_PRV_SHORTENING_SERVICE_H
+#ifndef _INCLUDE_EC_PRV_SERVER_SHORTENING_SERVICE_H
+#define _INCLUDE_EC_PRV_SERVER_SHORTENING_SERVICE_H
+
+// ORDER MATTERS 😢
+// clang-format off
+#include "idl/url_index_generated.h"
+#include "idl/private_url_generated.h"
+#include "idl/trusted_lookup_request_generated.h"
+#include "idl/trusted_lookup_response_generated.h"
+#include "idl/trusted_shortening_request_generated.h"
+#include "idl/trusted_shortening_response_generated.h"
+// /ORDER MATTERS
+
 #include "server/db.h"
 #include "server/xorshift.h"
 #include <chrono>
@@ -38,8 +49,15 @@ public:
 	auto handle_shortening_request(std::span<uint8_t> src) -> ::flatbuffers::DetachedBuffer;
 
 	auto handle_lookup_request(std::span<uint8_t> src) -> ::flatbuffers::DetachedBuffer;
+
+	void handle_trusted_shortening_request(::flatbuffers::FlatBufferBuilder& dst,
+										   std::unique_ptr<::ec_prv::fbs::TrustedShorteningRequestT> src);
+
+	void
+	handle_trusted_lookup_request(::flatbuffers::FlatBufferBuilder& dst,
+				      std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT> src);
 };
 
 } // namespace shortening_service
 } // namespace ec_prv
-#endif // _INCLUDE_EC_PRV_SHORTENING_SERVICE_H
+#endif // _INCLUDE_EC_PRV_SERVER_SHORTENING_SERVICE_H

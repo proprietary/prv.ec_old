@@ -104,6 +104,12 @@ public:
 	/// Checks that the cryptographic parameters are valid.
 	///
 	auto valid() const -> bool;
+
+	auto salt() const -> std::vector<uint8_t> const&;
+
+	auto iv() const -> std::vector<uint8_t> const&;
+
+	auto blinded_url() const -> std::vector<uint8_t> const&;
 };
 
 } // namespace private_url
