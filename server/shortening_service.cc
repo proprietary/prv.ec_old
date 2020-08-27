@@ -16,7 +16,32 @@
 namespace {
 
 std::span<uint8_t> fbspan(::flatbuffers::FlatBufferBuilder& fbb) {
-	return std::span<uint8_t>(fbb.GetBufferPointer(), fbb.GetSize());
+	return std::span<uint8_t>{fbb.GetBufferPointer(), fbb.GetSize()};
+}
+
+///
+/// Generate new URL indices we find one not yet taken.
+///
+auto find_new_url_index_v1(::ec_prv::xorshift::XORShift& rand_source,
+			   ::ec_prv::db::KVStore const& kvstore) -> ::flatbuffers::DetachedBuffer {
+	// find new index not taken
+	std::string buf;
+	::flatbuffers::FlatBufferBuilder url_index_fbb;
+	while (true) {
+		::ec_prv::fbs::URLIndexBuilder url_index_builder(url_index_fbb);
+		url_index_builder.add_version(1);
+		auto rand_index = rand_source->rand();
+		url_index_builder.add_id(rand_index);
+		auto url_index = url_index_builder.Finish();
+		::ec_prv::fbs::FinishURLIndexBuffer(url_index_fbb, url_index);
+		auto url_index_bytes = fbspan(url_index_fbb);
+		kvstore.get(buf, url_index_bytes);
+		// generated an random index that doesn't exist already--good!
+		if (buf.length() == 0) {
+			return url_index_fbb.Release();
+		}
+		url_index_fbb.Clear();
+	}
 }
 
 } // namespace
@@ -43,6 +68,7 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> re
 				break;
 			}
 		}
+
 		// Create payload
 		::flatbuffers::FlatBufferBuilder private_url_fbb;
 		{
@@ -56,46 +82,27 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> re
 			private_url_fbb.Finish(p);
 		}
 
-		// Create key index
-		{
-			// find new index not taken
-			// TODO(zds): factor this out into rocksdb/database module
-			std::string buf;
-			while (true) {
-				::flatbuffers::FlatBufferBuilder url_index_fbb;
-				::ec_prv::fbs::URLIndexBuilder url_index_builder(url_index_fbb);
-				url_index_builder.add_version(1);
-				auto rand_index = rand_source_->rand();
-				url_index_builder.add_id(rand_index);
-				auto url_index = url_index_builder.Finish();
-				::ec_prv::fbs::FinishURLIndexBuffer(url_index_fbb, url_index);
-				auto url_index_bytes = fbspan(url_index_fbb);
-				store_->get(buf, url_index_bytes);
-				// generated an random index that doesn't exist already--good!
-				if (buf.length() == 0) {
-					::flatbuffers::FlatBufferBuilder err_fbb;
-					auto ok =
-					    store_->put(url_index_bytes, fbspan(private_url_fbb));
-					auto resp = ::ec_prv::fbs::CreateShorteningResponse(
-					    err_fbb, 1, ok, url_index);
-					err_fbb.Finish(resp);
-					return err_fbb.Release();
-				}
-			}
-		}
-		break;
+		// Create unique identifier
+		auto url_index = find_new_url_index_v1(*rand_source_, *store_);
+		std::span<uint8_t> url_index_bytes{url_index.data(), url_index.size()};
+		auto ok = store_->put(url_index_bytes, fbspan(private_url_fbb));
+		assert(ok == true); // TODO: handle error better
+		::flatbuffers::FlatBufferBuilder resp_fbb;
+		auto resp = ::ec_prv::fbs::CreateShorteningResponse(resp_fbb, 1, ok, url_index);
+		resp_fbb.Finish(resp);
+		return resp_fbb.Release();
 	}
 	default:
 		break;
 	}
 	// return error
-	::flatbuffers::FlatBufferBuilder fbb;
-	::ec_prv::fbs::ShorteningResponseBuilder srb{fbb};
+	::flatbuffers::FlatBufferBuilder resp_fbb;
+	::ec_prv::fbs::ShorteningResponseBuilder srb{resp_fbb};
 	srb.add_version(1);
 	srb.add_error(true);
 	auto sr = srb.Finish();
-	fbb.Finish(sr);
-	return fbb.Release();
+	resp_fbb.Finish(sr);
+	return resp_fbb.Release();
 }
 
 auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
@@ -158,13 +165,11 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedShorteningReque
 		auto blinded_url = private_url_fbb.CreateVector(private_url.blinded_url());
 		auto pubuf = CreatePrivateURL(private_url_fbb, 1, 0, salt, iv, blinded_url);
 		private_url_fbb.Finish(pubuf);
-		// generate index for rocksdb
-		FlatBufferBuilder url_index_fbb;
-		auto generated_index = rand_source_->rand();
-		auto ui = CreateURLIndex(url_index_fbb, 1, generated_index);
-		url_index_fbb.Finish(ui);
+		// generate new key for rocksdb
+		auto url_index = find_new_url_index_v1(*rand_source_, *store_);
+		std::span<uint8_t> url_index_bytes{url_index.data(), url_index.size()};
 		// put into rocksdb
-		store_->put(fbspan(url_index_fbb), fbspan(private_url_fbb));
+		store_->put(url_index_bytes, fbspan(private_url_fbb));
 		// construct response
 		auto const& pass = std::get<std::string>(pu.value());
 		FlatBufferBuilder resp_fbb;
@@ -172,9 +177,12 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedShorteningReque
 		tsrb.add_version(1);
 		auto pass_vec = resp_fbb.CreateVector(reinterpret_cast<uint8_t const*>(pass.data()),
 						      pass.size());
-		auto resp_lookup_key = CreateURLIndex(resp_fbb, 1, generated_index);
-		tsrb.add_pass(pass_vec);
+		// make another copy of the new url index recently generated
+		auto const* url_index_struct = url_index.GetRoot<URLIndex>()->UnPack();
+		// parses out the id from the url index structure
+		auto resp_lookup_key = CreateURLIndex(resp_fbb, 1, url_index_struct->id);
 		tsrb.add_lookup_key(resp_lookup_key);
+		tsrb.add_pass(pass_vec);
 		auto tsr = tsrb.Finish();
 		resp_fbb.Finish(tsr);
 		return resp_fbb.Release();
