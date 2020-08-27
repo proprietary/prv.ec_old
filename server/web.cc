@@ -3,6 +3,7 @@
 #include "idl/all_generated_flatbuffers.h"
 #include <algorithm>
 #include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <iterator>
 #include <string>
@@ -16,38 +17,6 @@
 using namespace std::literals;
 
 namespace {
-
-// valid base64 encoding characters with [62] and [63] as '-' and '_' to be url-safe
-static const char BASE_64_CHARS[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
-
-// auto parse_shorturl(std::string_view url) -> std::string_view {
-// 	auto it = url.begin();
-// 	if (*(it++) != '/') {
-// 		// unexpected
-// 		assert(false);
-// 		return {};
-// 	}
-// 	auto shorturl_start = it;
-// 	while (it != url.end()) {
-// 		// validate that all characters exist in base64 alphabet
-// 		auto i = sizeof(BASE_64_CHARS);
-// 		while (i > 0) {
-// 			if (BASE_64_CHARS[i] == *it) {
-// 				break;
-// 			}
-// 			i--;
-// 		}
-// 		if (i == 0) {
-// 			// fail
-// 			// character not found in base64 alphabet
-// 			return {};
-// 		}
-// 		it++;
-// 	}
-// 	auto shorturl_end = it;
-// 	return std::string_view(shorturl_start, shorturl_end);
-// }
 
 auto parse_auth_header(std::string_view authorization_header,
 		       std::string_view strip_prefix = "Basic "sv) -> std::string {
@@ -85,7 +54,16 @@ auto parse_http_basic_auth_header(std::string_view authorization_header)
 namespace ec_prv {
 namespace web {
 
-Server::Server(int const port) : port_{port}, store_{}, svc_{&store_} {}
+Server::Server(int const port)
+    : port_{port}, store_{}, svc_{&store_}, rpc_user_{::getenv("EC_PRV_RPC_USER")},
+      rpc_pass_{::getenv("EC_PRV_RPC_PASS")} {
+	if (rpc_user_.length() == 0) {
+		throw std::runtime_error{"EC_PRV_RPC_USER environment variable not set"};
+	}
+	if (rpc_pass_.length() == 0) {
+		throw std::runtime_error{"EC_PRV_RPC_PASS environment variable not set"};
+	}
+}
 
 void Server::run() {
 	using namespace std::literals;
@@ -103,92 +81,32 @@ void Server::run() {
 			  // clang-format on
 
 			  // Request a new shortened URL
-			  res->onAborted([]() { uWS::Loop::get()->defer([]() {}); });
-			  std::vector<uint8_t> buf;
-			  res->onData([this, &buf, res](std::string_view chunk, bool is_end) {
-				  std::copy(chunk.begin(), chunk.end(), std::back_inserter(buf));
-				  if (is_end) {
-					  res->cork([this, &buf, res]() -> void {
-						  ::flatbuffers::Verifier v{buf.data(), buf.size()};
-						  if (!::ec_prv::fbs::VerifyShorteningRequestBuffer(
-							  v)) {
-							  res->end();
-							  return;
-						  }
-						  res->writeStatus("200 OK");
-						  auto fb = ::ec_prv::fbs::UnPackShorteningRequest(
-						      buf.data());
-						  auto shortening_response =
-						      this->svc_.handle_shortening_request(
-							  std::move(fb));
-						  res->end(std::string_view{
-						      reinterpret_cast<char const*>(
-							  shortening_response.data()),
-						      shortening_response.size()});
-					  });
-				  }
-			  });
+			  accept_rpc<::ec_prv::fbs::ShorteningRequest, false>(res, req);
 		  })
-	    .post(
-		"/lookup_request",
-		[this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) {
+	    .post("/lookup_request",
+		  [this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) {
 	// clang-format off
 #ifndef DEBUG
 			  res->writeHeader("Access-Control-Allow-Origin", "https://prv.ec");
 #endif
 			  //clang-format on
 
-			  std::vector<uint8_t> buf;
-			  res->onData([this, &buf, res](std::string_view chunk, bool is_end) {
-				  std::copy(chunk.begin(), chunk.end(), std::back_inserter(buf));
-				  if (is_end) {
-					  res->cork([this, &buf, res]() -> void {
-						  ::flatbuffers::Verifier v{buf.data(), buf.size()};
-						  if (!::ec_prv::fbs::VerifyLookupRequestBuffer(v)) {
-							  res->end();
-							  return;
-						  }
-						  res->writeStatus("200 OK");
-						  auto fb = ::ec_prv::fbs::UnPackLookupRequest(buf.data());
-						  auto lookup_response = this->svc_.handle_lookup_request(std::move(fb));
-						  res->end(std::string_view{reinterpret_cast<char const*>(lookup_response.data()), lookup_response.size()});
-					  });
-				  }
-			  });
+			  accept_rpc<::ec_prv::fbs::LookupRequest, false>(res, req);
 		  })
 	    .post("/trusted_shortening_request",
 		[this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) {
 			// Authenticated endpoint for trusted clients performing all crypto
-			// server-side, returning a 302 Redirect Authenticated with HTTP Basic
-			// Auth
+			// server-side.
 			res->writeHeader("Access-Control-Allow-Origin", "*");
 			auto authorization = req->getHeader("authorization");
 			auto [user, pass] = parse_http_basic_auth_header(authorization);
-			if (user != "user" && pass != "dummy") {
+			if (user != this->rpc_user_ && pass != this->rpc_pass_) {
 				res->writeStatus("403 Forbidden");
 				res->writeHeader("Content-Type", "text/plain");
 				res->end();
 				return;
 			}
-			std::vector<uint8_t> buf;
-			res->onData([this, res, &buf](std::string_view chunk, bool is_end) -> void {
-				std::copy(chunk.begin(), chunk.end(),
-					  std::back_inserter(buf));
-				if (is_end) {
-					::flatbuffers::Verifier v{buf.data(), buf.size()};
-					if (!::ec_prv::fbs::VerifyTrustedShorteningRequestBuffer(
-						v)) {
-						res->end();
-						return;
-					}
-					::flatbuffers::FlatBufferBuilder fbb;
-					auto fb = ::ec_prv::fbs::UnPackTrustedShorteningRequest(
-					    buf.data());
-					this->svc_.handle_trusted_shortening_request(fbb,
-										     std::move(fb));
-					res->write(std::string_view{reinterpret_cast<char const*>(fbb.GetBufferPointer()), fbb.GetSize()});
-				}
-			});
+			this->accept_rpc<::ec_prv::fbs::TrustedShorteningRequest, false>(res, req);
 		})
 	    .post(
 		"/trusted_lookup_request",
@@ -202,26 +120,7 @@ void Server::run() {
 				res->end();
 				return;
 			}
-			std::vector<uint8_t> buf;
-			res->onData([this, res, &buf](std::string_view chunk, bool is_end) -> void {
-				std::copy(chunk.begin(), chunk.end(),
-					  std::back_inserter(buf));
-				if (is_end) {
-					::flatbuffers::FlatBufferBuilder fbb;
-					::flatbuffers::Verifier v{buf.data(), buf.size()};
-					if (!::ec_prv::fbs::VerifyTrustedLookupRequestBuffer(v)) {
-						res->end();
-						return;
-					}
-					auto fb =
-					    ::ec_prv::fbs::UnPackTrustedLookupRequest(buf.data());
-					this->svc_.handle_trusted_lookup_request(fbb,
-										 std::move(fb));
-					res->write(std::string_view{
-					    reinterpret_cast<char const*>(fbb.GetBufferPointer()),
-					    fbb.GetSize()});
-				}
-			});
+			this->accept_rpc<::ec_prv::fbs::TrustedLookupRequest, false>(res, req);
 		})
 	    .listen(8000,
 		    [](auto* token) {
@@ -232,23 +131,6 @@ void Server::run() {
 	    .run();
 }
 
-// void handle_lookup_request(std::string_view inbuf) {
-// 	// uint8_t const* const buf = reinterpret_cast<uint8_t const*>(inbuf.data());
-// 	// auto const sz = inbuf.size();
-// 	// bool ok = ::ec_prv::VerifyURLRecordBuffer(::flatbuffers::Verifier(buf, sz));
-// 	// if (!ok) {
-// 	// 	// bad input
-// 	// 	return;
-// 	// }
-// 	// auto* ur = ::ec_prv::GetURLRecord(buf);
-// 	// switch (ur->version()) {
-// 	// case 1: {
-// 	// }
-// 	// default:
-// 	// 	// bad input
-// 	// 	return;
-// 	// }
-// }
 
 } // namespace web
 } // namespace ec_prv

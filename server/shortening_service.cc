@@ -28,8 +28,8 @@ ServiceHandle::ServiceHandle(::ec_prv::db::KVStore* store,
 			     std::shared_ptr<xorshift::XORShift> xorshift)
     : store_{store}, rand_source_{xorshift} {}
 
-auto ServiceHandle::handle_shortening_request(
-    std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> req) -> ::flatbuffers::DetachedBuffer {
+auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> req)
+    -> ::flatbuffers::DetachedBuffer {
 	switch (req->version) {
 	case 1: {
 		// validate
@@ -98,7 +98,7 @@ auto ServiceHandle::handle_shortening_request(
 	return fbb.Release();
 }
 
-auto ServiceHandle::handle_lookup_request(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
+auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
     -> ::flatbuffers::DetachedBuffer {
 	switch (req->version) {
 	case 1: {
@@ -139,89 +139,94 @@ auto ServiceHandle::handle_lookup_request(std::unique_ptr<::ec_prv::fbs::LookupR
 	return fbb.Release();
 }
 
-void ServiceHandle::handle_trusted_shortening_request(
-    ::flatbuffers::FlatBufferBuilder& dst,
-    std::unique_ptr<::ec_prv::fbs::TrustedShorteningRequestT> src) {
+auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedShorteningRequestT> req)
+    -> ::flatbuffers::DetachedBuffer {
 	using namespace ::ec_prv::fbs;
 	using namespace ::ec_prv::private_url;
-	switch (src->version) {
+	using ::flatbuffers::FlatBufferBuilder;
+	switch (req->version) {
 	case 1: {
-		auto pu = ::ec_prv::private_url::PrivateURL::generate(src->url);
+		auto pu = ::ec_prv::private_url::PrivateURL::generate(req->url);
 		if (!pu) {
 			break;
 		}
 		auto const& private_url = std::get<::ec_prv::private_url::PrivateURL>(pu.value());
 		// create payload to place into rocksdb
-		::flatbuffers::FlatBufferBuilder private_url_fbb;
+		FlatBufferBuilder private_url_fbb;
 		auto salt = private_url_fbb.CreateVector(private_url.salt());
 		auto iv = private_url_fbb.CreateVector(private_url.iv());
 		auto blinded_url = private_url_fbb.CreateVector(private_url.blinded_url());
 		auto pubuf = CreatePrivateURL(private_url_fbb, 1, 0, salt, iv, blinded_url);
 		private_url_fbb.Finish(pubuf);
 		// generate index for rocksdb
-		::flatbuffers::FlatBufferBuilder url_index_fbb;
-		auto ui = CreateURLIndex(url_index_fbb, 1, 4);
+		FlatBufferBuilder url_index_fbb;
+		auto generated_index = rand_source_->rand();
+		auto ui = CreateURLIndex(url_index_fbb, 1, generated_index);
 		url_index_fbb.Finish(ui);
 		// put into rocksdb
 		store_->put(fbspan(url_index_fbb), fbspan(private_url_fbb));
 		// construct response
 		auto const& pass = std::get<std::string>(pu.value());
-		auto tsrb = TrustedShorteningResponseBuilder(dst);
+		FlatBufferBuilder resp_fbb;
+		auto tsrb = TrustedShorteningResponseBuilder(resp_fbb);
 		tsrb.add_version(1);
-		auto pass_vec =
-		    dst.CreateVector(reinterpret_cast<uint8_t const*>(pass.data()), pass.size());
+		auto pass_vec = resp_fbb.CreateVector(reinterpret_cast<uint8_t const*>(pass.data()),
+						      pass.size());
+		auto resp_lookup_key = CreateURLIndex(resp_fbb, 1, generated_index);
 		tsrb.add_pass(pass_vec);
-		tsrb.add_lookup_key(ui);
+		tsrb.add_lookup_key(resp_lookup_key);
 		auto tsr = tsrb.Finish();
-		dst.Finish(tsr);
-		return;
+		resp_fbb.Finish(tsr);
+		return resp_fbb.Release();
 	}
 	default:
 		break;
 	}
 	// failure case
-	::ec_prv::fbs::TrustedShorteningResponseBuilder tsrb(dst);
+	::flatbuffers::FlatBufferBuilder resp_fbb;
+	::ec_prv::fbs::TrustedShorteningResponseBuilder tsrb(resp_fbb);
 	tsrb.add_version(1);
 	tsrb.add_error(true);
 	auto tsr = tsrb.Finish();
-	dst.Finish(tsr);
+	resp_fbb.Finish(tsr);
+	return resp_fbb.Release();
 }
 
-void ServiceHandle::handle_trusted_lookup_request(
-    ::flatbuffers::FlatBufferBuilder& dst,
-    std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT> src) {
+auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT> req)
+    -> ::flatbuffers::DetachedBuffer {
 	using namespace ::ec_prv::fbs;
 	using ::flatbuffers::FlatBufferBuilder;
 
-	switch (src->version) {
+	switch (req->version) {
 	case 1: {
 		// search for the key in database
 		FlatBufferBuilder url_index_fbb;
-		url_index_fbb.Finish(URLIndex::Pack(url_index_fbb, src->lookup_key.get()));
-		std::span<uint8_t> url_index_bytes(url_index_fbb.GetBufferPointer(),
-						   url_index_fbb.GetSize());
+		url_index_fbb.Finish(URLIndex::Pack(url_index_fbb, req->lookup_key.get()));
 		std::string private_url_raw;
-		store_->get(private_url_raw, url_index_bytes);
+		store_->get(private_url_raw, fbspan(url_index_fbb));
 		FlatBufferBuilder private_url_fbb;
 		auto* pu = GetPrivateURL(private_url_raw.data())->UnPack();
 		// perform decryption
 		private_url::PrivateURL p{std::move(pu->salt), std::move(pu->iv),
 					  std::move(pu->blinded_url)};
-		auto decrypted_url = p.get_plaintext(std::move(src->pass));
+		auto decrypted_url = p.get_plaintext(std::move(req->pass));
 		// build response message
-		auto resp_fb_builder = TrustedLookupResponseBuilder(dst);
+		FlatBufferBuilder resp_fbb;
+		auto resp_fb_builder = TrustedLookupResponseBuilder(resp_fbb);
 		resp_fb_builder.add_version(1);
-		resp_fb_builder.add_url(dst.CreateString(decrypted_url));
+		resp_fb_builder.add_url(resp_fbb.CreateString(decrypted_url));
 		auto resp = resp_fb_builder.Finish();
-		dst.Finish(resp);
-		return;
+		resp_fbb.Finish(resp);
+		return resp_fbb.Release();
 	}
 	default:
 		break;
 	}
 	// 	error case
-	auto tlrb = CreateTrustedLookupResponse(dst, 1, true);
-	dst.Finish(tlrb);
+	FlatBufferBuilder resp_fbb;
+	auto tlrb = CreateTrustedLookupResponse(resp_fbb, 1, true);
+	resp_fbb.Finish(tlrb);
+	return resp_fbb.Release();
 }
 
 auto ServiceHandle::check_expiry(uint64_t input_expiry) -> bool {

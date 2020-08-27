@@ -36,19 +36,15 @@ public:
 			       std::shared_ptr<::ec_prv::xorshift::XORShift> xorshift =
 				   std::make_shared<::ec_prv::xorshift::XORShift>());
 
-	auto handle_shortening_request(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> src)
+	auto handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> req)
 	    -> ::flatbuffers::DetachedBuffer;
 
-	auto handle_lookup_request(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
+	auto handle(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
 	    -> ::flatbuffers::DetachedBuffer;
 
-	void handle_trusted_shortening_request(
-	    ::flatbuffers::FlatBufferBuilder& dst,
-	    std::unique_ptr<::ec_prv::fbs::TrustedShorteningRequestT> src);
+	auto handle(std::unique_ptr<::ec_prv::fbs::TrustedShorteningRequestT> req) -> ::flatbuffers::DetachedBuffer;
 
-	void
-	handle_trusted_lookup_request(::flatbuffers::FlatBufferBuilder& dst,
-				      std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT> src);
+	auto handle(std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT> req) -> ::flatbuffers::DetachedBuffer;
 };
 
 } // namespace shortening_service
