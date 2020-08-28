@@ -1,0 +1,2409 @@
+{
+  "program": {
+    "fileInfos": {
+      "./node_modules/typescript/lib/lib.es5.d.ts": {
+        "version": "c9a1f03d6ba0fe3c871eb0dd81622e78fbb61ade70878b34d48a341a690c59e9",
+        "signature": "c9a1f03d6ba0fe3c871eb0dd81622e78fbb61ade70878b34d48a341a690c59e9",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.d.ts": {
+        "version": "dc47c4fa66b9b9890cf076304de2a9c5201e94b740cffdf09f87296d877d71f6",
+        "signature": "dc47c4fa66b9b9890cf076304de2a9c5201e94b740cffdf09f87296d877d71f6",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/typescript/lib/lib.es2016.d.ts": {
+        "version": "7a387c58583dfca701b6c85e0adaf43fb17d590fb16d5b2dc0a2fbd89f35c467",
+        "signature": "7a387c58583dfca701b6c85e0adaf43fb17d590fb16d5b2dc0a2fbd89f35c467",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/typescript/lib/lib.es2017.d.ts": {
+        "version": "8a12173c586e95f4433e0c6dc446bc88346be73ffe9ca6eec7aa63c8f3dca7f9",
+        "signature": "8a12173c586e95f4433e0c6dc446bc88346be73ffe9ca6eec7aa63c8f3dca7f9",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/typescript/lib/lib.dom.d.ts": {
+        "version": "38130cdd16bd2318b9362f9d60dd9670f7e38708bb6131cf11fc78a41b2c34a0",
+        "signature": "38130cdd16bd2318b9362f9d60dd9670f7e38708bb6131cf11fc78a41b2c34a0",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.dom.iterable.d.ts": {
+        "version": "fb0c09b697dc42afa84d1587e3c994a2f554d2a45635e4f0618768d16a86b69a",
+        "signature": "fb0c09b697dc42afa84d1587e3c994a2f554d2a45635e4f0618768d16a86b69a",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.webworker.importscripts.d.ts": {
+        "version": "7fac8cb5fc820bc2a59ae11ef1c5b38d3832c6d0dfaec5acdb5569137d09a481",
+        "signature": "7fac8cb5fc820bc2a59ae11ef1c5b38d3832c6d0dfaec5acdb5569137d09a481",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.scripthost.d.ts": {
+        "version": "097a57355ded99c68e6df1b738990448e0bf170e606707df5a7c0481ff2427cd",
+        "signature": "097a57355ded99c68e6df1b738990448e0bf170e606707df5a7c0481ff2427cd",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.core.d.ts": {
+        "version": "46ee15e9fefa913333b61eaf6b18885900b139867d89832a515059b62cf16a17",
+        "signature": "46ee15e9fefa913333b61eaf6b18885900b139867d89832a515059b62cf16a17",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.collection.d.ts": {
+        "version": "43fb1d932e4966a39a41b464a12a81899d9ae5f2c829063f5571b6b87e6d2f9c",
+        "signature": "43fb1d932e4966a39a41b464a12a81899d9ae5f2c829063f5571b6b87e6d2f9c",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.generator.d.ts": {
+        "version": "cdccba9a388c2ee3fd6ad4018c640a471a6c060e96f1232062223063b0a5ac6a",
+        "signature": "cdccba9a388c2ee3fd6ad4018c640a471a6c060e96f1232062223063b0a5ac6a",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.iterable.d.ts": {
+        "version": "42f5e41e5893da663dbf0394268f54f1da4b43dc0ddd2ea4bf471fe5361d6faf",
+        "signature": "42f5e41e5893da663dbf0394268f54f1da4b43dc0ddd2ea4bf471fe5361d6faf",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.promise.d.ts": {
+        "version": "0b7a905675e6cb4211c128f0a3aa47d414b275180a299a9aad5d3ec298abbfc4",
+        "signature": "0b7a905675e6cb4211c128f0a3aa47d414b275180a299a9aad5d3ec298abbfc4",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.proxy.d.ts": {
+        "version": "dfff68b3c34338f6b307a25d4566de15eed7973b0dc5d69f9fde2bcac1c25315",
+        "signature": "dfff68b3c34338f6b307a25d4566de15eed7973b0dc5d69f9fde2bcac1c25315",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.reflect.d.ts": {
+        "version": "cb609802a8698aa28b9c56331d4b53f590ca3c1c3a255350304ae3d06017779d",
+        "signature": "cb609802a8698aa28b9c56331d4b53f590ca3c1c3a255350304ae3d06017779d",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.symbol.d.ts": {
+        "version": "3013574108c36fd3aaca79764002b3717da09725a36a6fc02eac386593110f93",
+        "signature": "3013574108c36fd3aaca79764002b3717da09725a36a6fc02eac386593110f93",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts": {
+        "version": "4670208dd7da9d6c774ab1b75c1527a810388c7989c4905de6aaea8561cb9dce",
+        "signature": "4670208dd7da9d6c774ab1b75c1527a810388c7989c4905de6aaea8561cb9dce",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2016.array.include.d.ts": {
+        "version": "3be5a1453daa63e031d266bf342f3943603873d890ab8b9ada95e22389389006",
+        "signature": "3be5a1453daa63e031d266bf342f3943603873d890ab8b9ada95e22389389006",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.object.d.ts": {
+        "version": "17bb1fc99591b00515502d264fa55dc8370c45c5298f4a5c2083557dccba5a2a",
+        "signature": "17bb1fc99591b00515502d264fa55dc8370c45c5298f4a5c2083557dccba5a2a",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts": {
+        "version": "b5e4c2d67aa844ed503b29cd4ca2ede1a229ac7fe874613b2c996fa9c581a25f",
+        "signature": "b5e4c2d67aa844ed503b29cd4ca2ede1a229ac7fe874613b2c996fa9c581a25f",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.string.d.ts": {
+        "version": "6a6b173e739a6a99629a8594bfb294cc7329bfb7b227f12e1f7c11bc163b8577",
+        "signature": "6a6b173e739a6a99629a8594bfb294cc7329bfb7b227f12e1f7c11bc163b8577",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.intl.d.ts": {
+        "version": "12a310447c5d23c7d0d5ca2af606e3bd08afda69100166730ab92c62999ebb9d",
+        "signature": "12a310447c5d23c7d0d5ca2af606e3bd08afda69100166730ab92c62999ebb9d",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.typedarrays.d.ts": {
+        "version": "b0124885ef82641903d232172577f2ceb5d3e60aed4da1153bab4221e1f6dd4e",
+        "signature": "b0124885ef82641903d232172577f2ceb5d3e60aed4da1153bab4221e1f6dd4e",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.full.d.ts": {
+        "version": "d2f31f19e1ba6ed59be9259d660a239d9a3fcbbc8e038c6b2009bde34b175fed",
+        "signature": "d2f31f19e1ba6ed59be9259d660a239d9a3fcbbc8e038c6b2009bde34b175fed",
+        "affectsGlobalScope": false
+      },
+      "./check_webcrypto_support.ts": {
+        "version": "87424975fa8578a4a1b2386510899aec221dbf727d6867ddde76cf356775903c",
+        "signature": "4c54485b9bb291de76832323efe4daa5b86beb90da5192dca61af838f1064452",
+        "affectsGlobalScope": false
+      },
+      "./common.ts": {
+        "version": "eeb48da7931593bdffd876617ea61a561eef4b84c6cc902791720f392b9eb777",
+        "signature": "f2f24d9f002320c92c5c27459a3d1234b710ae89782448b556e08b86b67f3014",
+        "affectsGlobalScope": false
+      },
+      "./index.ts": {
+        "version": "5bac43d7ba2893a199682f87e12266ec4a036f800ea5ab712fa6ceb9e3baf6d6",
+        "signature": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/@types/flatbuffers/index.d.ts": {
+        "version": "eeac4d06039327f81377b1eef141f2717055c7e73e074ab1a1bada6bcca40104",
+        "signature": "eeac4d06039327f81377b1eef141f2717055c7e73e074ab1a1bada6bcca40104",
+        "affectsGlobalScope": true
+      },
+      "./fbs/url_index_generated.ts": {
+        "version": "a0497c84344af15c1c4f51ab8cea2a10fbaa83ab270f3e60f34c92dd64cde860",
+        "signature": "e709f892dac84c3a9d0b8bdc92de536a521a4e9c1feb8ae322e24e53798f5bcb",
+        "affectsGlobalScope": false
+      },
+      "./fbs/lookup_request_generated.ts": {
+        "version": "90839d004d2da79b4979002b22916c6d1eafb5d82d1433d52ed7a4688c143917",
+        "signature": "a24c533a7e8688dce6795b87a3fc52d63d6f57844e421a69721d3b9876980126",
+        "affectsGlobalScope": false
+      },
+      "./fbs/private_url_generated.ts": {
+        "version": "3b9593a9061ff5d46136c52e6b8e8b613b3a3f81f56e3b79249d381c4b4fbacd",
+        "signature": "d389f8883c4b32acf5fce524e07d4a4fe4f3465dc2e464609012853396358133",
+        "affectsGlobalScope": false
+      },
+      "./fbs/lookup_response_generated.ts": {
+        "version": "0f3cee139fd20571a8a390f693feec2203c9ba5a5cf5f5a4bc2a4b13237da87c",
+        "signature": "c7c58e9b4419dc7b8d00c5423ea5f5f0fda62ae58d7d35bb95888e8ce7bb1ff6",
+        "affectsGlobalScope": false
+      },
+      "./fbs/shortening_request_generated.ts": {
+        "version": "e387861054ff920773755ea898283d791a5b55f988d00236992b84ae80025c82",
+        "signature": "8192f99cdd17a898604ec80595dbf31c75ce65935b1684da0286dd0472333043",
+        "affectsGlobalScope": false
+      },
+      "./fbs/shortening_response_generated.ts": {
+        "version": "bab8c91c98ea6010a98c29c4438fa793da97179da359d5cc1b2aba54aaea3310",
+        "signature": "39757f8d334855cd8afe729a34755fcd5e35eb8f159ef796f91376052c65ae70",
+        "affectsGlobalScope": false
+      },
+      "./fbs/trusted_lookup_request_generated.ts": {
+        "version": "9e59e7b69a94a37ce8d27ac36717cf962bff92165b25812768a042eb0e8f57c7",
+        "signature": "aa7911adb4a08f6400fd858503143e47e2ab8b20804187a02b4064a366100bd2",
+        "affectsGlobalScope": false
+      },
+      "./fbs/trusted_lookup_response_generated.ts": {
+        "version": "df72432c1f517f38247fa9c1351917a5b549ef50404607eccbb1205b3c98c7d1",
+        "signature": "17f21960db051dfb176728f9a869d28218356cd74374a81c57c883985d736406",
+        "affectsGlobalScope": false
+      },
+      "./fbs/trusted_shortening_request_generated.ts": {
+        "version": "86640d9fc455e457b7799bb45a1df323dc204158bb2106d2ce3f74b068f452e2",
+        "signature": "c0754d25300f657674a90a0dad48d8573ecea802613f16a921271104267c932c",
+        "affectsGlobalScope": false
+      },
+      "./fbs/trusted_shortening_response_generated.ts": {
+        "version": "d5fe608f94af4f6935dfba5492ec85f4df9ebc93bc0da72bb3271644cd6015c3",
+        "signature": "c999a8d7ea0da010f97447246618d00360625dd9039995ad4af20a3a08f7a260",
+        "affectsGlobalScope": false
+      }
+    },
+    "options": {
+      "incremental": true,
+      "target": 4,
+      "module": 1,
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": false,
+      "configFilePath": "./tsconfig.json"
+    },
+    "referencedMap": {
+      "./fbs/lookup_request_generated.ts": [
+        "./fbs/url_index_generated.ts",
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/lookup_response_generated.ts": [
+        "./fbs/private_url_generated.ts",
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/private_url_generated.ts": [
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/shortening_request_generated.ts": [
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/shortening_response_generated.ts": [
+        "./fbs/url_index_generated.ts",
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/trusted_lookup_request_generated.ts": [
+        "./fbs/url_index_generated.ts",
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/trusted_lookup_response_generated.ts": [
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/trusted_shortening_request_generated.ts": [
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/trusted_shortening_response_generated.ts": [
+        "./fbs/url_index_generated.ts",
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/url_index_generated.ts": [
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ]
+    },
+    "exportedModulesMap": {
+      "./fbs/lookup_request_generated.ts": [
+        "./fbs/url_index_generated.ts",
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/lookup_response_generated.ts": [
+        "./fbs/private_url_generated.ts",
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/private_url_generated.ts": [
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/shortening_request_generated.ts": [
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/shortening_response_generated.ts": [
+        "./fbs/url_index_generated.ts",
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/trusted_lookup_request_generated.ts": [
+        "./fbs/url_index_generated.ts",
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/trusted_lookup_response_generated.ts": [
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/trusted_shortening_request_generated.ts": [
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/trusted_shortening_response_generated.ts": [
+        "./fbs/url_index_generated.ts",
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ],
+      "./fbs/url_index_generated.ts": [
+        "./node_modules/@types/flatbuffers/index.d.ts"
+      ]
+    },
+    "semanticDiagnosticsPerFile": [
+      "./check_webcrypto_support.ts",
+      "./common.ts",
+      [
+        "./fbs/lookup_request_generated.ts",
+        [
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 279,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 446,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 672,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 975,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 1068,
+            "length": 18,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'SIZE_PREFIX_LENGTH' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 1828,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 1978,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 2179,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 2216,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 2400,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 2421,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 2622,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 2650,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 2837,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 2865,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 3676,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 3698,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 3734,
+            "length": 5,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'start' does not exist on type 'typeof LookupRequest'."
+          },
+          {
+            "file": "./fbs/lookup_request_generated.ts",
+            "start": 3960,
+            "length": 3,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'end' does not exist on type 'typeof LookupRequest'."
+          }
+        ]
+      ],
+      [
+        "./fbs/lookup_response_generated.ts",
+        [
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 282,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 450,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 680,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 989,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 1084,
+            "length": 18,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'SIZE_PREFIX_LENGTH' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 2020,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 2170,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 2346,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 2540,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 2572,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 2752,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 2773,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 2975,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 3003,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 3191,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 3219,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 4107,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 4129,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 4166,
+            "length": 5,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'start' does not exist on type 'typeof LookupResponse'."
+          },
+          {
+            "file": "./fbs/lookup_response_generated.ts",
+            "start": 4439,
+            "length": 3,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'end' does not exist on type 'typeof LookupResponse'."
+          }
+        ]
+      ],
+      [
+        "./fbs/private_url_generated.ts",
+        [
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 212,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 376,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 590,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 875,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 962,
+            "length": 18,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'SIZE_PREFIX_LENGTH' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 1301,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 3646,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 3796,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 3983,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 4011,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 4206,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 4238,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 4447,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 4494,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 4775,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 4963,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 4993,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 5198,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 5245,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 5524,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 5728,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 5766,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 5987,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 6034,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 6321,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 6510,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 6531,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 6729,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 6757,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 6941,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 6969,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 7070,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 7114,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 7143,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 7172,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 7209,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 7229,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 8547,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 8566,
+            "length": 10,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'createLong' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 8791,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/private_url_generated.ts",
+            "start": 8813,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          }
+        ]
+      ],
+      [
+        "./fbs/shortening_request_generated.ts",
+        [
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 219,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 390,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 632,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 959,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 1060,
+            "length": 18,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'SIZE_PREFIX_LENGTH' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 1406,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 3758,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 3908,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 4095,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 4123,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 4318,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 4350,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 4559,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 4606,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 4887,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 5075,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 5105,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 5310,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 5357,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 5636,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 5840,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 5878,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 6099,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 6146,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 6433,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 6629,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 6650,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 6855,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 6883,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 7074,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 7102,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 7210,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 7254,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 7283,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 7312,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 7349,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 7369,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 8792,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 8811,
+            "length": 10,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'createLong' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 9036,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_request_generated.ts",
+            "start": 9058,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          }
+        ]
+      ],
+      [
+        "./fbs/shortening_response_generated.ts",
+        [
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 284,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 456,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 702,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 1035,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 1138,
+            "length": 18,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'SIZE_PREFIX_LENGTH' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 2077,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 2227,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 2403,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 2607,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 2644,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 2833,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 2854,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 3060,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 3088,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 3280,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 3308,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 4251,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 4273,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 4314,
+            "length": 5,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'start' does not exist on type 'typeof ShorteningResponse'."
+          },
+          {
+            "file": "./fbs/shortening_response_generated.ts",
+            "start": 4618,
+            "length": 3,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'end' does not exist on type 'typeof ShorteningResponse'."
+          }
+        ]
+      ],
+      [
+        "./fbs/trusted_lookup_request_generated.ts",
+        [
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 286,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 460,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 714,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 1059,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 1166,
+            "length": 18,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'SIZE_PREFIX_LENGTH' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 2636,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 2786,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 2987,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 3024,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 3208,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 3240,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 3449,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 3496,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 3777,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 3976,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 3997,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 4205,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 4233,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 4427,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 4455,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 5518,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 5540,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 5669,
+            "length": 5,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'start' does not exist on type 'typeof TrustedLookupRequest'."
+          },
+          {
+            "file": "./fbs/trusted_lookup_request_generated.ts",
+            "start": 5974,
+            "length": 3,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'end' does not exist on type 'typeof TrustedLookupRequest'."
+          }
+        ]
+      ],
+      [
+        "./fbs/trusted_lookup_response_generated.ts",
+        [
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 223,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 398,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 656,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 1007,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 1116,
+            "length": 18,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'SIZE_PREFIX_LENGTH' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 1720,
+            "length": 8,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Encoding'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 2043,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 2193,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 2369,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 2561,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 2592,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 2778,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 2799,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 3008,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 3036,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 3231,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 3259,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 3371,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 3433,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 3453,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 4477,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_lookup_response_generated.ts",
+            "start": 4499,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          }
+        ]
+      ],
+      [
+        "./fbs/trusted_shortening_request_generated.ts",
+        [
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 226,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 404,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 674,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 1043,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 1158,
+            "length": 18,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'SIZE_PREFIX_LENGTH' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 1596,
+            "length": 8,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Encoding'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 1922,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 2072,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 2261,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 2292,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 2481,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 2502,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 2714,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 2742,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 2940,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 2968,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 3083,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 3130,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 3150,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 4058,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_request_generated.ts",
+            "start": 4080,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          }
+        ]
+      ],
+      [
+        "./fbs/trusted_shortening_response_generated.ts",
+        [
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 291,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 470,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 744,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 1119,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 1236,
+            "length": 18,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'SIZE_PREFIX_LENGTH' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 2886,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 3036,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 3212,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 3406,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 3438,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 3647,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 3694,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 3975,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 4177,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 4214,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 4410,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 4431,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 4644,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 4672,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 4871,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 4899,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 6094,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 6116,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 6255,
+            "length": 5,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'start' does not exist on type 'typeof TrustedShorteningResponse'."
+          },
+          {
+            "file": "./fbs/trusted_shortening_response_generated.ts",
+            "start": 6650,
+            "length": 3,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'end' does not exist on type 'typeof TrustedShorteningResponse'."
+          }
+        ]
+      ],
+      [
+        "./fbs/url_index_generated.ts",
+        [
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 304,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 466,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 672,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 945,
+            "length": 10,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'ByteBuffer'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 1028,
+            "length": 18,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'SIZE_PREFIX_LENGTH' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 1361,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 1598,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 1748,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 1927,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 1951,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 2137,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 2158,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 2354,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 2382,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 2564,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 2592,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 2691,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 2731,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 2749,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 3320,
+            "length": 4,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Long'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 3339,
+            "length": 10,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'createLong' does not exist on type 'typeof import(\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\")'."
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 3464,
+            "length": 7,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Builder'.",
+            "category": 1,
+            "code": 2694
+          },
+          {
+            "file": "./fbs/url_index_generated.ts",
+            "start": 3486,
+            "length": 6,
+            "messageText": "Namespace '\"/home/zds/devel/ec_prv/web_client/node_modules/@types/flatbuffers/index\"' has no exported member 'Offset'.",
+            "category": 1,
+            "code": 2694
+          }
+        ]
+      ],
+      "./index.ts",
+      "./node_modules/@types/flatbuffers/index.d.ts",
+      "./node_modules/typescript/lib/lib.dom.d.ts",
+      "./node_modules/typescript/lib/lib.dom.iterable.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.collection.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.core.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.generator.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.iterable.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.promise.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.proxy.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.reflect.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.symbol.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts",
+      "./node_modules/typescript/lib/lib.es2016.array.include.d.ts",
+      "./node_modules/typescript/lib/lib.es2016.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.full.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.intl.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.object.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.string.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.typedarrays.d.ts",
+      "./node_modules/typescript/lib/lib.es5.d.ts",
+      "./node_modules/typescript/lib/lib.scripthost.d.ts",
+      "./node_modules/typescript/lib/lib.webworker.importscripts.d.ts"
+    ]
+  },
+  "version": "4.0.2"
+}

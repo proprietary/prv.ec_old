@@ -1,0 +1,32 @@
+{
+  "name": "ec_prv_web_client",
+  "version": "0.0.1",
+  "description": "web frontend to prv.ec the privacy url shortener",
+  "main": "index.js",
+  "scripts": {
+    "test": "cat /dev/null"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/proprietary/prv.ec.git"
+  },
+  "keywords": [
+    "privacy",
+    "url",
+    "shortener"
+  ],
+  "author": "Zelly Snyder <zelly@outlook.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/proprietary/prv.ec/issues"
+  },
+  "homepage": "https://github.com/proprietary/prv.ec#readme",
+  "devDependencies": {
+    "@types/flatbuffers": "^1.10.0",
+    "ts-loader": "^8.0.3",
+    "typescript": "^4.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {}
+}

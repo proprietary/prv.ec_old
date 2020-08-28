@@ -1,0 +1,50 @@
+load("@com_github_google_flatbuffers//:build_defs.bzl", "flatbuffer_library_public")
+package(default_visibility = ["//visibility:public"])
+
+FLATC_ARGS = [
+    "--gen-object-api",
+    "--gen-compare",
+    "--no-includes",
+    "--gen-mutable",
+    "--reflect-names",
+]
+
+# Typescript
+
+flatbuffer_library_public(
+    name = "private_url_ts",
+    srcs = ["//idl:private_url.fbs"],
+    outs = ["private_url_generated.ts"],
+    language_flag = "-T",
+    flatc_args = FLATC_ARGS,
+)
+
+flatbuffer_library_public(
+    name = "url_index_ts",
+    srcs = ["//idl:url_index.fbs"],
+    outs = ["url_index_generated.ts"],
+    language_flag = "-T",
+    flatc_args = FLATC_ARGS,
+)
+
+flatbuffer_library_public(
+    name = "shortening_service_ts",
+    srcs = [
+        "//idl:lookup_request.fbs",
+        "//idl:lookup_response.fbs",
+        "//idl:shortening_request.fbs",
+        "//idl:shortening_response.fbs",
+    ],
+    outs = [
+        "lookup_request_generated.ts",
+        "lookup_response_generated.ts",
+        "shortening_request_generated.ts",
+        "shortening_response_generated.ts",
+    ],
+    language_flag = "-T",
+    flatc_args = FLATC_ARGS,
+    includes = [
+        "//idl:private_url.fbs",
+        "//idl:url_index.fbs"
+    ],
+)

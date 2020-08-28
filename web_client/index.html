@@ -1,0 +1,83 @@
+<!doctype html>
+<html itemscope itemtype="https://schmea.org/WebPage" lang="en">
+  <head>
+	<meta charset="utf-8">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<link href="" rel="shortcut icon" type="image/png">
+	<meta content="prv.ec free url shortener service" name="og:title">
+	<meta content="world's first privacy focused URL shortening service" name="og:description">
+	<title>prv.ec — the privacy url shortener</title>
+  </head>
+  <body>
+	<section aria-role="banner">
+	  <header>
+		<h1>the world's first private url shortener</h1>
+		<aside>we don't even know what the url is. <a href="#learn">how it works</a></aside>
+	  </header>
+	</section>
+	<section>
+	  <main>
+		<div>
+		  <input
+			type="text"
+			placeholder="https://www.example.com/articles/2045/11/05/1/?ei=e8tPv8P8wr5TUzUZDIXyujepaicgxUNx&impression=twitter&c=10..."
+			id="url"
+			autocomplete="off"
+			aria-required="true"
+			/>
+		  <button>Shorten URL</button>
+		</div>
+		<div>
+		  <div id="shortened_url_result">
+		  </div>
+		</div>
+	  </main>
+	</section>
+	<section>
+	  <a id="learn">
+		<h2>How it works</h2>
+	  </a>
+	  <article>
+		<p>
+		  prv.ec stores the urls you enter here in encrypted
+		  ciphertext. both encryption and decryption is done right
+		  here, in your browser. even if we wanted to, we could not
+		  tell where your link goes to, or if it's even a url for that
+		  matter. this is in contrast to all other popular url
+		  shortening services which collect all kinds of data about
+		  the visitors to their links. we don't log anything about
+		  users who visit links (you can check&mdash;the server
+		  software
+		  is <a href="https://github.com/proprietary/prv.ec">free and
+		  open source software</a>), not that it matters much since we
+		  have no way of knowing where your links go to.
+		</p>
+		<p>
+		  the shortened url itself contains the password to decrypt
+		  the url, so anyone you share the link with who clicks on it
+		  will be redirected to the intended url. anything in the url
+		  after the "#" character is not visible to our servers and
+		  remains entirely client-side. in your shortened url, some of
+		  the characters after the "#" represent your
+		  password. several techniques are used to keep this password
+		  short while still preserving some level of secrecy. this
+		  includes performing an expensive calculation which may
+		  take <em>several</em> seconds and heat up your phone before
+		  the original url can be successfully decrypted and
+		  redirected for you. try it out!
+		</p>
+	  </article>
+	</section>
+	<footer>
+	  <ul>
+		<li><a target="_blank" href="https://github.com/proprietary/prv.ec">Github</a></li>
+	  </ul>
+	</footer>
+	<noscript>
+	  <big>
+		Sorry, this site only works with JavaScript enabled.
+	  </big>
+	</noscript>
+	<script src="dist/bundle.js"></script>
+  </body>
+</html>
