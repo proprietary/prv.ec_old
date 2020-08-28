@@ -19,7 +19,7 @@ class ServiceHandle {
 private:
 	::ec_prv::db::KVStore* const store_;
 
-	std::shared_ptr<::ec_prv::xorshift::XORShift> rand_source_;
+	std::shared_ptr<::ec_prv::xorshift::XORShiftU32> rand_source_;
 
 	///
 	/// Maximum time allowed to retain links.
@@ -33,8 +33,8 @@ private:
 
 public:
 	explicit ServiceHandle(::ec_prv::db::KVStore* store,
-			       std::shared_ptr<::ec_prv::xorshift::XORShift> xorshift =
-				   std::make_shared<::ec_prv::xorshift::XORShift>());
+			       std::shared_ptr<::ec_prv::xorshift::XORShiftU32> xorshift =
+				   std::make_shared<::ec_prv::xorshift::XORShiftU32>());
 
 	auto handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> req)
 	    -> ::flatbuffers::DetachedBuffer;

@@ -52,11 +52,11 @@ version():number {
 };
 
 /**
- * @returns flatbuffers.Long
+ * @returns number
  */
-id():flatbuffers.Long {
+id():number {
   var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readUint64(this.bb_pos + offset) : this.bb!.createLong(0, 0);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -76,10 +76,10 @@ static addVersion(builder:flatbuffers.Builder, version:number) {
 
 /**
  * @param flatbuffers.Builder builder
- * @param flatbuffers.Long id
+ * @param number id
  */
-static addId(builder:flatbuffers.Builder, id:flatbuffers.Long) {
-  builder.addFieldInt64(1, id, builder.createLong(0, 0));
+static addId(builder:flatbuffers.Builder, id:number) {
+  builder.addFieldInt32(1, id, 0);
 };
 
 /**
@@ -107,7 +107,7 @@ static finishSizePrefixedURLIndexBuffer(builder:flatbuffers.Builder, offset:flat
   builder.finish(offset, undefined, true);
 };
 
-static createURLIndex(builder:flatbuffers.Builder, version:number, id:flatbuffers.Long):flatbuffers.Offset {
+static createURLIndex(builder:flatbuffers.Builder, version:number, id:number):flatbuffers.Offset {
   URLIndex.startURLIndex(builder);
   URLIndex.addVersion(builder, version);
   URLIndex.addId(builder, id);
@@ -137,11 +137,11 @@ export class URLIndexT {
 /**
  * @constructor
  * @param number version
- * @param flatbuffers.Long id
+ * @param number id
  */
 constructor(
   public version: number = 1,
-  public id: flatbuffers.Long = flatbuffers.createLong(0, 0)
+  public id: number = 0
 ){};
 
 /**

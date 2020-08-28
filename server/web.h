@@ -37,6 +37,7 @@ private:
 						res->end();
 						return;
 					}
+					res->writeHeader("Content-Type", "application/octet-stream");
 					res->writeStatus("200 OK");
 					std::unique_ptr<typename RequestMessageT::NativeTableType>
 					    fb{root->UnPack(nullptr)};

@@ -18,23 +18,23 @@
 // generated headers of corresponding to the *.fbs files that were
 // included in the .fbs schema
 //
-//	._________________.    	  .____________________.
-// 	|				  |		  |		   	   		   |
-//  | private_url.fbs |	   	  |	  url_index.fbs	   |
-//	|				  |		  |		   	   	   	   |
-//	._________________.	   	  .____________________.
-//				^  					   ^
-//				|	   	   	   	   	   |
-//				|  	   	   	   	   	   |
-// 	   	   	┌──────────────────────────────┐
-// 	   	   	│   	   	   	   	   	   	   |
-//		  	│  shortening service  	   	   |
-//		   	│  ├── lookup_request.fbs      |
-// 	   	   	│  ├── lookup_response.fbs     |
-//	   	   	│  ├── shortening_request.fbs  |
-// 	   	   	│  ├── shortening_response.fbs |
-// 	   	   	│  │   ...   	   	   	   	   |
-// 	   	   	└──────────────────────────────┘
+//  ._________________.
+//  |                 |
+//  | private_url.fbs |       .__________________.
+//  |                 |       |  url_index.fbs   |
+//  ._________________.       .__________________.
+//              ^                    ^
+//              |                    |
+//              |                    |
+//          ┌──────────────────────────────┐
+//          │                              |
+//          │  shortening service          |
+//          │  ├── lookup_request.fbs      |
+//          │  ├── lookup_response.fbs     |
+//          │  ├── shortening_request.fbs  |
+//          │  ├── shortening_response.fbs |
+//          │  │   ...                     |
+//          └──────────────────────────────┘
 //
 //
 //

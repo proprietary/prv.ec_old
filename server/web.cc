@@ -79,6 +79,13 @@ auto parse_shorturl(std::string_view url) -> std::string_view {
 	return std::string_view(shorturl_start, shorturl_end);
 }
 
+auto pack_bytes_u32le(std::span<uint8_t> bytes) -> uint32_t {
+	if (bytes.size() < 4) {
+		return 0;
+	}
+	return (bytes[0] & 0xff) | (bytes[1] << 0x8) | (bytes[2] << 0x10) | (bytes[3] << 0x18);
+}
+
 } // namespace
 
 namespace ec_prv {
@@ -156,7 +163,7 @@ void Server::run() {
 			auto url = req->getUrl();
 			auto identifier = parse_shorturl(url);
 			auto identifier_as_bytes = b64::dec(identifier);
-			if (identifier_as_bytes.size() > (1 << 10)) {
+			if (identifier_as_bytes.size() > 4) {
 				res->cork([res]() -> void {
 					res->writeStatus("302 Found");
 					res->writeHeader("location", "https://prv.ec");
@@ -164,20 +171,25 @@ void Server::run() {
 				});
 				return;
 			}
-			::flatbuffers::Verifier v{identifier_as_bytes.data(), identifier_as_bytes.size()};
-			if (!v.VerifyBuffer<::ec_prv::fbs::LookupRequest>(nullptr)) {
+			uint32_t identifier_parsed = pack_bytes_u32le(identifier_as_bytes);
+			if (identifier_parsed == 0) {
 				res->cork([res]() -> void {
-				res->writeStatus("302 Found");
-				res->writeHeader("location", "https://prv.ec");
-				res->end();
+					res->writeStatus("302 Found");
+					res->writeHeader("location", "https://prv.ec");
+					res->end();
 				});
 				return;
 			}
+			::flatbuffers::FlatBufferBuilder ui_fbb;
+			auto uioffset = ::ec_prv::fbs::CreateURLIndex(ui_fbb, 1, identifier_parsed);
+			ui_fbb.Finish(uioffset);
 			// lookup in rocksdb
 			std::string o;
-			this->store_.get(o, identifier_as_bytes);
+			this->store_.get(o, std::span<uint8_t>{ui_fbb.GetBufferPointer(), ui_fbb.GetSize()});
 			if (o.length() == 0) {
 				res->cork([res]() -> void {
+					res->writeStatus("302 Found");
+					res->writeHeader("location", "https://prv.ec");
 					res->end();
 				});
 				return;

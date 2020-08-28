@@ -132,3 +132,13 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
 )
+
+cc_test(
+    name = "xorshift_test",
+    srcs = ["xorshift.test.cc"],
+    deps = [
+        ":xorshift",
+        "@com_github_google_googletest//:gtest",
+    ],
+    visibility = ["//visibility:public"],
+)

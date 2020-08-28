@@ -22,26 +22,18 @@ std::span<uint8_t> fbspan(::flatbuffers::FlatBufferBuilder& fbb) {
 ///
 /// Generate new URL indices we find one not yet taken.
 ///
-auto find_new_url_index_v1(::ec_prv::xorshift::XORShift& rand_source,
+auto find_new_url_index_v1(::ec_prv::xorshift::XORShiftU32& rand_source,
 			   ::ec_prv::db::KVStore& kvstore) -> ::flatbuffers::DetachedBuffer {
 	// find new index not taken
-	std::string buf;
-	::flatbuffers::FlatBufferBuilder url_index_fbb;
-	while (true) {
-		::ec_prv::fbs::URLIndexBuilder url_index_builder(url_index_fbb);
-		url_index_builder.add_version(1);
-		auto rand_index = rand_source.rand();
-		url_index_builder.add_id(rand_index);
-		auto url_index = url_index_builder.Finish();
-		::ec_prv::fbs::FinishURLIndexBuffer(url_index_fbb, url_index);
-		auto url_index_bytes = fbspan(url_index_fbb);
-		kvstore.get(buf, url_index_bytes);
-		// generated an random index that doesn't exist already--good!
-		if (buf.length() == 0) {
+	auto available_key = kvstore.find_new_key([&rand_source]() -> ::flatbuffers::DetachedBuffer {
+			::flatbuffers::FlatBufferBuilder url_index_fbb;
+			::ec_prv::fbs::URLIndexBuilder uib{url_index_fbb};
+			uib.add_version(1);
+			uib.add_id(rand_source.rand());
+			url_index_fbb.Finish(uib.Finish());
 			return url_index_fbb.Release();
-		}
-		url_index_fbb.Clear();
-	}
+		});
+	return available_key;
 }
 
 } // namespace
@@ -50,7 +42,7 @@ namespace ec_prv {
 namespace shortening_service {
 
 ServiceHandle::ServiceHandle(::ec_prv::db::KVStore* store,
-			     std::shared_ptr<xorshift::XORShift> xorshift)
+			     std::shared_ptr<xorshift::XORShiftU32> xorshift)
     : store_{store}, rand_source_{xorshift} {}
 
 auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> req)
@@ -97,11 +89,13 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> re
 		auto ok = store_->put(url_index_bytes, fbspan(private_url_fbb));
 		assert(ok == true); // TODO: handle error better
 		::flatbuffers::FlatBufferBuilder resp_fbb;
+		auto uiv = resp_fbb.CreateVector<uint8_t>(
+		    url_index.data(),
+		    url_index.size());
 		::ec_prv::fbs::ShorteningResponseBuilder srb{resp_fbb};
 		srb.add_version(1);
 		srb.add_error(!ok);
-		srb.add_lookup_key(
-		    resp_fbb.CreateVector<uint8_t>(url_index.data(), url_index.size()));
+		srb.add_lookup_key(uiv);
 		resp_fbb.Finish(srb.Finish());
 		return resp_fbb.Release();
 	}
@@ -195,14 +189,14 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedShorteningReque
 		// construct response
 		auto const& pass = std::get<std::string>(pu.value());
 		FlatBufferBuilder resp_fbb;
+		auto uiv = resp_fbb.CreateVector(url_index_bytes.data(), url_index_bytes.size());
 		TrustedShorteningResponseBuilder tsrb{resp_fbb};
 		tsrb.add_version(1);
 		tsrb.add_error(false);
 		auto pass_vec = resp_fbb.CreateVector(reinterpret_cast<uint8_t const*>(pass.data()),
 						      pass.size());
 		tsrb.add_pass(pass_vec);
-		tsrb.add_lookup_key(
-		    resp_fbb.CreateVector<uint8_t>(url_index.data(), url_index.size()));
+		tsrb.add_lookup_key(uiv);
 		resp_fbb.Finish(tsrb.Finish());
 		return resp_fbb.Release();
 	}
@@ -237,7 +231,7 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT>
 		}
 		auto* pu = GetPrivateURL(private_url_raw.data())->UnPack();
 		// TODO(zds): factor out crypto params
-		if (pu->pbkdf2_iters != 2'000'000) {
+		if (pu->pbkdf2_iters < 2'000'000) {
 			break;
 		}
 		// perform decryption
@@ -246,10 +240,11 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT>
 		auto decrypted_url = p.get_plaintext(std::move(req->pass));
 		// build response message
 		FlatBufferBuilder resp_fbb;
+		auto dus = resp_fbb.CreateString(decrypted_url);
 		auto resp_fb_builder = TrustedLookupResponseBuilder(resp_fbb);
 		resp_fb_builder.add_version(1);
 		resp_fb_builder.add_error(false);
-		resp_fb_builder.add_url(resp_fbb.CreateString(decrypted_url));
+		resp_fb_builder.add_url(dus);
 		auto resp = resp_fb_builder.Finish();
 		resp_fbb.Finish(resp);
 		return resp_fbb.Release();

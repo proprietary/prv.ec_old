@@ -56,18 +56,30 @@ export class ShortenerClient {
 }
 
 export class LookupClient {
-	private identifier_: Uint8Array;
+	private identifier_: Uint8Array; // 32-bit little-endian unsigned integer
 	private pass_: Uint8Array;
 
-	public constructor(identifier: Uint8Array, pass: string) {
-		this.identifier_ = identifier;
+	public constructor(identifier: string, pass: string) {
+		// decode identifier string to bytes
+		this.identifier_ = toByteArray(identifier);
+		if (this.identifier_.length != 4) {
+			throw new Error();
+		}
 		this.pass_ = toByteArray(pass);
 	}
 
+	private buildUrlIndex() {
+		// little-endian byte array to u32
+		let n: number = 0;
+		n = this.identifier_[0] | (this.identifier_[1] << 8) | (this.identifier_[2] << 16) | (this.identifier_[3] << 24);
+		const fbb = new flatbuffers.Builder();
+		const ui = url_index.ec_prv.fbs.URLIndex.createURLIndex(fbb, 1, n);
+		fbb.finish(ui);
+		return url_index.ec_prv.fbs.URLIndex.getRootAsURLIndex(fbb.dataBuffer()).unpack();
+	}
+
 	public async lookup(): Promise<string> {
-		const ui = url_index.ec_prv.fbs.URLIndex.getRootAsURLIndex(
-			new flatbuffers.ByteBuffer(this.identifier_),
-		).unpack();
+		const ui = this.buildUrlIndex();
 		let r = await lookupRequestV1(ui);
 		if (r == null) {
 			return '';
