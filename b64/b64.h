@@ -3,6 +3,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <span>
 
 namespace ec_prv {
 namespace b64 {
@@ -21,6 +22,11 @@ auto dec_nonurlsafe(std::string_view) -> std::vector<uint8_t>;
 /// Encode raw bytes to a base64-encoded string.
 ///
 auto enc(std::vector<uint8_t>&) -> std::string;
+
+///
+/// Encode raw bytes to a base64-encoded string.
+///
+auto enc(std::span<uint8_t>) -> std::string;
 
 ///
 /// Decode a base64-encoded string to bytes.

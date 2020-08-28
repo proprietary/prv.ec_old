@@ -1,6 +1,5 @@
-#include "server/web.h"
-#include "b64/b64.h"
-#include "idl/all_generated_flatbuffers.h"
+#include "web.h"
+#include "b64.h"
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -17,6 +16,9 @@
 using namespace std::literals;
 
 namespace {
+
+static const char BASE_64_CHARS[] =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
 
 auto parse_auth_header(std::string_view authorization_header,
 		       std::string_view strip_prefix = "Basic "sv) -> std::string {
@@ -47,6 +49,34 @@ auto parse_http_basic_auth_header(std::string_view authorization_header)
 	}
 	auto pass = token.substr(idx + 1);
 	return std::make_pair(user, pass);
+}
+
+auto parse_shorturl(std::string_view url) -> std::string_view {
+	auto it = url.begin();
+	if (*(it++) != '/') {
+		// unexpected
+		assert(false);
+		return {};
+	}
+	auto shorturl_start = it;
+	while (it != url.end()) {
+		// validate that all characters exist in base64 alphabet
+		auto i = sizeof(BASE_64_CHARS);
+		while (i > 0) {
+			if (BASE_64_CHARS[i] == *it) {
+				break;
+			}
+			i--;
+		}
+		if (i == 0) {
+			// fail
+			// character not found in base64 alphabet
+			return {};
+		}
+		it++;
+	}
+	auto shorturl_end = it;
+	return std::string_view(shorturl_start, shorturl_end);
 }
 
 } // namespace
@@ -121,6 +151,53 @@ void Server::run() {
 				return;
 			}
 			this->accept_rpc<::ec_prv::fbs::TrustedLookupRequest, false>(res, req);
+		})
+		.get("/*", [this](auto* res, auto* req) -> void {
+			auto url = req->getUrl();
+			auto identifier = parse_shorturl(url);
+			auto identifier_as_bytes = b64::dec(identifier);
+			if (identifier_as_bytes.size() > (1 << 10)) {
+				res->cork([res]() -> void {
+					res->writeStatus("302 Found");
+					res->writeHeader("location", "https://prv.ec");
+					res->end();
+				});
+				return;
+			}
+			::flatbuffers::Verifier v{identifier_as_bytes.data(), identifier_as_bytes.size()};
+			if (!v.VerifyBuffer<::ec_prv::fbs::LookupRequest>(nullptr)) {
+				res->cork([res]() -> void {
+				res->writeStatus("302 Found");
+				res->writeHeader("location", "https://prv.ec");
+				res->end();
+				});
+				return;
+			}
+			// lookup in rocksdb
+			std::string o;
+			this->store_.get(o, identifier_as_bytes);
+			if (o.length() == 0) {
+				res->cork([res]() -> void {
+					res->end();
+				});
+				return;
+			}
+			::flatbuffers::FlatBufferBuilder resp_fbb;
+			::ec_prv::fbs::LookupResponseBuilder lrb{resp_fbb};
+			lrb.add_version(1);
+			lrb.add_error(false);
+			lrb.add_data(resp_fbb.CreateVector(reinterpret_cast<uint8_t const*>(o.data()), o.size()));
+			resp_fbb.Finish(lrb.Finish());
+			auto const encoded = ::ec_prv::b64::enc(std::span{reinterpret_cast<uint8_t*>(o.data()), o.size()});
+			res->cork([res, &encoded]() -> void {
+				res->writeStatus("200 OK");
+				res->writeHeader("content-type", "text/html");
+				res->write(R"(<!doctype html><html><body><script>var a=")");
+				res->write(encoded);
+				// TODO(zds): write template abstraction
+				res->write(R"("; window.addEventListener('DOMContentLoaded', function() { window.location.replace(decryptLookupResponse(a)); });</script></body></html>)");
+				res->end();
+			});
 		})
 	    .listen(8000,
 		    [](auto* token) {

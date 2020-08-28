@@ -26,6 +26,7 @@ flatbuffer_cc_library(
 
 flatbuffer_cc_library(
     name = "shortening_service",
+    srcs_filegroup_name = "shortening_service_includes",
     srcs = [
         "lookup_request.fbs",
         "lookup_response.fbs",
@@ -41,6 +42,7 @@ flatbuffer_cc_library(
 
 flatbuffer_cc_library(
     name = "trusted_shortening_service",
+    srcs_filegroup_name = "trusted_shortening_service_includes",
     srcs = [
         "trusted_lookup_request.fbs",
         "trusted_lookup_response.fbs",

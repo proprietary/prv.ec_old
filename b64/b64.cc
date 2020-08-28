@@ -77,6 +77,10 @@ auto dec_nonurlsafe(std::string_view s) -> std::vector<uint8_t> {
 }
 
 auto enc(std::vector<uint8_t>& inbuf) -> std::string {
+	return enc(std::span<uint8_t>{inbuf});
+}
+
+auto enc(std::span<uint8_t> inbuf) -> std::string {
 	int32_t i = 0;
 	int32_t len = inbuf.size();
 	std::string out(encode_len(inbuf.size()), '\0');

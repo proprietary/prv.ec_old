@@ -4,7 +4,7 @@ namespace ec_prv.fbs;
 
 table LookupRequest {
 	version:uint8 = 1;
-	lookup_key:URLIndex;
+	lookup_key:[ubyte] (nested_flatbuffer: "URLIndex");
 }
 
 root_type LookupRequest;

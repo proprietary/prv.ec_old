@@ -6,7 +6,7 @@ table TrustedShorteningResponse {
 	version:uint8 = 1;
 	error:bool = false;
 	pass:[ubyte];
-	lookup_key:URLIndex;
+	lookup_key:[ubyte] (nested_flatbuffer: "URLIndex");
 }
 
 root_type TrustedShorteningResponse;

@@ -1,7 +1,8 @@
 #ifndef _INCLUDE_EC_PRV_SERVER_WEB_H
 #define _INCLUDE_EC_PRV_SERVER_WEB_H
 #include "server/db.h"
-#include "server/shortening_service.h"
+#include "idl/all_generated_flatbuffers.h"
+#include "shortening_service.h"
 #include <cstdint>
 #include <flatbuffers/flatbuffers.h>
 #include <string>

@@ -262,8 +262,7 @@ filegroup(
 cc_library(
     name = "rocksdb",
     srcs = [":sources"] + glob(["**/*.h"]),
-    hdrs = glob(["include/rocksdb/*.h"]),
-    strip_include_prefix = "include",
+    hdrs = glob(["include/rocksdb/**/*.h"]),
     copts = [
         "-std=c++11",
         "-fno-builtin-memcmp",
@@ -271,7 +270,7 @@ cc_library(
         "-mpclmul",
         "-msse4.2",
     ],
-    defines = [
+    local_defines = [
         "HAVE_PCLMUL",
         "HAVE_SSE42",
         "ROCKSDB_BACKTRACE",
@@ -296,7 +295,6 @@ cc_library(
         ],
     }),
     includes = [
-        ".",
         "include",
     ],
     visibility = ["//visibility:public"],
