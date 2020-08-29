@@ -1,3 +1,5 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
 cc_library(
     name = "b58",
     srcs = ["b58.h", "b58.cc"],
@@ -24,4 +26,19 @@ cc_test(
         ":b58",
         "@com_github_google_googletest//:gtest",
     ],
+)
+
+cc_binary(
+    name = "b58_cli",
+    srcs = ["b58_cli.cc"],
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-pedantic",
+        "-std=c++20",
+    ],
+    deps = [
+        ":b58",
+    ],
+    visibility = ["//visibility:public"],
 )

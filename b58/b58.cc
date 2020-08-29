@@ -1,6 +1,5 @@
 #include <cassert>
 #include <cstring>
-#include <iostream>
 #include <span>
 #include <string>
 #include <string_view>
