@@ -142,3 +142,33 @@ cc_test(
     ],
     visibility = ["//visibility:public"],
 )
+
+cc_library(
+    name = "url_index",
+    srcs = ["url_index.h", "url_index.cc"],
+    hdrs = ["url_index.h"],
+    deps = [":xorshift"],
+    copts = [
+        "-std=c++20",
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "url_index_test",
+    srcs = ["url_index.test.cc"],
+    deps = [
+        ":url_index",
+        "@com_github_google_googletest//:gtest",
+    ],
+    copts = [
+        "-std=c++20",
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+    ],
+    visibility = ["//visibility:public"],
+)
