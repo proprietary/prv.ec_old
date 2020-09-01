@@ -80,5 +80,21 @@ void KVStore::get(std::string& dst, std::span<uint8_t> const key) {
 	}
 }
 
+auto KVStore::put(url_index::URLIndex key, std::span<uint8_t> value) -> bool {
+	auto b = key.as_bytes();
+	rocksdb::Slice k {reinterpret_cast<char*>(b.data()), b.size()};
+	rocksdb::Slice v {reinterpret_cast<char*>(value.data()), value.size()};
+	auto s = db_->Put(rocksdb::WriteOptions(), k, v);
+	return s.ok();
+}
+
+
+auto KVStore::get(rocksdb::PinnableSlice& dst, url_index::URLIndex key) -> bool {
+	auto b = key.as_bytes();
+	rocksdb::Slice k {reinterpret_cast<char*>(b.data()), b.size()};
+	auto s = db_->Get(rocksdb::ReadOptions(), nullptr, k, &dst);
+	return s.ok();
+}
+
 } // namespace db
 } // namespace ec_prv

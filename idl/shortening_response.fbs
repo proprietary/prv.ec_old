@@ -1,11 +1,9 @@
-include "url_index.fbs";
-
 namespace ec_prv.fbs;
 
 table ShorteningResponse {
 	version:uint8 = 1;
 	error:bool = false;
-	lookup_key:[ubyte] (nested_flatbuffer: "URLIndex");
+	lookup_key:uint32;
 }
 
 root_type ShorteningResponse;

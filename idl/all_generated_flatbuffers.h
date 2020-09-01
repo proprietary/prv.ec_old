@@ -1,7 +1,6 @@
 // ORDER MATTERS
 //
 // clang-format off
-#include "idl/url_index_generated.h"
 #include "idl/private_url_generated.h"
 #include "idl/shortening_request_generated.h"
 #include "idl/shortening_response_generated.h"
@@ -20,12 +19,12 @@
 //
 //  ._________________.
 //  |                 |
-//  | private_url.fbs |       .__________________.
-//  |                 |       |  url_index.fbs   |
-//  ._________________.       .__________________.
-//              ^                    ^
-//              |                    |
-//              |                    |
+//  | private_url.fbs |
+//  |                 |
+//  ._________________.
+//              ^
+//              |
+//              |
 //          ┌──────────────────────────────┐
 //          │                              |
 //          │  shortening service          |

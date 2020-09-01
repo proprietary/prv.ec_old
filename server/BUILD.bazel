@@ -59,8 +59,8 @@ cc_library(
     deps = [
         ":db",
         ":private_url",
+        ":url_index",
         "//idl:all_generated_flatbuffers",
-        ":xorshift",
         "@com_github_google_flatbuffers//:flatbuffers",
     ],
 )
@@ -79,6 +79,7 @@ cc_library(
         "-pedantic",
     ],
     deps = [
+        ":url_index",
         "@com_github_facebook_rocksdb//:rocksdb",
     ],
 )

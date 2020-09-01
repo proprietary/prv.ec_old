@@ -3,7 +3,7 @@
 #include "idl/all_generated_flatbuffers.h"
 #include "server/db.h"
 #include "server/private_url.h"
-#include "server/xorshift.h"
+#include "server/url_index.h"
 #include <algorithm>
 #include <chrono>
 #include <cstdint>
@@ -22,18 +22,21 @@ std::span<uint8_t> fbspan(::flatbuffers::FlatBufferBuilder& fbb) {
 ///
 /// Generate new URL indices we find one not yet taken.
 ///
-auto find_new_url_index_v1(::ec_prv::xorshift::XORShiftU32& rand_source,
-			   ::ec_prv::db::KVStore& kvstore) -> ::flatbuffers::DetachedBuffer {
-	// find new index not taken
-	auto available_key = kvstore.find_new_key([&rand_source]() -> ::flatbuffers::DetachedBuffer {
-			::flatbuffers::FlatBufferBuilder url_index_fbb;
-			::ec_prv::fbs::URLIndexBuilder uib{url_index_fbb};
-			uib.add_version(1);
-			uib.add_id(rand_source.rand());
-			url_index_fbb.Finish(uib.Finish());
-			return url_index_fbb.Release();
-		});
-	return available_key;
+auto find_new_url_index_v1(::ec_prv::db::KVStore& kvstore) -> ec_prv::url_index::URLIndex {
+	auto k = ec_prv::url_index::URLIndex::random();
+	rocksdb::PinnableSlice v;
+	while (true) {
+		auto ok = kvstore.get(v, k);
+		if (!ok) {
+			throw ec_prv::db::RocksDBError { "RocksDB error" };
+		}
+		if (v.empty()) {
+			break;
+		}
+		v.Reset();
+		k = ec_prv::url_index::URLIndex::random();
+	}
+	return k;
 }
 
 } // namespace
@@ -41,9 +44,7 @@ auto find_new_url_index_v1(::ec_prv::xorshift::XORShiftU32& rand_source,
 namespace ec_prv {
 namespace shortening_service {
 
-ServiceHandle::ServiceHandle(::ec_prv::db::KVStore* store,
-			     std::shared_ptr<xorshift::XORShiftU32> xorshift)
-    : store_{store}, rand_source_{xorshift} {}
+ServiceHandle::ServiceHandle(::ec_prv::db::KVStore* store) : store_{store} {}
 
 auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> req)
     -> ::flatbuffers::DetachedBuffer {
@@ -84,18 +85,14 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> re
 		}
 
 		// Create unique identifier
-		auto url_index = find_new_url_index_v1(*rand_source_, *store_);
-		std::span<uint8_t> url_index_bytes{url_index.data(), url_index.size()};
-		auto ok = store_->put(url_index_bytes, fbspan(private_url_fbb));
+		auto url_index = find_new_url_index_v1(*store_);
+		auto ok = store_->put(url_index, fbspan(private_url_fbb));
 		assert(ok == true); // TODO: handle error better
 		::flatbuffers::FlatBufferBuilder resp_fbb;
-		auto uiv = resp_fbb.CreateVector<uint8_t>(
-		    url_index.data(),
-		    url_index.size());
 		::ec_prv::fbs::ShorteningResponseBuilder srb{resp_fbb};
 		srb.add_version(1);
 		srb.add_error(!ok);
-		srb.add_lookup_key(uiv);
+		srb.add_lookup_key(url_index.as_integer());
 		resp_fbb.Finish(srb.Finish());
 		return resp_fbb.Release();
 	}
@@ -116,34 +113,24 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
     -> ::flatbuffers::DetachedBuffer {
 	switch (req->version) {
 	case 1: {
-		::flatbuffers::Verifier v{req->lookup_key.data(), req->lookup_key.size()};
-		if (!v.VerifyBuffer<::ec_prv::fbs::URLIndex>()) {
+		auto lookup_key = url_index::URLIndex::from_integer(req->lookup_key);
+		if (lookup_key.access_type() != url_index::URLIndexAccess::PUBLIC) {
 			break;
 		}
-		auto const* url_index =
-		    ::flatbuffers::GetRoot<::ec_prv::fbs::URLIndex>(req->lookup_key.data());
-		if (url_index == nullptr) {
-			break;
-		}
-		if (url_index->version() != 1) {
-			break;
-		}
-		if (url_index->id() <= 0) {
-			break;
-		}
-		std::string rocksdb_result_buf;
-		store_->get(rocksdb_result_buf, std::span<uint8_t>{req->lookup_key});
-		if (rocksdb_result_buf.length() == 0) {
+		rocksdb::PinnableSlice rocksdb_result_buf;
+		store_->get(rocksdb_result_buf, lookup_key);
+		if (rocksdb_result_buf.empty()) {
 			break;
 		}
 		// Construct success response
 		::flatbuffers::FlatBufferBuilder fbb;
+		auto puv =
+		    fbb.CreateVector(reinterpret_cast<uint8_t const*>(rocksdb_result_buf.data()),
+				     rocksdb_result_buf.size());
 		::ec_prv::fbs::LookupResponseBuilder lrb{fbb};
 		lrb.add_version(1);
 		lrb.add_error(false);
-		lrb.add_data(
-		    fbb.CreateVector(reinterpret_cast<uint8_t const*>(rocksdb_result_buf.data()),
-				     rocksdb_result_buf.size()));
+		lrb.add_data(puv);
 		fbb.Finish(lrb.Finish());
 		return fbb.Release();
 	}
@@ -182,21 +169,19 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedShorteningReque
 		pub.add_pbkdf2_iters(2'000'000); // TODO(zds): factor out crypto params
 		private_url_fbb.Finish(pub.Finish());
 		// generate new key for rocksdb
-		auto url_index = find_new_url_index_v1(*rand_source_, *store_);
-		std::span<uint8_t> url_index_bytes{url_index.data(), url_index.size()};
+		auto url_index = find_new_url_index_v1(*store_);
 		// put into rocksdb
-		store_->put(url_index_bytes, fbspan(private_url_fbb));
+		store_->put(url_index, fbspan(private_url_fbb));
 		// construct response
 		auto const& pass = std::get<std::string>(pu.value());
 		FlatBufferBuilder resp_fbb;
-		auto uiv = resp_fbb.CreateVector(url_index_bytes.data(), url_index_bytes.size());
+		auto pass_vec = resp_fbb.CreateVector(reinterpret_cast<uint8_t const*>(pass.data()),
+						      pass.size());
 		TrustedShorteningResponseBuilder tsrb{resp_fbb};
 		tsrb.add_version(1);
 		tsrb.add_error(false);
-		auto pass_vec = resp_fbb.CreateVector(reinterpret_cast<uint8_t const*>(pass.data()),
-						      pass.size());
 		tsrb.add_pass(pass_vec);
-		tsrb.add_lookup_key(uiv);
+		tsrb.add_lookup_key(url_index.as_integer());
 		resp_fbb.Finish(tsrb.Finish());
 		return resp_fbb.Release();
 	}
@@ -220,16 +205,16 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT>
 	switch (req->version) {
 	case 1: {
 		// search for the key in database
-		::flatbuffers::Verifier v{req->lookup_key.data(), req->lookup_key.size()};
-		if (!v.VerifyBuffer<URLIndex>()) {
-			break;
-		}
-		std::string private_url_raw;
-		store_->get(private_url_raw, std::span<uint8_t>{req->lookup_key});
-		if (private_url_raw.length() == 0) {
+		auto url_index = url_index::URLIndex::from_integer(req->lookup_key);
+		rocksdb::PinnableSlice private_url_raw;
+		store_->get(private_url_raw, url_index);
+		if (private_url_raw.empty()) {
 			break;
 		}
 		auto* pu = GetPrivateURL(private_url_raw.data())->UnPack();
+		if (pu->version != 1) {
+			break;
+		}
 		// TODO(zds): factor out crypto params
 		if (pu->pbkdf2_iters < 2'000'000) {
 			break;

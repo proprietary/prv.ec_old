@@ -18,13 +18,6 @@ flatbuffer_cc_library(
 )
 
 flatbuffer_cc_library(
-    name = "url_index",
-    srcs = ["url_index.fbs"],
-    srcs_filegroup_name = "url_index_includes",
-    flatc_args = FLATC_ARGS,
-)
-
-flatbuffer_cc_library(
     name = "shortening_service",
     srcs_filegroup_name = "shortening_service_includes",
     srcs = [
@@ -34,7 +27,6 @@ flatbuffer_cc_library(
         "shortening_response.fbs",
     ],
     includes = [
-        ":url_index_includes",
         ":private_url_includes",
     ],
     flatc_args = FLATC_ARGS,
@@ -49,9 +41,6 @@ flatbuffer_cc_library(
         "trusted_shortening_request.fbs",
         "trusted_shortening_response.fbs",
     ],
-    includes = [
-        ":url_index_includes",
-    ],
     flatc_args = FLATC_ARGS,
 )
 
@@ -62,7 +51,6 @@ cc_library(
     deps = [
         ":trusted_shortening_service",
         ":shortening_service",
-        ":url_index",
         ":private_url",
      ],
 )

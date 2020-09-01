@@ -2,7 +2,6 @@
 #define _INCLUDE_EC_PRV_SERVER_SHORTENING_SERVICE_H
 #include "idl/all_generated_flatbuffers.h"
 #include "server/db.h"
-#include "server/xorshift.h"
 #include <chrono>
 #include <cstdint>
 #include <flatbuffers/flatbuffers.h>
@@ -19,8 +18,6 @@ class ServiceHandle {
 private:
 	::ec_prv::db::KVStore* const store_;
 
-	std::shared_ptr<::ec_prv::xorshift::XORShiftU32> rand_source_;
-
 	///
 	/// Maximum time allowed to retain links.
 	///
@@ -32,9 +29,7 @@ private:
 	static auto check_expiry(uint64_t input_expiry) -> bool;
 
 public:
-	explicit ServiceHandle(::ec_prv::db::KVStore* store,
-			       std::shared_ptr<::ec_prv::xorshift::XORShiftU32> xorshift =
-				   std::make_shared<::ec_prv::xorshift::XORShiftU32>());
+	explicit ServiceHandle(::ec_prv::db::KVStore* store);
 
 	auto handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> req)
 	    -> ::flatbuffers::DetachedBuffer;

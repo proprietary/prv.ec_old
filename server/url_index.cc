@@ -8,16 +8,20 @@ namespace url_index {
 
 xorshift::XORShiftU32 URLIndex::xorshift_handle_ = xorshift::XORShiftU32{};
 
-URLIndex::URLIndex(URLIndexAccess access_type) : access_type_{access_type} {
-	switch (access_type_) {
+auto URLIndex::random(URLIndexAccess access_type) -> URLIndex {
+	uint32_t n = 0;
+	switch (access_type) {
 	case URLIndexAccess::PUBLIC:
-		n_ = generate(PUBLIC_MASK);
+		n = generate(PUBLIC_MASK);
 		break;
 
 	case URLIndexAccess::PRIVILEGED:
-		n_ = generate(PRIVILEGED_MASK);
+		n = generate(PRIVILEGED_MASK);
 		break;
 	}
+	auto generated = URLIndex{n};
+	assert(generated.access_type() == access_type);
+	return generated;
 }
 
 URLIndex::URLIndex(uint32_t n) : n_{n} {
@@ -44,10 +48,15 @@ auto URLIndex::is_privileged() -> bool {
 	return (n_ & PRIVILEGED_MASK) > 0 && access_type_ == URLIndexAccess::PRIVILEGED;
 }
 
+auto URLIndex::access_type() -> URLIndexAccess {
+	return access_type_;
+}
+
 auto URLIndex::as_integer() -> uint32_t { return n_; }
 
-auto URLIndex::as_bytes() -> std::vector<uint8_t> {
-	std::vector<uint8_t> out(4, 0);
+auto URLIndex::as_bytes() -> std::array<uint8_t, 4> {
+	std::array<uint8_t, 4> out;
+	out.fill(0);
 	out[0] = n_ & 0xff;
 	out[1] = (n_ >> 8) & 0xff;
 	out[2] = (n_ >> 16) & 0xff;
@@ -71,6 +80,11 @@ auto URLIndex::from_bytes(std::span<uint8_t> src) -> URLIndex {
 		n |= (src[3] << 24);
 	}
 	return URLIndex{n};
+}
+
+auto URLIndex::from_integer(uint32_t src) -> URLIndex {
+	URLIndex o {src};
+	return o;
 }
 
 } // namespace url_index

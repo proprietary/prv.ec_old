@@ -20,14 +20,6 @@ flatbuffer_library_public(
 )
 
 flatbuffer_library_public(
-    name = "url_index_ts",
-    srcs = ["//idl:url_index.fbs"],
-    outs = ["url_index_generated.ts"],
-    language_flag = "-T",
-    flatc_args = FLATC_ARGS,
-)
-
-flatbuffer_library_public(
     name = "shortening_service_ts",
     srcs = [
         "//idl:lookup_request.fbs",
@@ -45,6 +37,5 @@ flatbuffer_library_public(
     flatc_args = FLATC_ARGS,
     includes = [
         "//idl:private_url.fbs",
-        "//idl:url_index.fbs"
     ],
 )

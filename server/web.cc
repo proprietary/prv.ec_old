@@ -1,5 +1,6 @@
-#include "web.h"
-#include "b64.h"
+#include "server/web.h"
+#include "b64/b64.h"
+#include "server/url_index.h"
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -90,6 +91,8 @@ auto pack_bytes_u32le(std::span<uint8_t> bytes) -> uint32_t {
 
 namespace ec_prv {
 namespace web {
+using ::ec_prv::b64::enc;
+using ::flatbuffers::FlatBufferBuilder;
 
 Server::Server(int const port)
     : port_{port}, store_{}, svc_{&store_}, rpc_user_{::getenv("EC_PRV_RPC_USER")},
@@ -180,13 +183,11 @@ void Server::run() {
 				});
 				return;
 			}
-			::flatbuffers::FlatBufferBuilder ui_fbb;
-			auto uioffset = ::ec_prv::fbs::CreateURLIndex(ui_fbb, 1, identifier_parsed);
-			ui_fbb.Finish(uioffset);
+			auto ui = url_index::URLIndex::from_integer(identifier_parsed);
 			// lookup in rocksdb
-			std::string o;
-			this->store_.get(o, std::span<uint8_t>{ui_fbb.GetBufferPointer(), ui_fbb.GetSize()});
-			if (o.length() == 0) {
+			rocksdb::PinnableSlice o;
+			this->store_.get(o, ui);
+			if (o.empty()) {
 				res->cork([res]() -> void {
 					res->writeStatus("302 Found");
 					res->writeHeader("location", "https://prv.ec");
@@ -194,13 +195,13 @@ void Server::run() {
 				});
 				return;
 			}
-			::flatbuffers::FlatBufferBuilder resp_fbb;
+			FlatBufferBuilder resp_fbb;
 			::ec_prv::fbs::LookupResponseBuilder lrb{resp_fbb};
 			lrb.add_version(1);
 			lrb.add_error(false);
 			lrb.add_data(resp_fbb.CreateVector(reinterpret_cast<uint8_t const*>(o.data()), o.size()));
 			resp_fbb.Finish(lrb.Finish());
-			auto const encoded = ::ec_prv::b64::enc(std::span{reinterpret_cast<uint8_t*>(o.data()), o.size()});
+			auto const encoded = enc(std::span{reinterpret_cast<uint8_t*>(resp_fbb.GetBufferPointer()), resp_fbb.GetSize()});
 			res->cork([res, &encoded]() -> void {
 				res->writeStatus("200 OK");
 				res->writeHeader("content-type", "text/html");
