@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "server/url_index.h"
+#include "url_index/url_index.h"
 
 namespace {
 

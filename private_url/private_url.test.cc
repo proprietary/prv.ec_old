@@ -1,5 +1,5 @@
 #include "b64/b64.h"
-#include "server/private_url.h"
+#include "private_url/private_url.h"
 #include <gtest/gtest.h>
 #include <iostream>
 #include <string>

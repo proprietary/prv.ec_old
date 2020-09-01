@@ -1,6 +1,6 @@
 #include "server/web.h"
 #include "b64/b64.h"
-#include "server/url_index.h"
+#include "url_index/url_index.h"
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>

@@ -1,6 +1,6 @@
 #ifndef _INCLUDE_EC_PRV_SERVER_DB_H
 #define _INCLUDE_EC_PRV_SERVER_DB_H
-#include "server/url_index.h"
+#include "url_index/url_index.h"
 #include "rocksdb/db.h"
 #include <cstdint>
 #include <string_view>

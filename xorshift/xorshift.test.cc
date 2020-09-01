@@ -1,4 +1,4 @@
-#include "server/xorshift.h"
+#include "xorshift/xorshift.h"
 #include <gtest/gtest.h>
 
 namespace {

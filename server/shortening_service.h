@@ -37,9 +37,11 @@ public:
 	auto handle(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
 	    -> ::flatbuffers::DetachedBuffer;
 
-	auto handle(std::unique_ptr<::ec_prv::fbs::TrustedShorteningRequestT> req) -> ::flatbuffers::DetachedBuffer;
+	auto handle(std::unique_ptr<::ec_prv::fbs::TrustedShorteningRequestT> req)
+	    -> ::flatbuffers::DetachedBuffer;
 
-	auto handle(std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT> req) -> ::flatbuffers::DetachedBuffer;
+	auto handle(std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT> req)
+	    -> ::flatbuffers::DetachedBuffer;
 };
 
 } // namespace shortening_service

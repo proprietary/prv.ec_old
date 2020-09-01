@@ -1,4 +1,4 @@
-#include "server/private_url.h"
+#include "private_url/private_url.h"
 #include "b64/b64.h"
 #include <algorithm>
 #include <assert.h>

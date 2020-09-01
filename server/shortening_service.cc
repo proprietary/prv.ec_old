@@ -1,9 +1,9 @@
 #include "server/shortening_service.h"
 
 #include "idl/all_generated_flatbuffers.h"
+#include "private_url/private_url.h"
+#include "url_index/url_index.h"
 #include "server/db.h"
-#include "server/private_url.h"
-#include "server/url_index.h"
 #include <algorithm>
 #include <chrono>
 #include <cstdint>
@@ -28,7 +28,7 @@ auto find_new_url_index_v1(::ec_prv::db::KVStore& kvstore) -> ec_prv::url_index:
 	while (true) {
 		auto ok = kvstore.get(v, k);
 		if (!ok) {
-			throw ec_prv::db::RocksDBError { "RocksDB error" };
+			throw ec_prv::db::RocksDBError{"RocksDB error"};
 		}
 		if (v.empty()) {
 			break;

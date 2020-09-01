@@ -1,5 +1,5 @@
-#ifndef __INCLUDE_EC_PRV_SERVER_PRIVATE_URL_H
-#define __INCLUDE_EC_PRV_SERVER_PRIVATE_URL_H
+#ifndef __INCLUDE_EC_PRV_PRIVATE_URL_PRIVATE_URL_H
+#define __INCLUDE_EC_PRV_PRIVATE_URL_PRIVATE_URL_H
 #include <optional>
 #include <stdint.h>
 #include <string>
@@ -114,4 +114,4 @@ public:
 
 } // namespace private_url
 } // namespace ec_prv
-#endif // __INCLUDE_EC_PRV_SERVER_PRIVATE_URL_H
+#endif // __INCLUDE_EC_PRV_PRIVATE_URL_PRIVATE_URL_H

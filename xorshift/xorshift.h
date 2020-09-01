@@ -1,9 +1,9 @@
-#ifndef _INCLUDE_EC_PRV_SERVER_XORSHIFT
-#define _INCLUDE_EC_PRV_SERVER_XORSHIFT
-
+#ifndef _INCLUDE_EC_PRV_XORSHIFT_XORSHIFT
+#define _INCLUDE_EC_PRV_XORSHIFT_XORSHIFT
 #include <cstdint>
 
-namespace ec_prv::xorshift {
+namespace ec_prv {
+namespace xorshift {
 
 ///
 /// Fast, non-cryptographically secure random number generator
@@ -25,10 +25,11 @@ public:
 
 ///
 /// Fast, non-cryptographically secure random number generator.
-/// 
+///
 class XORShiftU32 {
 private:
 	uint32_t y_ = 0;
+
 public:
 	explicit XORShiftU32();
 
@@ -38,6 +39,7 @@ public:
 	auto rand() noexcept -> uint32_t;
 };
 
-} // namespace ec_prv::xorshift
+} // namespace xorshift
+} // namespace ec_prv
 
-#endif // _INCLUDE_EC_PRV_SERVER_XORSHIFT
+#endif // _INCLUDE_EC_PRV_XORSHIFT_XORSHIFT

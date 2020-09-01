@@ -1,5 +1,5 @@
-#include "server/url_index.h"
-#include "server/xorshift.h"
+#include "url_index/url_index.h"
+#include "xorshift/xorshift.h"
 #include <cassert>
 #include <stdexcept>
 

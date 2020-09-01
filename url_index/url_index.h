@@ -1,6 +1,6 @@
-#ifndef _INCLUDE_EC_PRV_SERVER_URL_INDEX_H
-#define _INCLUDE_EC_PRV_SERVER_URL_INDEX_H
-#include "server/xorshift.h"
+#ifndef _INCLUDE_EC_PRV_URL_INDEX_URL_INDEX_H
+#define _INCLUDE_EC_PRV_URL_INDEX_URL_INDEX_H
+#include "xorshift/xorshift.h"
 #include <cstdint>
 #include <span>
 #include <string>
@@ -53,4 +53,4 @@ public:
 
 } // namespace url_index
 } // namespace ec_prv
-#endif // _INCLUDE_EC_PRV_SERVER_URL_INDEX_H
+#endif // _INCLUDE_EC_PRV_URL_INDEX_URL_INDEX_H
