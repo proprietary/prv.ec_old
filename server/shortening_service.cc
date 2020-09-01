@@ -26,12 +26,12 @@ auto find_new_url_index_v1(::ec_prv::db::KVStore& kvstore) -> ec_prv::url_index:
 	auto k = ec_prv::url_index::URLIndex::random();
 	rocksdb::PinnableSlice v;
 	while (true) {
-		auto ok = kvstore.get(v, k);
-		if (!ok) {
-			throw ec_prv::db::RocksDBError{"RocksDB error"};
-		}
-		if (v.empty()) {
+		auto s = kvstore.get(v, k);
+		if (s.IsNotFound()) {
+			// found available url index
 			break;
+		} else if (!s.ok()) {
+			throw ec_prv::db::RocksDBError{"RocksDB error"};
 		}
 		v.Reset();
 		k = ec_prv::url_index::URLIndex::random();
@@ -118,7 +118,10 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
 			break;
 		}
 		rocksdb::PinnableSlice rocksdb_result_buf;
-		store_->get(rocksdb_result_buf, lookup_key);
+		auto s = store_->get(rocksdb_result_buf, lookup_key);
+		if (!s.ok()) {
+			break;
+		}
 		if (rocksdb_result_buf.empty()) {
 			break;
 		}
@@ -207,7 +210,10 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT>
 		// search for the key in database
 		auto url_index = url_index::URLIndex::from_integer(req->lookup_key);
 		rocksdb::PinnableSlice private_url_raw;
-		store_->get(private_url_raw, url_index);
+		auto s = store_->get(private_url_raw, url_index);
+		if (!s.ok()) {
+			break;
+		}
 		if (private_url_raw.empty()) {
 			break;
 		}

@@ -90,7 +90,7 @@ public:
 	/// much cryptography as possible on the client. This serves as a
 	/// fallback for noscript user agents.
 	///
-	static auto generate(std::string const& plaintext_url) noexcept
+	[[nodiscard]] static auto generate(std::string const& plaintext_url) noexcept
 	    -> std::optional<std::tuple<PrivateURL, std::string>>;
 
 	///
@@ -98,7 +98,7 @@ public:
 	/// array. Base64-encoded strings need to be converted to byte
 	/// arrays first.
 	///
-	auto get_plaintext(std::vector<uint8_t>&& pass) noexcept -> std::string;
+	[[nodiscard]] auto get_plaintext(std::vector<uint8_t>&& pass) noexcept -> std::string;
 
 	///
 	/// Checks that the cryptographic parameters are valid.

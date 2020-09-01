@@ -21,18 +21,19 @@ private:
 	rocksdb::DB* db_ = nullptr;
 
 public:
-	explicit KVStore();
+	explicit KVStore(std::string_view);
 	~KVStore() noexcept;
 	KVStore(KVStore const&) = delete;
 	auto operator=(KVStore const&) -> KVStore& = delete;
 	KVStore(KVStore&&) noexcept;
 	KVStore& operator=(KVStore&&) noexcept;
+	static auto open_default() -> KVStore;
 	auto put(std::vector<uint8_t>& key, std::vector<uint8_t>& value) -> bool;
 	auto put(std::span<uint8_t> key, std::span<uint8_t> value) -> bool;
 	auto get(std::vector<uint8_t>& key) -> std::vector<uint8_t>;
 	void get(std::string& dst, std::span<uint8_t> const key);
 	auto put(url_index::URLIndex key, std::span<uint8_t> value) -> bool;
-	auto get(rocksdb::PinnableSlice& dst, url_index::URLIndex key) -> bool;
+	[[nodiscard]] auto get(rocksdb::PinnableSlice& dst, url_index::URLIndex key) -> rocksdb::Status;
 };
 
 } // namespace db

@@ -9,17 +9,24 @@
 namespace ec_prv {
 namespace db {
 
-KVStore::KVStore() {
-	rocksdb::Options options;
-	options.create_if_missing = true;
-	options.IncreaseParallelism();
-	options.OptimizeLevelStyleCompaction();
+auto KVStore::open_default() -> KVStore {
 	const char* EC_PRV_ROCKSDB_DATADIR_PATH = std::getenv("EC_PRV_ROCKSDB_DATADIR_PATH");
 	if (nullptr == EC_PRV_ROCKSDB_DATADIR_PATH || strlen(EC_PRV_ROCKSDB_DATADIR_PATH) == 0) {
 		throw std::runtime_error{"Environment variable EC_PRV_ROCKSDB_DATADIR_PATH is missing"};
 	}
-	auto status = rocksdb::DB::Open(options, EC_PRV_ROCKSDB_DATADIR_PATH, &db_);
-	assert(status.ok());
+	return KVStore{EC_PRV_ROCKSDB_DATADIR_PATH};
+}
+
+KVStore::KVStore(std::string_view path) {
+	rocksdb::Options options;
+	options.create_if_missing = true;
+	options.IncreaseParallelism();
+	options.OptimizeLevelStyleCompaction();
+	std::string datadir_path {path};
+	auto status = rocksdb::DB::Open(options, datadir_path, &db_);
+	if (!status.ok()) {
+		throw RocksDBError{status.ToString()};
+	}
 }
 
 KVStore::~KVStore() noexcept { delete db_; }
@@ -88,12 +95,11 @@ auto KVStore::put(url_index::URLIndex key, std::span<uint8_t> value) -> bool {
 	return s.ok();
 }
 
-
-auto KVStore::get(rocksdb::PinnableSlice& dst, url_index::URLIndex key) -> bool {
+auto KVStore::get(rocksdb::PinnableSlice& dst, url_index::URLIndex key) -> rocksdb::Status {
 	auto b = key.as_bytes();
 	rocksdb::Slice k {reinterpret_cast<char*>(b.data()), b.size()};
-	auto s = db_->Get(rocksdb::ReadOptions(), nullptr, k, &dst);
-	return s.ok();
+	auto s = db_->Get(rocksdb::ReadOptions(), db_->DefaultColumnFamily(), k, &dst);
+	return s;
 }
 
 } // namespace db
