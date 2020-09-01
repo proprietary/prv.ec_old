@@ -10,6 +10,7 @@ void print_help_message(char** const argv) {
 
   -l, --lookup=URL            shortened URL to lookup and resolve to a full URL
   -s, --shorten=URL           full, original URL to shorten
+  -r, --rounds=NUMBER         (optional, default 2000000) number of PBKDF2 rounds
   -u, --upstream-server=URL   (optional, default "https://prv.ec") change the default server
 )",
 	       argv[0]);
@@ -20,17 +21,19 @@ int main(int argc, char** argv) {
 	std::string lookup_arg;
 	std::string shorten_arg;
 	std::string upstream_server{"https://prv.ec"};
+	int32_t pbkdf2_rounds = 2'000'000;
 	int verbose_flag = 0;
+	static struct option long_options[] = {
+	    {"verbose", no_argument, &verbose_flag, 1},
+	    {"brief", no_argument, &verbose_flag, 0},
+	    {"help", no_argument, nullptr, 'h'},
+	    {"lookup", required_argument, nullptr, 'l'},
+	    {"shorten", required_argument, nullptr, 's'},
+	    {"upstream-server", required_argument, nullptr, 'u'},
+	    {"rounds", required_argument, &pbkdf2_rounds, 'r'},
+	    {nullptr, 0, nullptr, 0},
+	};
 	while (true) {
-		static struct option long_options[] = {
-		    {"verbose", no_argument, &verbose_flag, 1},
-		    {"brief", no_argument, &verbose_flag, 0},
-		    {"help", no_argument, nullptr, 'h'},
-		    {"lookup", required_argument, nullptr, 'l'},
-		    {"shorten", required_argument, nullptr, 's'},
-		    {"upstream-server", required_argument, nullptr, 'u'},
-		    {nullptr, 0, nullptr, 0},
-		};
 		int option_index = 0;
 		c = getopt_long(argc, argv, "hl:s:u:", long_options, &option_index);
 		if (c == -1) {

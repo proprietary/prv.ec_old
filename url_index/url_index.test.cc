@@ -4,9 +4,10 @@
 namespace {
 
 TEST(URLIndex, URLIndexTest) {
-	ec_prv::url_index::URLIndex a{};
+	using ::ec_prv::url_index::URLIndex;
+	auto a = URLIndex::random();
 	auto b = a.as_bytes();
-	auto c = ec_prv::url_index::URLIndex::from_bytes(b);
+	auto c = URLIndex::from_bytes(b);
 	ASSERT_EQ(a.as_integer(), c.as_integer());
 }
 

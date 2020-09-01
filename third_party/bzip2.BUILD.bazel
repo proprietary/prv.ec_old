@@ -5,13 +5,12 @@ cc_library(
     srcs = [
         "blocksort.c",
         "bzlib.c",
-        "bzlib_private.h",
         "compress.c",
         "crctable.c",
         "decompress.c",
         "huffman.c",
         "randtable.c",
-    ],
+    ] + glob(["**/*.h"]),
     hdrs = ["bzlib.h"],
     strip_include_prefix = "",
 )

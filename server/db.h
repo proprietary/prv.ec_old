@@ -26,7 +26,7 @@ public:
 	KVStore(KVStore const&) = delete;
 	auto operator=(KVStore const&) -> KVStore& = delete;
 	KVStore(KVStore&&) noexcept;
-	KVStore& operator=(KVStore&&) noexcept;
+	auto operator=(KVStore&&) noexcept -> KVStore&;
 	static auto open_default() -> KVStore;
 	auto put(std::vector<uint8_t>& key, std::vector<uint8_t>& value) -> bool;
 	auto put(std::span<uint8_t> key, std::span<uint8_t> value) -> bool;

@@ -217,7 +217,8 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT>
 		if (private_url_raw.empty()) {
 			break;
 		}
-		auto* pu = GetPrivateURL(private_url_raw.data())->UnPack();
+		auto pu = std::make_unique<PrivateURLT>();
+		GetPrivateURL(private_url_raw.data())->UnPackTo(pu.get());
 		if (pu->version != 1) {
 			break;
 		}

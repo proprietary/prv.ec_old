@@ -32,9 +32,9 @@ KVStore::KVStore(std::string_view path) {
 KVStore::~KVStore() noexcept { delete db_; }
 
 KVStore::KVStore(KVStore&& other) noexcept {
-	if (this->db_ != nullptr) {
+	 
 		delete this->db_;
-	}
+	
 	this->db_ = other.db_;
 	other.db_ = nullptr;
 	other.~KVStore();

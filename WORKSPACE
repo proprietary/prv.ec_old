@@ -93,3 +93,11 @@ new_git_repository(
     shallow_since = "1598265557 +0200",
     build_file = "//third_party:uwebsockets.BUILD.bazel",
 )
+
+http_archive(
+   name = "se_haxx_curl",
+   build_file = "//third_party:curl.BUILD.bazel",
+   sha256 = "01ae0c123dee45b01bbaef94c0bc00ed2aec89cb2ee0fd598e0d302a6b5e0a98",
+   strip_prefix = "curl-7.69.1",
+   url = "https://curl.haxx.se/download/curl-7.69.1.tar.gz",
+)

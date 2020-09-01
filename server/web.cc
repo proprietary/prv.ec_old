@@ -95,7 +95,7 @@ using ::ec_prv::b64::enc;
 using ::flatbuffers::FlatBufferBuilder;
 
 Server::Server(int const port)
-    : port_{port}, store_{}, svc_{&store_}, rpc_user_{::getenv("EC_PRV_RPC_USER")},
+    : port_{port}, store_{::ec_prv::db::KVStore::open_default()}, svc_{&store_}, rpc_user_{::getenv("EC_PRV_RPC_USER")},
       rpc_pass_{::getenv("EC_PRV_RPC_PASS")} {
 	if (rpc_user_.length() == 0) {
 		throw std::runtime_error{"EC_PRV_RPC_USER environment variable not set"};
@@ -186,8 +186,8 @@ void Server::run() {
 			auto ui = url_index::URLIndex::from_integer(identifier_parsed);
 			// lookup in rocksdb
 			rocksdb::PinnableSlice o;
-			this->store_.get(o, ui);
-			if (o.empty()) {
+			auto status = this->store_.get(o, ui);
+			if (!status.ok() || o.empty()) {
 				res->cork([res]() -> void {
 					res->writeStatus("302 Found");
 					res->writeHeader("location", "https://prv.ec");

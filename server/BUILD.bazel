@@ -79,6 +79,7 @@ cc_test(
         "//idl:all_generated_flatbuffers",
         ":shortening_service",
         ":db",
+        "//b64:b64",
         "//private_url:private_url",
         "@com_github_google_googletest//:gtest",
     ],
@@ -103,3 +104,4 @@ cc_library(
     ],
 )
 
+# TODO: Make sure rocksdb builds as static lib
