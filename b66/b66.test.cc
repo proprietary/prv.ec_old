@@ -37,7 +37,7 @@ TEST(TestB66, EncodeDecode) {
 			std::vector<uint8_t> byte_array(i, 0);
 			std::transform(byte_array.begin(), byte_array.end(), byte_array.begin(),
 				       [&d, &rd](auto x) { return d(rd); });
-			::ec_prv::b66::strip_leading_zeros(byte_array);
+			// ::ec_prv::b66::strip_leading_zeros(byte_array);
 			// for (auto i = 0UL; i < byte_array.size(); ++i) {
 			// 	printf("%02x", byte_array[i]);
 			// }
@@ -93,32 +93,35 @@ auto pack(std::vector<uint8_t> const& src) -> uint32_t {
 TEST(TestB66, Integers) {
 	using ::ec_prv::b66::enc;
 	using ::ec_prv::b66::dec;
-	for (uint32_t i = 0; i < std::numeric_limits<uint32_t>::max(); ++i) {
+	std::random_device rd{};
+	std::uniform_int_distribution<uint32_t> dist{0};
+	for (uint32_t j = 1; j < 10; j++) {
+		auto i = dist(rd);
 		std::cout << "\ni = " << i << std::endl;
 		auto a = unpack(i);
-		ec_prv::b66::strip_leading_zeros(a);
-		std::cout << "unpacked integer: ";
-		for (auto c : a) {
-			printf("%02x", c);
-		}
-		puts("");
+		// ec_prv::b66::strip_leading_zeros(a);
+		// std::cout << "unpacked integer: ";
+		// for (auto c : a) {
+		// 	printf("%02x", c);
+		// }
+		// puts("");
 		std::string encoded_result;
 		enc(encoded_result, a);
-		std::cout << "encoded result: " << encoded_result<< std::endl;
+		// std::cout << "encoded result: " << encoded_result<< std::endl;
 		std::vector<uint8_t> decoded_result;
 		dec(decoded_result, encoded_result);
 		ASSERT_GT(decoded_result.size(), 0);
-		std::cout << "decoded result: ";
-		for (auto c : decoded_result) {
-			printf("%02x", c);
-		}
-		puts("");
+		// std::cout << "decoded result: ";
+		// for (auto c : decoded_result) {
+		// 	printf("%02x", c);
+		// }
+		// puts("");
 		auto it1 = a.begin();
 		auto it2 = decoded_result.begin();
 		for (; it1 != a.end() && it2 != decoded_result.end(); ++it1, ++it2) {
 			ASSERT_EQ(*it1, *it2);
 		}
-		ec_prv::b66::strip_leading_zeros(decoded_result);
+		// ec_prv::b66::strip_leading_zeros(decoded_result);
 		auto recovered_integer = pack(decoded_result);
 		ASSERT_EQ(i, recovered_integer);
 	}

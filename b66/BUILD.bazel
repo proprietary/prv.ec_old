@@ -3,8 +3,12 @@ cc_library(
     srcs = [
         "b66.h",
         "b66.cc",
+        "marshal_int.h",
+        "marshal_int.cc",
+        "util.h",
+        "util.cc",
     ],
-    hdrs = ["b66.h"],
+    hdrs = ["b66.h", "marshal_int.h"],
     copts = [
         "-std=c++20",
         "-Werror",

@@ -16,7 +16,11 @@ auto enc(std::string& dst, std::span<uint8_t> src) -> void;
 
 auto dec(std::vector<uint8_t>& dst, std::string_view src) -> void;
 
-auto strip_leading_zeros(std::vector<uint8_t>& dst) -> void;
+auto unpack(uint32_t n) -> std::vector<uint8_t>;
+
+auto pack(std::vector<uint8_t> const& src) -> uint32_t;
+
+// auto strip_leading_zeros(std::vector<uint8_t>& dst) -> void;
 
 } // namespace b66;
 

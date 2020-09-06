@@ -1,6 +1,7 @@
 #include "b66/b66.h"
 #include <algorithm>
 #include <cassert>
+#include <iterator>
 
 namespace {
 
@@ -44,15 +45,25 @@ namespace ec_prv {
 namespace b66 {
 
 auto enc(std::string& dst, std::span<uint8_t> src) -> void {
+	// count leading zeros and skip them
+	size_t leading_zeros = 0;
+	for (auto c : src) {
+		if (c != 0x00) {
+			break;
+		}
+		leading_zeros++;
+	}
+	auto start = src.begin();
+	std::advance(start, leading_zeros);
 	// src.size * ceil[log 256 / log 66] + 1
 	// 1 extra for null terminator
 	auto max_len = src.size() * 1366 / 1000 + 1;
 	dst.assign(max_len, '\0');
-	int length = 0;
-	for (auto b = src.begin(); b != src.end(); ++b) {
+	size_t length = 0;
+	for (auto b = start; b != src.end(); ++b) {
 		int32_t carry = static_cast<uint8_t>(*b);
 		auto it = dst.rbegin();
-		int i = 0;
+		size_t i = 0;
 		while ((carry > 0 || i < length) && it != dst.rend()) {
 			carry += static_cast<uint8_t>(*it) * 256;
 			*it = static_cast<uint8_t>(carry % 66);
@@ -63,12 +74,10 @@ auto enc(std::string& dst, std::span<uint8_t> src) -> void {
 		assert(carry == 0);
 		length = i;
 	}
-	// skip "trailing" (insignificant) zeros (occurs at start because big-endian)
-	auto it = dst.begin();
-	for (; it != dst.end() && *it == '\0'; ++it);
-	if (it != dst.begin() && it != dst.end()) {
-		dst.erase(dst.begin(), it);
-	}
+	assert(max_len >= length);
+	// handle leading zeros
+	dst.erase(dst.begin(), dst.begin() + max_len - length);
+	dst.insert(dst.begin(), leading_zeros, 0x00);
 	// map to characters
 	for (auto it = dst.begin(); it != dst.end(); ++it) {
 		*it = BASIS_66[static_cast<uint8_t>(*it)];
@@ -76,11 +85,24 @@ auto enc(std::string& dst, std::span<uint8_t> src) -> void {
 }
 
 auto dec(std::vector<uint8_t>& dst, std::string_view src) -> void {
+	// leading zeros
+	size_t leading_zeros = 0;
+	for (auto c : src) {
+		if (c != BASIS_66[0]) {
+			break;
+		}
+		leading_zeros++;
+	}
+	if (leading_zeros >= src.length()) {
+		return;
+	}
+	auto start = src.begin();
+	std::advance(start, leading_zeros);
 	// src.size * ceil[log 66 / log 256]
 	auto max_len = src.size() * 756 / 1000 + 1;
 	dst.assign(max_len, 0);
-	int length = 0;
-	for (auto ch = src.begin(); ch != src.end(); ++ch) {
+	size_t length = 0;
+	for (auto ch = start; ch != src.end(); ++ch) {
 		int32_t n = BASE_66_LOOKUP_TABLE[static_cast<uint8_t>(*ch)];
 		assert(n != 66);
 		if (n == 66) {
@@ -88,7 +110,7 @@ auto dec(std::vector<uint8_t>& dst, std::string_view src) -> void {
 		}
 		int32_t carry = n;
 		auto it = dst.rbegin();
-		int i = 0;
+		size_t i = 0;
 		while ((carry > 0 || i < length) && it != dst.rend()) {
 			carry += static_cast<int32_t>(*it) * 66;
 			*it = carry % 256;
@@ -99,19 +121,22 @@ auto dec(std::vector<uint8_t>& dst, std::string_view src) -> void {
 		assert(carry == 0);
 		length = i;
 	}
-	// strip "trailing" (insignficant) zeros (occurs at start because big endian)
-	strip_leading_zeros(dst);
+	assert(max_len >= length);
+	dst.erase(dst.begin(), dst.begin() + max_len - length);
+	dst.insert(dst.begin(), leading_zeros, 0x00);
 }
 
-auto strip_leading_zeros(std::vector<uint8_t>& dst) -> void {
-	auto first_nonzero = dst.begin();
-	while (first_nonzero != dst.end() && *first_nonzero == 0) {
-		++first_nonzero;
-	}
-	if (first_nonzero != dst.begin() && first_nonzero != dst.end()) {
-		dst.erase(dst.begin(), first_nonzero);
-	}
-}
+
+
+// auto strip_leading_zeros(std::vector<uint8_t>& dst) -> void {
+// 	auto first_nonzero = dst.begin();
+// 	while (first_nonzero != dst.end() && *first_nonzero == 0) {
+// 		++first_nonzero;
+// 	}
+// 	if (first_nonzero != dst.begin() && first_nonzero != dst.end()) {
+// 		dst.erase(dst.begin(), first_nonzero);
+// 	}
+// }
 
 } // namespace b66
 
