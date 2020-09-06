@@ -2,8 +2,8 @@
 #define _INCLUDE_EC_PRV_B66_UTIL_H
 
 #include <cstdint>
-#include <vector>
 #include <span>
+#include <vector>
 
 namespace ec_prv::b66::util {
 
@@ -17,4 +17,3 @@ auto pack(uint32_t& dst, std::span<uint8_t> src) -> void;
 
 } // namespace ec_prv::b66::util
 #endif // _INCLUDE_EC_PRV_B66_UTIL_H
-

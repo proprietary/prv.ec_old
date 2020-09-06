@@ -1,18 +1,20 @@
 #include "b66/b66.h"
+#include "b66/marshal_int.h"
+#include <cstdio>
 #include <gtest/gtest.h>
 #include <ios>
 #include <iostream>
-#include <random>
-#include <cstdio>
 #include <limits>
+#include <random>
 
 namespace {
 
 TEST(TestB66, SmokeTest) {
-	using ::ec_prv::b66::enc;
 	using ::ec_prv::b66::dec;
+	using ::ec_prv::b66::enc;
 	std::string o;
-	std::vector<uint8_t> a {0x04, 0x08, 0x99, 0xff, 0xff, 0xea, 0xf9, 0x22, 0x91, 0x11, 0x42, 0xf8, 0xff};
+	std::vector<uint8_t> a{0x04, 0x08, 0x99, 0xff, 0xff, 0xea, 0xf9,
+			       0x22, 0x91, 0x11, 0x42, 0xf8, 0xff};
 	enc(o, std::span{a});
 	std::cout << o << std::endl;
 	std::vector<uint8_t> w;
@@ -28,8 +30,8 @@ TEST(TestB66, SmokeTest) {
 }
 
 TEST(TestB66, EncodeDecode) {
-	using ::ec_prv::b66::enc;
 	using ::ec_prv::b66::dec;
+	using ::ec_prv::b66::enc;
 	for (int j = 0; j < 5; ++j) {
 		for (int i = 2; i < 0xff; ++i) {
 			std::random_device rd{};
@@ -37,7 +39,6 @@ TEST(TestB66, EncodeDecode) {
 			std::vector<uint8_t> byte_array(i, 0);
 			std::transform(byte_array.begin(), byte_array.end(), byte_array.begin(),
 				       [&d, &rd](auto x) { return d(rd); });
-			// ::ec_prv::b66::strip_leading_zeros(byte_array);
 			// for (auto i = 0UL; i < byte_array.size(); ++i) {
 			// 	printf("%02x", byte_array[i]);
 			// }
@@ -61,7 +62,7 @@ TEST(TestB66, EncodeDecode) {
 			enc(encoded_again, decoded_result);
 			ASSERT_STREQ(encoded_result.c_str(), encoded_again.c_str());
 		}
-	}	
+	}
 }
 
 auto unpack(uint32_t n) -> std::vector<uint8_t> {
@@ -91,15 +92,14 @@ auto pack(std::vector<uint8_t> const& src) -> uint32_t {
 }
 
 TEST(TestB66, Integers) {
-	using ::ec_prv::b66::enc;
 	using ::ec_prv::b66::dec;
+	using ::ec_prv::b66::enc;
 	std::random_device rd{};
 	std::uniform_int_distribution<uint32_t> dist{0};
 	for (uint32_t j = 1; j < 10; j++) {
 		auto i = dist(rd);
 		std::cout << "\ni = " << i << std::endl;
 		auto a = unpack(i);
-		// ec_prv::b66::strip_leading_zeros(a);
 		// std::cout << "unpacked integer: ";
 		// for (auto c : a) {
 		// 	printf("%02x", c);
@@ -121,9 +121,22 @@ TEST(TestB66, Integers) {
 		for (; it1 != a.end() && it2 != decoded_result.end(); ++it1, ++it2) {
 			ASSERT_EQ(*it1, *it2);
 		}
-		// ec_prv::b66::strip_leading_zeros(decoded_result);
 		auto recovered_integer = pack(decoded_result);
 		ASSERT_EQ(i, recovered_integer);
+	}
+}
+
+TEST(TestB66, MarshalU32) {
+	using ::ec_prv::b66::marshal;
+	using ::ec_prv::b66::unmarshal;
+
+	std::random_device rd{};
+	std::uniform_int_distribution<uint32_t> dist{0};
+	for (auto i = 0ULL; i < 100; i++) {
+		auto n = dist(rd);
+		auto s = marshal(n);
+		auto m = unmarshal(s);
+		ASSERT_EQ(n, m);
 	}
 }
 

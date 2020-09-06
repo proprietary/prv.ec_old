@@ -2,10 +2,10 @@
 #define _INCLUDE_EC_PRV_B66_MARHSAL_INT_H
 
 #include <cstdint>
-#include <vector>
 #include <span>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace ec_prv {
 namespace b66 {
@@ -40,5 +40,3 @@ auto unmarshal(std::string_view src) -> uint32_t;
 } // namespace ec_prv
 
 #endif // _INCLUDE_EC_PRV_B66_MARSHAL_INT_H
-
-

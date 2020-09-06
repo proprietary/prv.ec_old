@@ -126,18 +126,6 @@ auto dec(std::vector<uint8_t>& dst, std::string_view src) -> void {
 	dst.insert(dst.begin(), leading_zeros, 0x00);
 }
 
-
-
-// auto strip_leading_zeros(std::vector<uint8_t>& dst) -> void {
-// 	auto first_nonzero = dst.begin();
-// 	while (first_nonzero != dst.end() && *first_nonzero == 0) {
-// 		++first_nonzero;
-// 	}
-// 	if (first_nonzero != dst.begin() && first_nonzero != dst.end()) {
-// 		dst.erase(dst.begin(), first_nonzero);
-// 	}
-// }
-
 } // namespace b66
 
 } // namespace ec_prv

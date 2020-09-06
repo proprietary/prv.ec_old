@@ -38,7 +38,4 @@ auto pack(uint32_t& dst, std::span<uint8_t> src) -> void {
 	}
 }
 
-
-
-} // namespace
-
+} // namespace ec_prv::b66::util

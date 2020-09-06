@@ -1,12 +1,12 @@
 #ifndef _INCLUDE_EC_PRV_B66_B66_H
 #define _INCLUDE_EC_PRV_B66_B66_H
 
+#include <cstdint>
+#include <iterator>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
-#include <span>
-#include <cstdint>
-#include <iterator>
 
 namespace ec_prv {
 
@@ -20,11 +20,8 @@ auto unpack(uint32_t n) -> std::vector<uint8_t>;
 
 auto pack(std::vector<uint8_t> const& src) -> uint32_t;
 
-// auto strip_leading_zeros(std::vector<uint8_t>& dst) -> void;
-
-} // namespace b66;
+} // namespace b66
 
 } // namespace ec_prv
 
 #endif // _INCLUDE_EC_PRV_B66_B66_H
-
