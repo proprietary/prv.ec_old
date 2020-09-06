@@ -8,7 +8,7 @@ TEST(cURLPoolTest, SmokeTest) {
 	using ec_prv::curlpool::cURLPool;
 
 	cURLPool a{};
-	for (auto i = 0; i < 1000; i++) {
+	for (auto i = 0; i < 100; i++) {
 		auto* curl = curl_easy_init();
 		ASSERT_NE(curl, nullptr);
 		curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");

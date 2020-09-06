@@ -13,10 +13,9 @@ cc_library(
         "-Wall",
         "-pedantic",
     ],
-    linkopts = ["-luv", "-lcurl", "-fsanitize=address"],
     deps = [
-        # "@se_haxx_curl//:curl",
-        # "@org_libuv_libuv//:libuv",
+        "@se_haxx_curl//:curl",
+        "@org_libuv_libuv//:libuv",
     ],
 )
 
@@ -30,11 +29,8 @@ cc_test(
         "-Werror",
         "-Wall",
         "-pedantic",
-        "-ggdb",
-        "-g3",
-        "-O1",
     ],
-    linkopts = ["-fsanitize=address"],
+    linkopts = ["-fsanitize=address", "-fsanitize=undefined"],
     deps = [
         "@com_github_google_googletest//:gtest",
         ":curlpool",

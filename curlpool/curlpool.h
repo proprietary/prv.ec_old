@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_EC_PRV_SERVER_CURLPOOL_H
-#define _INCLUDE_EC_PRV_SERVER_CURLPOOL_H
+#ifndef _INCLUDE_EC_PRV_CURLPOOL_H
+#define _INCLUDE_EC_PRV_CURLPOOL_H
 
 #include <cassert>
 #include <cstdlib>
@@ -269,4 +269,4 @@ public:
 } // namespace curlpool
 } // namespace ec_prv
 
-#endif // _INCLUDE_EC_PRV_SERVER_CURLPOOL_H
+#endif // _INCLUDE_EC_PRV_CURLPOOL_H
