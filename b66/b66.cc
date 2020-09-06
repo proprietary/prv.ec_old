@@ -1,4 +1,5 @@
 #include "b66/b66.h"
+#include <algorithm>
 #include <cassert>
 
 namespace {
@@ -47,18 +48,28 @@ auto enc(std::string& dst, std::span<uint8_t> src) -> void {
 	// 1 extra for null terminator
 	auto max_len = src.size() * 1366 / 1000 + 1;
 	dst.assign(max_len, '\0');
-	for (auto b : src) {
-		auto carry = static_cast<uint32_t>(b);
-		auto it = dst.begin();
-		while (carry > 0 && it != dst.end()) {
-			carry += static_cast<uint32_t>(*it) * 256;
-			*it = (carry % 66) & 0xff;
+	int length = 0;
+	for (auto b = src.begin(); b != src.end(); ++b) {
+		int32_t carry = static_cast<uint8_t>(*b);
+		auto it = dst.rbegin();
+		int i = 0;
+		while ((carry > 0 || i < length) && it != dst.rend()) {
+			carry += static_cast<uint8_t>(*it) * 256;
+			*it = static_cast<uint8_t>(carry % 66);
 			carry /= 66;
 			it++;
+			i++;
 		}
 		assert(carry == 0);
+		length = i;
 	}
-	// TODO: skip trailing zeros
+	// skip "trailing" (insignificant) zeros (occurs at start because big-endian)
+	auto it = dst.begin();
+	for (; it != dst.end() && *it == '\0'; ++it);
+	if (it != dst.begin() && it != dst.end()) {
+		dst.erase(dst.begin(), it);
+	}
+	// map to characters
 	for (auto it = dst.begin(); it != dst.end(); ++it) {
 		*it = BASIS_66[static_cast<uint8_t>(*it)];
 	}
@@ -66,23 +77,39 @@ auto enc(std::string& dst, std::span<uint8_t> src) -> void {
 
 auto dec(std::vector<uint8_t>& dst, std::string_view src) -> void {
 	// src.size * ceil[log 66 / log 256]
-	auto max_len = src.size() * 756 / 1000;
+	auto max_len = src.size() * 756 / 1000 + 1;
 	dst.assign(max_len, 0);
-	for (auto ch = src.rbegin(); ch != src.rend(); ++ch) {
-		auto n = BASE_66_LOOKUP_TABLE[static_cast<uint8_t>(*ch)];
+	int length = 0;
+	for (auto ch = src.begin(); ch != src.end(); ++ch) {
+		int32_t n = BASE_66_LOOKUP_TABLE[static_cast<uint8_t>(*ch)];
 		assert(n != 66);
 		if (n == 66) {
 			return;
 		}
-		auto carry = static_cast<uint32_t>(n);
+		int32_t carry = n;
 		auto it = dst.rbegin();
-		while (carry > 0 && it != dst.rend()) {
-			carry += static_cast<uint32_t>(*it) * 66;
-			*it = (carry % 256) & 0xff;
+		int i = 0;
+		while ((carry > 0 || i < length) && it != dst.rend()) {
+			carry += static_cast<int32_t>(*it) * 66;
+			*it = carry % 256;
 			carry /= 256;
 			it++;
+			i++;
 		}
 		assert(carry == 0);
+		length = i;
+	}
+	// strip "trailing" (insignficant) zeros (occurs at start because big endian)
+	strip_leading_zeros(dst);
+}
+
+auto strip_leading_zeros(std::vector<uint8_t>& dst) -> void {
+	auto first_nonzero = dst.begin();
+	while (first_nonzero != dst.end() && *first_nonzero == 0) {
+		++first_nonzero;
+	}
+	if (first_nonzero != dst.begin() && first_nonzero != dst.end()) {
+		dst.erase(dst.begin(), first_nonzero);
 	}
 }
 
