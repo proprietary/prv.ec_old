@@ -1,0 +1,42 @@
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "curlpool",
+    srcs = [
+        "curlpool.h",
+        "curlpool.cc",
+    ],
+    hdrs = ["curlpool.h"],
+    copts = [
+        "-std=c++20",
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+    ],
+    linkopts = ["-luv", "-lcurl", "-fsanitize=address"],
+    deps = [
+        # "@se_haxx_curl//:curl",
+        # "@org_libuv_libuv//:libuv",
+    ],
+)
+
+cc_test(
+    name = "curlpool_test",
+    srcs = [
+        "curlpool.test.cc",
+    ],
+    copts = [
+        "-std=c++20",
+        "-Werror",
+        "-Wall",
+        "-pedantic",
+        "-ggdb",
+        "-g3",
+        "-O1",
+    ],
+    linkopts = ["-fsanitize=address"],
+    deps = [
+        "@com_github_google_googletest//:gtest",
+        ":curlpool",
+    ],
+)

@@ -1,4 +1,4 @@
-#include "server/curlpool.h"
+#include "curlpool/curlpool.h"
 
 namespace ec_prv {
 namespace curlpool {

@@ -1,4 +1,4 @@
-#include "server/curlpool.h"
+#include "curlpool/curlpool.h"
 #include <gtest/gtest.h>
 #include <cassert>
 
