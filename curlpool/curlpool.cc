@@ -3,7 +3,7 @@
 namespace ec_prv {
 namespace curlpool {
 
-cURLPool::cURLPool() : loop_{std::make_unique<uv_loop_t>()} {
+cURLPool::cURLPool() : loop_{std::make_unique<uv_loop_t>()}, stopping_{false} {
 	uv_loop_init(loop_.get());
 	loop_->data = this;
 	uv_timer_init(loop_.get(), &timeout_);
@@ -23,11 +23,18 @@ cURLPool::cURLPool() : loop_{std::make_unique<uv_loop_t>()} {
 }
 
 cURLPool::~cURLPool() noexcept {
-	if (loop_) {
-		uv_loop_close(loop_.get());
-	}
+	// stop the event loop
+	stopping_.store(true);
+	wakeup();
 	if (curlm_ != nullptr) {
 		curl_multi_cleanup(curlm_);
+	}
+	uv_close(
+	    reinterpret_cast<uv_handle_t*>(&timeout_), +[](uv_handle_t*) {});
+	uv_close(
+	    reinterpret_cast<uv_handle_t*>(&wakeup_), +[](uv_handle_t*) {});
+	if (loop_) {
+		uv_loop_close(loop_.get());
 	}
 }
 
@@ -50,12 +57,17 @@ cURLPool::cURLPool(cURLPool&& other) noexcept {
 	additions_ = std::move(other.additions_);
 	removals_ = std::move(other.removals_);
 }
-cURLPool& cURLPool::operator=(cURLPool&& other) noexcept {
+auto cURLPool::operator=(cURLPool&& other) noexcept -> cURLPool& {
 	using std::swap;
 	cURLPool{std::move(other)}.swap(*this);
 	return *this;
 }
-void cURLPool::run() { uv_run(loop_.get(), UV_RUN_DEFAULT); }
+void cURLPool::run() {
+	if (stopping_.load() == true) {
+		return;
+	}
+	uv_run(loop_.get(), UV_RUN_DEFAULT);
+}
 
 void cURLPool::handle_socket(CURL* easy_handle, curl_socket_t socket, int action, void* userp,
 			     void* socketp) {
@@ -98,7 +110,7 @@ void cURLPool::handle_socket(CURL* easy_handle, curl_socket_t socket, int action
 				    fputs(curl_multi_strerror(ec), stderr);
 				    // TODO: handle curl multi error
 			    }
-			    printf("%d running\n", running_handles);
+			    // printf("%d running\n", running_handles);
 			    context->pool->check_multi_info();
 		    });
 		break;
@@ -168,6 +180,11 @@ void cURLPool::check_multi_info() {
 
 void cURLPool::handle_wakeup() {
 	std::lock_guard<std::mutex> lock{m_};
+	if (stopping_.load() == true && loop_) {
+		// the event loop is waking up to be killed
+		uv_stop(loop_.get());
+		return;
+	}
 	while (!additions_.empty()) {
 		auto* a = additions_.front();
 		auto ec = curl_multi_add_handle(curlm_, a);
@@ -184,7 +201,6 @@ void cURLPool::handle_wakeup() {
 		}
 		removals_.pop();
 	}
-	// TODO: graceful shutdown when a `shutdown` boolean is set
 }
 
 void cURLPool::wakeup() { uv_async_send(&wakeup_); }
@@ -224,7 +240,7 @@ cURLContext::cURLContext(cURLContext&& other) noexcept {
 	poll_handle = std::move(other.poll_handle);
 	sockfd = other.sockfd;
 }
-cURLContext& cURLContext::operator=(cURLContext&& other) {
+auto cURLContext::operator=(cURLContext&& other) noexcept -> cURLContext& {
 	pool = other.pool;
 	poll_handle = std::move(other.poll_handle);
 	sockfd = other.sockfd;
