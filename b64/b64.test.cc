@@ -58,7 +58,7 @@ TEST(Base64, Integration) {
 		}
 		std::vector<uint8_t> buf{s.begin(), s.end()};
 		{
-			auto encoded = ::ec_prv::b64::enc_nonurlsafe(buf);
+			auto encoded = ::ec_prv::b64::enc_secure(buf);
 			auto decoded = ::ec_prv::b64::dec(encoded);
 			std::string_view decoded_as_string{
 			    reinterpret_cast<char const*>(decoded.data()), decoded.size()};
