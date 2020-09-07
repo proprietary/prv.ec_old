@@ -1,0 +1,5 @@
+cc_binary(
+    name = "strliteral",
+    srcs = ["strliteral.c"],
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,6 @@
+/strliteral
+/test/test
+/test/test-data-*
+/test/test-data.c
+/benchmark/work
+/benchmark/*.svg

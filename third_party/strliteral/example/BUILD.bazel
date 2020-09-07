@@ -1,0 +1,16 @@
+load("//third_party/strliteral:build_defs.bzl", "embed_file")
+
+embed_file(
+    name = "example_embedded",
+    srcs = ["example.txt"],
+    outs = ["example.txt_generated.h"],
+    identifier = "example_txt",
+    visibility = ["//visibility:public"],
+)
+
+cc_binary(
+    name = "example_bin",
+    srcs = ["example.cc"],
+    deps = [":example_embedded"],
+    visibility = ["//visibility:public"],
+)
