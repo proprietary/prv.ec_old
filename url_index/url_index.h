@@ -1,12 +1,12 @@
 #ifndef _INCLUDE_EC_PRV_URL_INDEX_URL_INDEX_H
 #define _INCLUDE_EC_PRV_URL_INDEX_URL_INDEX_H
 #include "xorshift/xorshift.h"
+#include <array>
 #include <cstdint>
+#include <optional>
 #include <span>
 #include <string>
-#include <array>
 #include <vector>
-#include <optional>
 
 ///
 /// URL shortening records are indexed as unsigned 32-bit integers
@@ -40,15 +40,19 @@ public:
 	/// intentended for public consumption. A URL index using fewer
 	/// bits has a shorter URL and may be reserved for different uses.
 	///
-	auto is_privileged() -> bool;
+	auto is_privileged() const noexcept -> bool;
 
-	auto as_bytes() -> std::array<uint8_t, 4>;
+	[[nodiscard]] auto as_bytes() -> std::array<uint8_t, 4>;
 
-	static auto from_bytes(std::span<uint8_t>) -> URLIndex;
+	[[nodiscard]] auto as_base_66_string() const noexcept -> std::string;
 
-	static auto from_integer(uint32_t src) -> URLIndex;
+	[[nodiscard]] static auto from_bytes(std::span<uint8_t>) -> URLIndex;
 
-	auto access_type() -> URLIndexAccess;
+	[[nodiscard]] static auto from_integer(uint32_t src) noexcept -> URLIndex;
+
+	[[nodiscard]] static auto from_base_66_string(std::string_view) noexcept -> URLIndex;
+
+	[[nodiscard]] auto access_type() const noexcept -> URLIndexAccess;
 };
 
 } // namespace url_index

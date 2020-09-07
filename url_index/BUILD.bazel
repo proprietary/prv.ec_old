@@ -2,7 +2,7 @@ cc_library(
     name = "url_index",
     srcs = ["url_index.h", "url_index.cc"],
     hdrs = ["url_index.h"],
-    deps = ["//xorshift:xorshift"],
+    deps = ["//xorshift:xorshift", "//b66:b66"],
     copts = [
         "-std=c++20",
         "-Werror",

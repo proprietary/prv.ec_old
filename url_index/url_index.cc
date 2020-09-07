@@ -1,4 +1,5 @@
 #include "url_index/url_index.h"
+#include "b66/marshal_int.h"
 #include "xorshift/xorshift.h"
 #include <cassert>
 #include <stdexcept>
@@ -42,15 +43,13 @@ auto URLIndex::generate(uint32_t mask) -> uint32_t {
 	return result;
 }
 
-auto URLIndex::is_privileged() -> bool {
+auto URLIndex::is_privileged() const noexcept -> bool {
 	assert(((n_ & PRIVILEGED_MASK) > 0 && access_type_ == URLIndexAccess::PRIVILEGED) ||
 	       ((n_ & PUBLIC_MASK) > 0 && access_type_ == URLIndexAccess::PUBLIC));
 	return (n_ & PRIVILEGED_MASK) > 0 && access_type_ == URLIndexAccess::PRIVILEGED;
 }
 
-auto URLIndex::access_type() -> URLIndexAccess {
-	return access_type_;
-}
+auto URLIndex::access_type() const noexcept -> URLIndexAccess { return access_type_; }
 
 auto URLIndex::as_integer() -> uint32_t { return n_; }
 
@@ -82,9 +81,20 @@ auto URLIndex::from_bytes(std::span<uint8_t> src) -> URLIndex {
 	return URLIndex{n};
 }
 
-auto URLIndex::from_integer(uint32_t src) -> URLIndex {
-	URLIndex o {src};
+auto URLIndex::from_integer(uint32_t src) noexcept -> URLIndex {
+	URLIndex o{src};
 	return o;
+}
+
+auto URLIndex::as_base_66_string() const noexcept -> std::string {
+	using ::ec_prv::b66::marshal;
+	return marshal(n_);
+}
+
+auto URLIndex::from_base_66_string(std::string_view src) noexcept -> URLIndex {
+	using ::ec_prv::b66::unmarshal;
+	uint32_t m = unmarshal(src);
+	return from_integer(m);
 }
 
 } // namespace url_index
