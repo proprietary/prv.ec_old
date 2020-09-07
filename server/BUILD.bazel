@@ -36,6 +36,7 @@ cc_library(
         ":db",
         ":shortening_service",
         "//b64:b64",
+        "//b66:b66",
         "//idl:all_generated_flatbuffers",
         "@com_github_google_flatbuffers//:flatbuffers",
         "@com_github_unetworking_uwebsockets//:uWebSockets",

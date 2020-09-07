@@ -1,4 +1,5 @@
 #include "server/web.h"
+#include "b66/marshal_int.h"
 #include "b64/b64.h"
 #include "url_index/url_index.h"
 #include <algorithm>
@@ -18,8 +19,8 @@ using namespace std::literals;
 
 namespace {
 
-static const char BASE_64_CHARS[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
+static const char BASE_66_CHARS[] =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~";
 
 auto parse_auth_header(std::string_view authorization_header,
 		       std::string_view strip_prefix = "Basic "sv) -> std::string {
@@ -62,9 +63,9 @@ auto parse_shorturl(std::string_view url) -> std::string_view {
 	auto shorturl_start = it;
 	while (it != url.end()) {
 		// validate that all characters exist in base64 alphabet
-		auto i = sizeof(BASE_64_CHARS);
+		auto i = sizeof(BASE_66_CHARS);
 		while (i > 0) {
-			if (BASE_64_CHARS[i] == *it) {
+			if (BASE_66_CHARS[i] == *it) {
 				break;
 			}
 			i--;
@@ -165,16 +166,7 @@ void Server::run() {
 		.get("/*", [this](auto* res, auto* req) -> void {
 			auto url = req->getUrl();
 			auto identifier = parse_shorturl(url);
-			auto identifier_as_bytes = b64::dec(identifier);
-			if (identifier_as_bytes.size() > 4) {
-				res->cork([res]() -> void {
-					res->writeStatus("302 Found");
-					res->writeHeader("location", "https://prv.ec");
-					res->end();
-				});
-				return;
-			}
-			uint32_t identifier_parsed = pack_bytes_u32le(identifier_as_bytes);
+			uint32_t identifier_parsed = ec_prv::b66::unmarshal(identifier);
 			if (identifier_parsed == 0) {
 				res->cork([res]() -> void {
 					res->writeStatus("302 Found");
