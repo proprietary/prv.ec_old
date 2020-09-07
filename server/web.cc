@@ -1,6 +1,6 @@
 #include "server/web.h"
 #include "b64/b64.h"
-#include "b66/b66.h"
+#include "b66/marshal_int.h"
 #include "url_index/url_index.h"
 #include <algorithm>
 #include <cstdio>
@@ -142,33 +142,34 @@ void Server::run() {
 			// LookupRequest flatbuffer on the client.
 			
 			res->onAborted([]() -> void {});
-			auto buf = std::make_shared<std::string>();
-			res->onData([this, buf, res](std::string_view chunk, bool is_end) -> void {
-				// TODO: cork socket calls
-				buf->insert(buf->end(), chunk.begin(), chunk.end());
-				if (is_end) {
-					constexpr size_t MAX_LEN_OF_STRINGIFIED_URL_INDEX = 10;
-					if (buf.size() > MAX_LEN_OF_STRINGIFIED_URL_INDEX) {
-						res->end();
-						return;
-					}
-					res->writeHeader("Content-Type",
-									 "application/octet-stream");
-					res->writeStatus("200 OK");
-					::flatbuffers::FlatBufferBuilder fbb;
-					// deserialize base-66 encoded url index
-					auto ui = ::ec_prv::url_index::URLIndex::from_base_66_string(buf);
-					::ec_prv::fbs::LookupRequestBuilder lrb{fbb};
-					lrb.add_version(1);
-					lrb.add_url_index(ui.as_integer());
-					auto lr = lrb.Finish();
-					fbb.Finish(lr);
-					auto req = ::ec_prv::fbs::UnPackLookupRequest(fbb.GetBufferPointer());
-					auto lookup_response = svc_->handle(req);
-					std::string_view output{reinterpret_cast<char const*>(lookup_response.data()), lookup_response.size()};
-					res->end(output);
-				}
-			});
+			auto buf = std::make_shared<std::vector<uint8_t>>();
+			accept_rpc<::ec_prv::fbs::LookupRequestWeb, false>(res, req, buf);
+			// res->onData([this, buf, res](std::string_view chunk, bool is_end) -> void {
+			// 	// TODO: cork socket calls
+			// 	buf->insert(buf->end(), chunk.begin(), chunk.end());
+			// 	if (is_end) {
+			// 		constexpr size_t MAX_LEN_OF_STRINGIFIED_URL_INDEX = 10;
+			// 		if (buf.size() > MAX_LEN_OF_STRINGIFIED_URL_INDEX) {
+			// 			res->end();
+			// 			return;
+			// 		}
+			// 		res->writeHeader("Content-Type",
+			// 						 "application/octet-stream");
+			// 		res->writeStatus("200 OK");
+			// 		::flatbuffers::FlatBufferBuilder fbb;
+			// 		// deserialize base-66 encoded url index
+			// 		auto ui = ::ec_prv::url_index::URLIndex::from_base_66_string(buf);
+			// 		::ec_prv::fbs::LookupRequestBuilder lrb{fbb};
+			// 		lrb.add_version(1);
+			// 		lrb.add_url_index(ui.as_integer());
+			// 		auto lr = lrb.Finish();
+			// 		fbb.Finish(lr);
+			// 		auto req = ::ec_prv::fbs::UnPackLookupRequest(fbb.GetBufferPointer());
+			// 		auto lookup_response = svc_->handle(req);
+			// 		std::string_view output{reinterpret_cast<char const*>(lookup_response.data()), lookup_response.size()};
+			// 		res->end(output);
+			// 	}
+			// });
 		})
 	    .post("/trusted_shortening_request",
 		[this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) {

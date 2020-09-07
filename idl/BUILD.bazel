@@ -22,6 +22,7 @@ flatbuffer_cc_library(
     srcs_filegroup_name = "shortening_service_includes",
     srcs = [
         "lookup_request.fbs",
+        "lookup_request_web.fbs",
         "lookup_response.fbs",
         "shortening_request.fbs",
         "shortening_response.fbs",

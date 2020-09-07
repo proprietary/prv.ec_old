@@ -1,5 +1,6 @@
 #include "server/shortening_service.h"
 
+#include "flatbuffers/flatbuffers.h"
 #include "idl/all_generated_flatbuffers.h"
 #include "private_url/private_url.h"
 #include "server/db.h"
@@ -143,6 +144,35 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
 	// failure case
 	::flatbuffers::FlatBufferBuilder fbb;
 	auto resp = ::ec_prv::fbs::CreateLookupResponse(fbb, 1, true);
+	fbb.Finish(resp);
+	return fbb.Release();
+}
+
+auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::LookupRequestWebT> req) -> ::flatbuffers::DetachedBuffer {
+	using ::flatbuffers::FlatBufferBuilder;
+	using url_index::URLIndex;
+	using url_index::URLIndexAccess;
+
+	FlatBufferBuilder fbb;
+	auto lookup_key = URLIndex::from_base_66_string(req->lookup_key);
+	if (lookup_key.access_type() != URLIndexAccess::PUBLIC) {
+		auto resp = fbs::CreateLookupResponse(fbb, 1, true);
+		fbb.Finish(resp);
+		return fbb.Release();
+	}
+	rocksdb::PinnableSlice rocksdb_result_buf;
+	auto status = store_->get(rocksdb_result_buf, lookup_key);
+	if (!status.ok() || rocksdb_result_buf.empty()) {
+		auto resp = fbs::CreateLookupResponse(fbb, 1, true);
+		fbb.Finish(resp);
+		return fbb.Release();
+	}
+	auto puv = fbb.CreateVector(reinterpret_cast<uint8_t const*>(rocksdb_result_buf.data()), rocksdb_result_buf.size());
+	fbs::LookupResponseBuilder b{fbb};
+	b.add_version(1);
+	b.add_error(false);
+	b.add_data(puv);
+	auto resp = b.Finish();
 	fbb.Finish(resp);
 	return fbb.Release();
 }

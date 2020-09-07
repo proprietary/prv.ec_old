@@ -5,6 +5,7 @@
 #include "idl/shortening_request_generated.h"
 #include "idl/shortening_response_generated.h"
 #include "idl/lookup_request_generated.h"
+#include "idl/lookup_request_web_generated.h"
 #include "idl/lookup_response_generated.h"
 #include "idl/trusted_shortening_request_generated.h"
 #include "idl/trusted_shortening_response_generated.h"

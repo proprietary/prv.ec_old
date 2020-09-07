@@ -23,12 +23,14 @@ flatbuffer_library_public(
     name = "shortening_service_ts",
     srcs = [
         "//idl:lookup_request.fbs",
+        "//idl:lookup_request_web.fbs",
         "//idl:lookup_response.fbs",
         "//idl:shortening_request.fbs",
         "//idl:shortening_response.fbs",
     ],
     outs = [
         "lookup_request_generated.ts",
+        "lookup_request_web_generated.ts",
         "lookup_response_generated.ts",
         "shortening_request_generated.ts",
         "shortening_response_generated.ts",
