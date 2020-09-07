@@ -6,18 +6,34 @@
 #include <string>
 #include <string_view>
 #include <memory>
+#include <utility>
 
 namespace ec_prv {
 namespace shortening_client {
 
-struct client_v1_t {
+using namespace std::string_view_literals;
+
+///
+/// Split apart a shortened URL to the identifier part and the "password" part.
+/// @returns (identifier, pass)
+///
+auto parse_shortened_url(std::string_view full_url,
+						 std::string_view upstream_server = "https://prv.ec"sv)
+	-> std::pair<std::string, std::string>;
+
+namespace v1 {
+
+struct ClientV1 {
 	char const* upstream_server;
 	int32_t pbkdf2_rounds;
 
-	auto shorten_v1(std::string_view url_plaintext) -> std::string;
+	auto shorten(std::string const& url_plaintext) -> std::string;
 
-	auto lookup_v1(std::string_view base_identifier, std::string_view pass) -> std::string;
+	auto lookup(std::string const& base_identifier, std::string_view pass) -> std::string;
 };
+
+
+} // namespace v1
 
 
 } // namespace shortening_client

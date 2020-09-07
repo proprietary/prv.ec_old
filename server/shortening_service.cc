@@ -2,8 +2,8 @@
 
 #include "idl/all_generated_flatbuffers.h"
 #include "private_url/private_url.h"
-#include "url_index/url_index.h"
 #include "server/db.h"
+#include "url_index/url_index.h"
 #include <algorithm>
 #include <chrono>
 #include <cstdint>

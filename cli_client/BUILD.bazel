@@ -10,6 +10,7 @@ cc_binary(
         "-pedantic",
     ],
     deps = [
+        ":shortening_client",
         "@com_github_google_flatbuffers//:flatbuffers",
         "//idl:all_generated_flatbuffers",
     ],
@@ -22,6 +23,9 @@ cc_library(
     srcs = [
         "shortening_client.h",
         "shortening_client.cc",
+        "http_requests.h",
+        "http_requests.cc",
+        "cacert.h",
     ],
     hdrs = ["shortening_client.h"],
     copts = [
@@ -35,6 +39,9 @@ cc_library(
         "//idl:all_generated_flatbuffers",
         "//private_url:private_url",
         "//url_index:url_index",
+        "//b66:b66",
+        "@se_haxx_curl//:curl",
+        "@com_googlesource_boringssl//:ssl",
     ],
     visibility = ["//visibility:public"],
 )
@@ -47,3 +54,4 @@ cc_binary(
         "@com_googlesource_boringssl//:ssl",
     ],
 )
+

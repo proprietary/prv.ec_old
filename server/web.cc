@@ -1,6 +1,6 @@
 #include "server/web.h"
-#include "b66/marshal_int.h"
 #include "b64/b64.h"
+#include "b66/marshal_int.h"
 #include "url_index/url_index.h"
 #include <algorithm>
 #include <cstdio>
@@ -81,13 +81,6 @@ auto parse_shorturl(std::string_view url) -> std::string_view {
 	return std::string_view(shorturl_start, shorturl_end);
 }
 
-auto pack_bytes_u32le(std::span<uint8_t> bytes) -> uint32_t {
-	if (bytes.size() < 4) {
-		return 0;
-	}
-	return (bytes[0] & 0xff) | (bytes[1] << 0x8) | (bytes[2] << 0x10) | (bytes[3] << 0x18);
-}
-
 } // namespace
 
 namespace ec_prv {
@@ -96,8 +89,8 @@ using ::ec_prv::b64::enc;
 using ::flatbuffers::FlatBufferBuilder;
 
 Server::Server(int const port)
-    : port_{port}, store_{::ec_prv::db::KVStore::open_default()}, svc_{&store_}, rpc_user_{::getenv("EC_PRV_RPC_USER")},
-      rpc_pass_{::getenv("EC_PRV_RPC_PASS")} {
+    : port_{port}, store_{::ec_prv::db::KVStore::open_default()}, svc_{&store_},
+      rpc_user_{::getenv("EC_PRV_RPC_USER")}, rpc_pass_{::getenv("EC_PRV_RPC_PASS")} {
 	if (rpc_user_.length() == 0) {
 		throw std::runtime_error{"EC_PRV_RPC_USER environment variable not set"};
 	}
@@ -116,26 +109,33 @@ void Server::run() {
 	    .post("/shortening_request",
 		  [this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) {
 	// clang-format off
-#ifndef DEBUG
+#if DEBUG == 1
 			  res->writeHeader("Access-Control-Allow-Origin", "https://prv.ec");
-#endif
-			  // clang-format on
+#endif // DEBUG == 1
+       // clang-format on
+
+			  res->onAborted([]() -> void {});
 
 			  // Request a new shortened URL
-			  accept_rpc<::ec_prv::fbs::ShorteningRequest, false>(res, req);
+			  auto buf = std::make_shared<std::vector<uint8_t>>();
+			  buf->reserve(1 << 20);
+			  accept_rpc<::ec_prv::fbs::ShorteningRequest, false>(res, req, buf);
 		  })
 	    .post("/lookup_request",
 		  [this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) {
 	// clang-format off
-#ifndef DEBUG
+#if DEBUG == 1
 			  res->writeHeader("Access-Control-Allow-Origin", "https://prv.ec");
-#endif
+#endif // DEBUG == 1
 			  //clang-format on
 
-			  accept_rpc<::ec_prv::fbs::LookupRequest, false>(res, req);
+			  auto buf = std::make_shared<std::vector<uint8_t>>();
+			  buf->reserve(1 << 20);
+			  accept_rpc<::ec_prv::fbs::LookupRequest, false>(res, req, buf);
 		  })
 	    .post("/trusted_shortening_request",
 		[this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) {
+			res->onAborted([]() -> void {});
 			// Authenticated endpoint for trusted clients performing all crypto
 			// server-side.
 			res->writeHeader("Access-Control-Allow-Origin", "*");
@@ -147,7 +147,9 @@ void Server::run() {
 				res->end();
 				return;
 			}
-			this->accept_rpc<::ec_prv::fbs::TrustedShorteningRequest, false>(res, req);
+			auto buf = std::make_shared<std::vector<uint8_t>>();
+			buf->reserve(1 << 20);
+			accept_rpc<::ec_prv::fbs::TrustedShorteningRequest, false>(res, req, buf);
 		})
 	    .post(
 		"/trusted_lookup_request",
@@ -161,7 +163,9 @@ void Server::run() {
 				res->end();
 				return;
 			}
-			this->accept_rpc<::ec_prv::fbs::TrustedLookupRequest, false>(res, req);
+			auto buf = std::make_shared<std::vector<uint8_t>>();
+			buf->reserve(1 << 20);
+			accept_rpc<::ec_prv::fbs::TrustedLookupRequest, false>(res, req, buf);
 		})
 		.get("/*", [this](auto* res, auto* req) -> void {
 			auto url = req->getUrl();
