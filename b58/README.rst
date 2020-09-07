@@ -1,11 +1,11 @@
-==============================================
-Base-58 encoder/decoder in little endian (C++)
-==============================================
+==============================
+Base-58 encoder/decoder in C++
+==============================
 
 This library implements base-58 decoding and encoding. Unlike base-64,
 base-58 is more readable, URL and filename safe, and doesn't use
-characters that are easily confused for one another ('0' and 'O', 'I'
-and 'l').
+characters that are easily confused for one another.
 
-Most base-58 encoding and decoding libraries assume big endian byte
-ordering. This works for little endian only.
+- '0' and 'O' (neither are in base-58 encoded strings)
+- 'I' and 'l' (neither are in base-58 encoded strings)
+
