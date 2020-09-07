@@ -13,7 +13,7 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//b66:b66",
+        "//b64:b64",
         "@com_googlesource_boringssl//:crypto",
         "@com_googlesource_boringssl//:ssl",
     ],

@@ -1,5 +1,5 @@
 #include "private_url/private_url.h"
-#include "b66/b66.h"
+#include "b64/b64.h"
 #include <algorithm>
 #include <assert.h>
 #include <cstdlib>
@@ -227,8 +227,7 @@ auto PrivateURL::get_plaintext(std::vector<uint8_t>&& pass) noexcept -> std::str
 }
 
 auto PrivateURL::get_plaintext(std::string_view pass) noexcept -> std::string {
-	std::vector<uint8_t> pass_bytes;
-	::ec_prv::b66::dec(pass_bytes, pass);
+	auto pass_bytes = ::ec_prv::b64::dec(pass);
 	return get_plaintext(std::move(pass_bytes));
 }
 
@@ -246,13 +245,12 @@ auto PrivateURL::generate(std::string const& plaintext_url) noexcept
 		return {};
 	}
 	// this is the secret key to be returned to the client and never stored on the server
-	std::string b66_pass;
-	::ec_prv::b66::enc(b66_pass, pass);
+	auto b64_pass = ::ec_prv::b64::enc_urlsafe(pass);
 	// encrypt plaintext URL
 	auto ciphertext = PrivateURL::encrypt(std::move(key.value()), iv, plaintext_url);
 	return std::make_tuple<PrivateURL, std::string>(
 	    PrivateURL(std::move(salt), std::move(iv), std::move(ciphertext.value())),
-	    std::move(b66_pass));
+	    std::move(b64_pass));
 }
 
 auto PrivateURL::iv() const -> std::vector<uint8_t> const& { return iv_; }
