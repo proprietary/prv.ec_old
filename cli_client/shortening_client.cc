@@ -50,10 +50,7 @@ auto parse_shortened_url(std::string_view full_url, std::string_view upstream_se
 			return {};
 		}
 	}
-	if (it == full_url.end()) {
-		return {};
-	}
-	if (it++; it != full_url.end() && *it != '/') {
+	if (it != full_url.end() && *it != '/') {
 		return {};
 	}
 	if (++it == full_url.end()) {
@@ -65,7 +62,7 @@ auto parse_shortened_url(std::string_view full_url, std::string_view upstream_se
 		return {};
 	}
 	std::string identifier;
-	identifier.assign(full_url.begin(), pass_start);
+	identifier.assign(identifier_start, pass_start);
 	if (++pass_start == full_url.end()) {
 		return {};
 	}
@@ -76,7 +73,7 @@ auto parse_shortened_url(std::string_view full_url, std::string_view upstream_se
 
 namespace v1 {
 
-auto shorten_request(std::vector<uint8_t>& dst, std::vector<uint8_t>& pass_dst,
+auto shorten_request(std::vector<uint8_t>& dst, std::string& pass_dst,
 		     std::string const& url_plaintext) -> bool {
 	using ::ec_prv::private_url::PrivateURL;
 
@@ -106,7 +103,7 @@ auto shorten_request(std::vector<uint8_t>& dst, std::vector<uint8_t>& pass_dst,
 	return true;
 }
 
-auto read_shortening_response(std::span<uint8_t> src, std::span<uint8_t> pass,
+auto read_shortening_response(std::span<uint8_t> src, std::string_view pass,
 			      std::string_view upstream_server) -> std::string {
 	using ::ec_prv::fbs::ShorteningResponse;
 	using ::ec_prv::url_index::URLIndex;
@@ -132,12 +129,10 @@ auto read_shortening_response(std::span<uint8_t> src, std::span<uint8_t> pass,
 	// create fully formatted shortened URL
 	auto ui = URLIndex::from_integer(srp->lookup_key());
 	auto uib = ui.as_bytes();
-	std::string pass_encoded;
 	std::string url_index_encoded;
 	::ec_prv::b66::enc(url_index_encoded, std::span<uint8_t>{uib});
-	::ec_prv::b66::enc(pass_encoded, pass);
 	std::ostringstream ss;
-	ss << upstream_server << '/' << url_index_encoded << '#' << pass_encoded;
+	ss << upstream_server << '/' << url_index_encoded << '#' << pass;
 	return ss.str();
 }
 
@@ -159,8 +154,7 @@ auto lookup_request(std::vector<uint8_t>& dst, ::ec_prv::url_index::URLIndex url
 	return true;
 }
 
-auto read_lookup_response(std::string& dst, std::span<uint8_t> src, std::vector<uint8_t> pass)
-    -> bool {
+auto read_lookup_response(std::string& dst, std::span<uint8_t> src, std::string_view pass) -> bool {
 	using ::ec_prv::private_url::PrivateURL;
 	using ::flatbuffers::Verifier;
 
@@ -183,12 +177,12 @@ auto read_lookup_response(std::string& dst, std::span<uint8_t> src, std::vector<
 	if (private_url->version != 1) {
 		return false;
 	}
-	if (private_url->expiry > current_unix_timestamp()) {
+	if (private_url->expiry < current_unix_timestamp()) {
 		return false;
 	}
 	PrivateURL pu{std::move(private_url->salt), std::move(private_url->iv),
 		      std::move(private_url->blinded_url)};
-	auto url_plaintext = pu.get_plaintext(std::move(pass));
+	auto url_plaintext = pu.get_plaintext(pass);
 	dst = std::move(url_plaintext);
 	return true;
 }
@@ -197,7 +191,7 @@ auto ClientV1::shorten(std::string const& url_plaintext) -> std::string {
 	using ::ec_prv::cli_client::request;
 
 	std::vector<uint8_t> srbuf;
-	std::vector<uint8_t> generated_pass;
+	std::string generated_pass;
 	auto status = shorten_request(srbuf, generated_pass, url_plaintext);
 	if (!status) {
 		return {};
@@ -241,10 +235,8 @@ auto ClientV1::lookup(std::string const& base_identifier, std::string_view pass)
 		return {};
 	}
 	// read response and decrypt
-	std::vector<uint8_t> pass_bytes;
-	dec(pass_bytes, pass);
 	std::string plaintext_url;
-	status = read_lookup_response(plaintext_url, response_bytes, pass_bytes);
+	status = read_lookup_response(plaintext_url, response_bytes, pass);
 	if (!status) {
 		return {};
 	}

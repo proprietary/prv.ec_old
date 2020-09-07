@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
 		puts(shortened_url.c_str());
 	} else if (!lookup_url.empty()) {
 		auto [identifier, pass] =
-		    ::ec_prv::shortening_client::parse_shortened_url(lookup_url);
+		    ::ec_prv::shortening_client::parse_shortened_url(lookup_url, upstream_server);
 		auto plaintext_url = client.lookup(identifier, pass);
 		puts(plaintext_url.c_str());
 	}

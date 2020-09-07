@@ -85,7 +85,7 @@ public:
 			    std::vector<uint8_t>&& blinded_url);
 
 	///
-	/// Generate cryptographic primitives completely server-side. This
+	/// Generates cryptographic primitives completely server-side. This
 	/// is not the intended use of this software, which is to do as
 	/// much cryptography as possible on the client. This serves as a
 	/// fallback for noscript user agents.
@@ -94,11 +94,17 @@ public:
 	    -> std::optional<std::tuple<PrivateURL, std::string>>;
 
 	///
-	/// Get underlying URL using the secret pass, which is a byte
-	/// array. Base64-encoded strings need to be converted to byte
+	/// Gets underlying URL using the secret pass, which is a byte
+	/// array. Base66-encoded strings need to be converted to byte
 	/// arrays first.
 	///
 	[[nodiscard]] auto get_plaintext(std::vector<uint8_t>&& pass) noexcept -> std::string;
+
+	///
+	/// Gets the underlying, original URL using the secret password,
+	/// which is here a base-66 encoded string.
+	///
+	[[nodiscard]] auto get_plaintext(std::string_view pass) noexcept -> std::string;
 
 	///
 	/// Checks that the cryptographic parameters are valid.

@@ -123,6 +123,7 @@ void Server::run() {
 		  })
 	    .post("/lookup_request",
 		  [this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) {
+			  res->onAborted([]() -> void {});
 	// clang-format off
 #if DEBUG == 1
 			  res->writeHeader("Access-Control-Allow-Origin", "https://prv.ec");
@@ -154,6 +155,7 @@ void Server::run() {
 	    .post(
 		"/trusted_lookup_request",
 		[this](auto* res, auto* req) {
+			res->onAborted([]() -> void {});
 			res->writeHeader("Access-Control-Allow-Origin", "*");
 			auto authorization = req->getHeader("authorization");
 			auto [user, pass] = parse_http_basic_auth_header(authorization);
@@ -168,6 +170,7 @@ void Server::run() {
 			accept_rpc<::ec_prv::fbs::TrustedLookupRequest, false>(res, req, buf);
 		})
 		.get("/*", [this](auto* res, auto* req) -> void {
+			res->onAborted([]() -> void {});
 			auto url = req->getUrl();
 			auto identifier = parse_shorturl(url);
 			uint32_t identifier_parsed = ec_prv::b66::unmarshal(identifier);
