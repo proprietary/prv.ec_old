@@ -15,12 +15,8 @@ module.exports = {
 	resolve: {
 		extensions: ['.js', '.ts'],
 		modules: [
-			path.resolve(__dirname, 'vendor/flatbuffers'),
 			'node_modules',
 		],
-		alias: {
-			flatbuffers: path.resolve(__dirname, 'vendor/flatbuffers/flatbuffers.js'),
-		},
 	},
 	output: {
 		filename: 'bundle.js',
@@ -29,7 +25,6 @@ module.exports = {
 	devServer: {
 		proxy: {
 			'/accept': 'http://127.0.0.1:8000',
-			
 		},
 		disableHostCheck: true,
 		historyApiFallback: {

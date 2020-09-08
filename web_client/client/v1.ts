@@ -9,8 +9,8 @@ import {
 	SALT_BYTES_V1,
 } from '../crypto';
 import { fromByteArray, toByteArray, fromURLSafeBase64 } from '../util';
-import * as private_url from '../fbs/private_url_generated';
-import {flatbuffers} from '../vendor/flatbuffers/flatbuffers';
+import {ec_prv as private_url} from '../fbs/private_url_generated';
+import { flatbuffers }  from '../vendor/flatbuffers/flatbuffers';
 
 export class ShortenerClient {
 	private iv_: Uint8Array = new Uint8Array(IV_BYTES_V1);
@@ -71,7 +71,7 @@ export class LookupClient {
 		if (r == null) {
 			return '';
 		}
-		let pu = private_url.ec_prv.fbs.PrivateURL.getRootAsPrivateURL(
+		let pu = private_url.fbs.PrivateURL.getRootAsPrivateURL(
 			new flatbuffers.ByteBuffer(new Uint8Array(r.data)),
 		).unpack();
 		const key = await deriveKeyV1({

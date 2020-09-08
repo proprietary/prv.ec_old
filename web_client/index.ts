@@ -1,9 +1,6 @@
-import * as flatbuffers from './vendor/flatbuffers/flatbuffers';
 import { ShortenerClient, LookupClient } from './client';
 
 (function () {
-	console.log('hello typescript');
-
 	(document.querySelector('#urlForm') as HTMLFormElement).addEventListener(
 		'submit',
 		async (evt: Event) => {
@@ -30,14 +27,23 @@ import { ShortenerClient, LookupClient } from './client';
 		},
 	);
 
-	if (window.location.pathname != '/') {
+	if (window.location.pathname != '/' && window.location.pathname != '/index.html') {
 		(async () => {
-			const identifier = window.location.pathname.slice(1);
-			const pass = window.location.hash.slice(1);
-			const client = new LookupClient(identifier, pass);
-			const urlPlaintext = await client.lookup();
-			console.info(urlPlaintext);
-			window.location.replace(urlPlaintext);
+			try {
+				const identifier = window.location.pathname.slice(1);
+				const pass = window.location.hash.slice(1);
+				if (identifier.length === 0  || pass.length === 0) {
+					return;
+				}
+				const client = new LookupClient(identifier, pass);
+				// TODO: display progress bar while deriving key
+				const urlPlaintext = await client.lookup();
+				console.info(`redirecting to: ${urlPlaintext}`);
+				window.location.replace(urlPlaintext);
+			} catch (e) {
+				console.error(e);
+				window.location.replace('/');
+			}
 		})();
 	}
 })();

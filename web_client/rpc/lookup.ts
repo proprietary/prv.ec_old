@@ -1,4 +1,4 @@
-import {flatbuffers} from '../vendor/flatbuffers/flatbuffers';
+import { flatbuffers } from '../vendor/flatbuffers/flatbuffers';
 import * as lookup_request from '../fbs/lookup_request_generated';
 import * as lookup_response from '../fbs/lookup_response_generated';
 import * as lookup_request_web from '../fbs/lookup_request_web_generated';
@@ -6,7 +6,6 @@ const {LookupRequest, LookupRequestT} = lookup_request.ec_prv.fbs;
 const {LookupRequestWeb} = lookup_request_web.ec_prv.fbs;
 const {LookupResponse, LookupResponseT} = lookup_response.ec_prv.fbs;
 import { post } from './common';
-
 
 export async function lookupRequestV1(urlIndex: lookup_request.ec_prv.fbs.LookupRequestT): Promise<null|lookup_response.ec_prv.fbs.LookupResponseT> {
 	/* const urlIndexFbb = new flatbuffers.Builder();

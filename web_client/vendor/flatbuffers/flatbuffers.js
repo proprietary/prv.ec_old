@@ -1392,9 +1392,9 @@ flatbuffers.ByteBuffer.prototype.createObjList = function(listAccessor, listLeng
 };
 
 // Exports for Node.js and RequireJS
-// this.flatbuffers = flatbuffers;
+this.flatbuffers = flatbuffers;
 // exports.default = flatbuffers;
-exports.flatbuffers = flatbuffers;
+// exports.flatbuffers = flatbuffers;
 
 /// @endcond
 /// @}
