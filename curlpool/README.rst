@@ -17,20 +17,20 @@ Usage
 -----
 
 ::
-   #include "curlpool.h"
 
-   int main(int argc, char* argv[]) {
-     curlpool::cURLPool pool{};
-	 for (int i = 0; i < 100; ++i) {
-       auto* curl = curl_easy_init();
-	   curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
-	   // etc... create a cURL easy handle as usual
-	   // but don't call `curl_easy_perform(curl)`! do this instead:
-	   pool.add_handle(curl);
-	 }
-	 pool.run();
-	}
-
+  #include "curlpool.h"
+  int main(int argc, char* argv[]) {
+    curlpool::cURLPool pool{};
+    for (int i = 0; i < 100; ++i) {
+      auto* curl = curl_easy_init();
+  	  curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
+  	  // etc... create a cURL easy handle as usual
+  	  // but don't call `curl_easy_perform(curl)`! do this instead:
+  	  pool.add_handle(curl);
+    }
+    pool.run();
+  }
+  
 
 License
 -------

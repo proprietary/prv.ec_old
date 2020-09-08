@@ -16,7 +16,9 @@ mkdir -p /tmp/ec_prv_docs/
 
 for f in $(find $(git rev-parse --show-toplevel) -type f -name '*.rst') ; do
 	name=$(basename $f)
-	rst2html $f "/tmp/ec_prv_docs/${name}.html";
+	dir_name_s="$(dirname $f)"
+	dir_prefix="$(sed 's/\//_/g' <(echo $dir_name_s))"
+	rst2html $f "/tmp/ec_prv_docs/${dir_prefix}__${name}.html";
 done
 
 python3 -m webbrowser "file:///tmp/ec_prv_docs/"
