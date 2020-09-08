@@ -9,7 +9,11 @@ import { ShortenerClient, LookupClient } from './client';
 			const urlInputElement = document.querySelector(
 				'#url',
 			) as HTMLInputElement;
-			const url = urlInputElement.value.trim();
+			let url = urlInputElement.value.trim();
+			// when urls are entered into the box without a protocol, assume it's https
+			if (!/^(https?:\/\/)|(mailto:)/.test(url)) {
+				url = "https://" + url;
+			}
 			const client = new ShortenerClient();
 			// TODO: display progress bar
 			const shortened_url_route = await client.shorten(url);

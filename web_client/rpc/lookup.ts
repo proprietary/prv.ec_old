@@ -8,22 +8,6 @@ const {LookupResponse, LookupResponseT} = lookup_response.ec_prv.fbs;
 import { post } from './common';
 
 export async function lookupRequestV1(urlIndex: lookup_request.ec_prv.fbs.LookupRequestT): Promise<null|lookup_response.ec_prv.fbs.LookupResponseT> {
-	/* const urlIndexFbb = new flatbuffers.Builder();
-	const ui = urlIndex.pack(urlIndexFbb);
-	urlIndexFbb.finish(ui);
-	const reqFbb = new flatbuffers.Builder();
-	const lkv = LookupRequest.createLookupKeyVector(reqFbb, urlIndexFbb.asUint8Array());
-	LookupRequest.startLookupRequest(reqFbb);
-	LookupRequest.addVersion(reqFbb, 1);
-	LookupRequest.addLookupKey(reqFbb, lkv);
-	const lr = LookupRequest.endLookupRequest(reqFbb);
-	reqFbb.finish(lr);
-	const resp = await post('lookup_request', reqFbb.asuUint8Array());
-	if (resp == null) {
-		return null;
-	}
-	const lookupResponse = LookupResponse.getRootAsLookupResponse(new flatbuffers.ByteBuffer(new Uint8Array(resp)));
-	return lookupResponse.unpack(); */
 	throw new Error("unimplemented");
 }
 

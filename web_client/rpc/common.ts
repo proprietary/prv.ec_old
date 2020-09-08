@@ -8,7 +8,6 @@ export async function post(name: RPCMethodName, message: ArrayBuffer): Promise<A
 		},
 		body: new Uint8Array(message),
 	});
-	console.log(message);
 	if (r.status == 200) {
 		const resp = await r.arrayBuffer();
 		return resp;
