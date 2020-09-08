@@ -1,15 +1,13 @@
 import * as shortening_request from '../fbs/shortening_request_generated';
 import * as shortening_response from '../fbs/shortening_response_generated';
 import * as private_url from '../fbs/private_url_generated';
-import * as url_index from '../fbs/url_index_generated';
-const { URLIndex } = url_index.ec_prv.fbs;
 const { ShorteningRequestT, ShorteningRequest } = shortening_request.ec_prv.fbs;
 const {
 	ShorteningResponseT,
 	ShorteningResponse,
 } = shortening_response.ec_prv.fbs;
 const { PrivateURL, PrivateURLT } = private_url.ec_prv.fbs;
-import * as flatbuffers from 'flatbuffers';
+import {flatbuffers} from '../vendor/flatbuffers/flatbuffers';
 import { post } from './common';
 import { toLong } from '../util';
 
@@ -27,7 +25,7 @@ export async function shorteningRequestV1(
 	expiry: Date,
 ): Promise<string> {
 	const fbb = new flatbuffers.Builder();
-	ShorteningRequest.startShorteningRequest(fbb);
+	
 	const expiryAsSeconds = toLong(Math.floor(expiry.getTime()/1000));
 	const saltVec = ShorteningRequest.createSaltVector(fbb, salt);
 	const ivVec = ShorteningRequest.createIvVector(fbb, iv);
@@ -35,26 +33,25 @@ export async function shorteningRequestV1(
 		fbb,
 		blindedUrl,
 	);
+	ShorteningRequest.startShorteningRequest(fbb);
 	ShorteningRequest.addExpiry(fbb, expiryAsSeconds);
 	ShorteningRequest.addVersion(fbb, 1);
 	ShorteningRequest.addIv(fbb, ivVec);
 	ShorteningRequest.addSalt(fbb, saltVec);
+	ShorteningRequest.addPbkdf2Iters(fbb, 2_000_000);
 	ShorteningRequest.addBlindedUrl(fbb, blindedUrlVector);
 	const sr = ShorteningRequest.endShorteningRequest(fbb);
 	fbb.finish(sr);
-	const resp = await post('shortening_request', fbb.dataBuffer().bytes());
+	const resp = await post('shortening_request', fbb.asUint8Array());
 	if (resp == null) {
 		return '';
 	}
-	const ret = ShorteningResponse.getRootAsShorteningResponse(
+	const responseFbObject = ShorteningResponse.getRootAsShorteningResponse(
 		new flatbuffers.ByteBuffer(new Uint8Array(resp)),
 	);
-	if (ret.error()) {
+	if (responseFbObject.error()) {
 		return '';
-	}	
-	const lookupKeyBuf = Uint8Array.from(ret.unpack().lookupKey);
-	const urlIndex = URLIndex.getRootAsURLIndex(
-		new flatbuffers.ByteBuffer(lookupKeyBuf),
-	);
-	return urlIndex.id.toString();
+	}
+	const responseObj = responseFbObject.unpack();
+	return responseObj.lookupKeyEncoded as string;
 }

@@ -1,4 +1,4 @@
-import { shorteningRequestV1, lookupRequestV1 } from '../rpc';
+import { shorteningRequestV1, lookupRequestV1, lookupRequestWeb } from '../rpc';
 import {
 	encryptV1,
 	decryptV1,
@@ -9,9 +9,8 @@ import {
 	SALT_BYTES_V1,
 } from '../crypto';
 import { fromByteArray, toByteArray, fromURLSafeBase64 } from '../util';
-import * as url_index from '../fbs/url_index_generated';
 import * as private_url from '../fbs/private_url_generated';
-import * as flatbuffers from 'flatbuffers';
+import {flatbuffers} from '../vendor/flatbuffers/flatbuffers';
 
 export class ShortenerClient {
 	private iv_: Uint8Array = new Uint8Array(IV_BYTES_V1);
@@ -43,7 +42,7 @@ export class ShortenerClient {
 			this.expiry_,
 		);
 		const passAsStr = fromByteArray(this.pass_);
-		return `https://prv.ec/${identifier}#${passAsStr}`;
+		return /* https://prv.ec/ */ `${identifier}#${passAsStr}`;
 	}
 
 	public set expiry(d: Date) {
@@ -56,31 +55,19 @@ export class ShortenerClient {
 }
 
 export class LookupClient {
-	private identifier_: Uint8Array; // 32-bit little-endian unsigned integer
+	private identifier_: string; // base-66 encoded string representing the URLIndex
 	private pass_: Uint8Array;
 
 	public constructor(identifier: string, pass: string) {
-		// decode identifier string to bytes
-		this.identifier_ = toByteArray(identifier);
-		if (this.identifier_.length != 4) {
+		this.identifier_ = identifier;
+		if (this.identifier_.length > 10) {
 			throw new Error();
 		}
 		this.pass_ = toByteArray(pass);
 	}
 
-	private buildUrlIndex() {
-		// little-endian byte array to u32
-		let n: number = 0;
-		n = this.identifier_[0] | (this.identifier_[1] << 8) | (this.identifier_[2] << 16) | (this.identifier_[3] << 24);
-		const fbb = new flatbuffers.Builder();
-		const ui = url_index.ec_prv.fbs.URLIndex.createURLIndex(fbb, 1, n);
-		fbb.finish(ui);
-		return url_index.ec_prv.fbs.URLIndex.getRootAsURLIndex(fbb.dataBuffer()).unpack();
-	}
-
 	public async lookup(): Promise<string> {
-		const ui = this.buildUrlIndex();
-		let r = await lookupRequestV1(ui);
+		let r = await lookupRequestWeb(this.identifier_);
 		if (r == null) {
 			return '';
 		}
@@ -103,6 +90,6 @@ export class LookupClient {
 
 function defaultExpiry(): Date {
 	return new Date(
-		Math.floor(new Date().getTime() / 1000) + 60 * 60 * 24 * 365,
+		Math.floor(new Date().getTime() / 1000) + 60 * 60 * 24 * 364,
 	);
 }

@@ -4,6 +4,7 @@ table ShorteningResponse {
 	version:uint8 = 1;
 	error:bool = false;
 	lookup_key:uint32;
+	lookup_key_encoded:string;
 }
 
 root_type ShorteningResponse;

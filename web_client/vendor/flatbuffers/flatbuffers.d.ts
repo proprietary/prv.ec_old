@@ -1,7 +1,10 @@
-declare module "flatbuffers" {
-    type Offset = number;
+export { flatbuffers };
 
-    interface Table {
+declare global {
+	namespace flatbuffers {
+    export type Offset = number;
+
+    export interface Table {
       bb: ByteBuffer|null;
       bb_pos: number;
     }
@@ -20,7 +23,7 @@ declare module "flatbuffers" {
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    class Long {
+    export class Long {
       low: number;
       high: number;
       static ZERO: Long;
@@ -32,7 +35,7 @@ declare module "flatbuffers" {
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    class Builder {
+    export class Builder {
       constructor(initial_size?: number);
 
       /**
@@ -206,7 +209,7 @@ declare module "flatbuffers" {
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    class ByteBuffer {
+    export class ByteBuffer {
       constructor(bytes: Uint8Array);
 
       static allocate(byte_size: number): ByteBuffer;
@@ -297,5 +300,6 @@ declare module "flatbuffers" {
 	/**
       * Convenience function for creating Long objects.
       */
-    function createLong(low: number, high: number): Long;
+	export function createLong(low: number, high: number): Long;
+	}
 }

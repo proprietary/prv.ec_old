@@ -18,6 +18,7 @@
 	<section>
 	  <main>
 		<div>
+			<form id="urlForm">
 		  <input
 			type="text"
 			placeholder="https://www.example.com/articles/2045/11/05/1/?ei=e8tPv8P8wr5TUzUZDIXyujepaicgxUNx&impression=twitter&c=10..."
@@ -25,10 +26,13 @@
 			autocomplete="off"
 			aria-required="true"
 			/>
+			
 		  <button>Shorten URL</button>
+			</form>
 		</div>
 		<div>
-		  <div id="shortened_url_result">
+		  <div id="shortenedUrlResult">
+			  <a id="shortenedUrlResultLink"></a>
 		  </div>
 		</div>
 	  </main>

@@ -106,6 +106,28 @@ void Server::run() {
 		 [](auto* res, auto* req) {
 			 res->end("<!doctype html><html><body><h1>prv.ec</h1></body></html>");
 		 })
+	    .post("/accept",
+		  [this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) -> void {
+			  // TODO: cork sockets
+			  res->writeHeader("Access-Control-Allow-Origin", "*");
+			  res->onAborted([]() -> void {});
+			  auto buf = std::make_shared<std::vector<uint8_t>>();
+			  buf->reserve(1 << 20);
+
+			  auto rpc_method_name = req->getHeader("x-rpc-method");
+
+			  if (rpc_method_name == "lookup_request_web") {
+				  accept_rpc<fbs::LookupRequestWeb, false>(res, req, buf);
+			  } else if (rpc_method_name == "shortening_request") {
+				  accept_rpc<fbs::ShorteningRequest, false>(res, req, buf);
+			  } else if (rpc_method_name == "lookup_request") {
+				  accept_rpc<fbs::LookupRequest, false>(res, req, buf);
+			  } else {
+				  res->writeStatus("400 Bad Request");
+				  res->end();
+				  return;
+			  }
+		  })
 	    .post("/shortening_request",
 		  [this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) {
 	// clang-format off

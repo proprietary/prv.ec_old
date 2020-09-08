@@ -90,10 +90,12 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> re
 		auto ok = store_->put(url_index, fbspan(private_url_fbb));
 		assert(ok == true); // TODO: handle error better
 		::flatbuffers::FlatBufferBuilder resp_fbb;
+		auto url_index_b66 = resp_fbb.CreateString(url_index.as_base_66_string());
 		::ec_prv::fbs::ShorteningResponseBuilder srb{resp_fbb};
 		srb.add_version(1);
 		srb.add_error(!ok);
 		srb.add_lookup_key(url_index.as_integer());
+		srb.add_lookup_key_encoded(url_index_b66);
 		resp_fbb.Finish(srb.Finish());
 		return resp_fbb.Release();
 	}
@@ -148,7 +150,8 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::LookupRequestT> req)
 	return fbb.Release();
 }
 
-auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::LookupRequestWebT> req) -> ::flatbuffers::DetachedBuffer {
+auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::LookupRequestWebT> req)
+    -> ::flatbuffers::DetachedBuffer {
 	using ::flatbuffers::FlatBufferBuilder;
 	using url_index::URLIndex;
 	using url_index::URLIndexAccess;
@@ -167,7 +170,8 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::LookupRequestWebT> req
 		fbb.Finish(resp);
 		return fbb.Release();
 	}
-	auto puv = fbb.CreateVector(reinterpret_cast<uint8_t const*>(rocksdb_result_buf.data()), rocksdb_result_buf.size());
+	auto puv = fbb.CreateVector(reinterpret_cast<uint8_t const*>(rocksdb_result_buf.data()),
+				    rocksdb_result_buf.size());
 	fbs::LookupResponseBuilder b{fbb};
 	b.add_version(1);
 	b.add_error(false);

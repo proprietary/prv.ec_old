@@ -1,4 +1,4 @@
-import * as flatbuffers from 'flatbuffers';
+import {flatbuffers} from '../vendor/flatbuffers/flatbuffers';
 
 export function toLong(n: number): flatbuffers.Long {
 	let binaryString = n.toString(2);
