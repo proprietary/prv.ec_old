@@ -6,6 +6,7 @@ const { ShorteningResponse } = shortening_response.ec_prv.fbs;
 import { flatbuffers } from '../vendor/flatbuffers/flatbuffers';
 import { post } from './common';
 import { toLong } from '../util';
+import { DEFAULT_PBKDF2_ROUNDS_V1 } from '../crypto';
 
 /**
  * Makes a request to shorten a URL and returns the generated identifier representing the shortened URL.
@@ -34,7 +35,7 @@ export async function shorteningRequestV1(
 	ShorteningRequest.addVersion(fbb, 1);
 	ShorteningRequest.addIv(fbb, ivVec);
 	ShorteningRequest.addSalt(fbb, saltVec);
-	ShorteningRequest.addPbkdf2Iters(fbb, 2_000_000);
+	ShorteningRequest.addPbkdf2Iters(fbb, DEFAULT_PBKDF2_ROUNDS_V1);
 	ShorteningRequest.addBlindedUrl(fbb, blindedUrlVector);
 	const sr = ShorteningRequest.endShorteningRequest(fbb);
 	fbb.finish(sr);

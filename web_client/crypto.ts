@@ -84,7 +84,7 @@ export interface DecryptV1Params {
 	ciphertext: Uint8Array;
 }
 
-export const DEFAULT_PBKDF2_ROUNDS_V1 = 2_000_000;
+export const DEFAULT_PBKDF2_ROUNDS_V1 = 10_000_000;
 export const AAD_DATA_V1 = new TextEncoder().encode('www.prv.ec');
 export const SALT_BYTES_V1 = 16;
 export const IV_BYTES_V1 = 12;

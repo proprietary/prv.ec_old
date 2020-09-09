@@ -3,6 +3,8 @@ cc_library(
     srcs = [
         "private_url.h",
         "private_url.cc",
+        "crypto_params.h",
+        "crypto_params.cc",
     ],
     hdrs = ["private_url.h"],
     copts = [

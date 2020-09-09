@@ -61,8 +61,7 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::ShorteningRequestT> re
 			if (!check_expiry(req->expiry)) {
 				break;
 			}
-			// TODO: factor out crypto parameters to separate module
-			if (req->pbkdf2_iters != 2'000'000) {
+			if (req->pbkdf2_iters < ::ec_prv::private_url::MIN_ACCEPTABLE_PBKDF2_ITERS) {
 				break;
 			}
 		}
@@ -203,7 +202,7 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedShorteningReque
 		pub.add_salt(salt);
 		pub.add_iv(iv);
 		pub.add_blinded_url(blinded_url);
-		pub.add_pbkdf2_iters(2'000'000); // TODO(zds): factor out crypto params
+		pub.add_pbkdf2_iters(::ec_prv::private_url::crypto_params_v1.pbkdf2_rounds);
 		private_url_fbb.Finish(pub.Finish());
 		// generate new key for rocksdb
 		auto url_index = find_new_url_index_v1(*store_);
@@ -256,8 +255,7 @@ auto ServiceHandle::handle(std::unique_ptr<::ec_prv::fbs::TrustedLookupRequestT>
 		if (pu->version != 1) {
 			break;
 		}
-		// TODO(zds): factor out crypto params
-		if (pu->pbkdf2_iters < 2'000'000) {
+		if (pu->pbkdf2_iters < ::ec_prv::private_url::MIN_ACCEPTABLE_PBKDF2_ITERS) {
 			break;
 		}
 		// perform decryption

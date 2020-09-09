@@ -1,7 +1,8 @@
 #ifndef __INCLUDE_EC_PRV_PRIVATE_URL_PRIVATE_URL_H
 #define __INCLUDE_EC_PRV_PRIVATE_URL_PRIVATE_URL_H
+#include "private_url/crypto_params.h"
+#include <cstdint>
 #include <optional>
-#include <stdint.h>
 #include <string>
 #include <string_view>
 #include <tuple>
@@ -15,37 +16,7 @@ private:
 	std::vector<uint8_t> salt_;
 	std::vector<uint8_t> iv_;
 	std::vector<uint8_t> blinded_url_;
-
-	//
-	// crypto parameters
-	//
-
-	// quoth the PBKDF2 standard: "For especially critical keys, or for
-	// very powerful systems or systems where user-perceived
-	// performance is not critical, an iteration count of 10,000,000
-	// may be appropriate."
-	// https://tools.ietf.org/html/rfc8018#section-4
-	static constexpr uint32_t PBKDF2_ROUNDS = 2'000'000; // yes, seriously
-
-	// yes, seriously, just 24 bits of entropy; that's why PBDKF2_ROUNDS is high
-	static constexpr size_t PASS_BYTES = 3;
-
-	// PBKDF2 standard recommends at least 8 bytes for the salt
-	// https://tools.ietf.org/html/rfc8018#section-4
-	static constexpr size_t SALT_BYTES = 32;
-
-	// PBKDF2 MAC function is SHA-256, which produces 32 byte keys
-	static constexpr size_t KEY_LEN = 32;
-
-	// default IV size for AES-GCM is 96 bits
-	static constexpr size_t IV_BYTES = 12;
-
-	static constexpr std::string_view AAD_DATA = "www.prv.ec";
-
-	// default tag size for AES-GCM is 128-bits
-	static constexpr size_t TAG_BYTES = 16;
-
-	static constexpr size_t AES_GCM_BLOCK_SIZE = 1; // EVP_CIPHER_block_size(EVP_aes_256_gcm());
+	CryptoParams crypto_params_ = crypto_params_v1;
 
 	///
 	/// Encrypt plaintext with AES-256-GCM. Crypto parameters are
@@ -109,13 +80,18 @@ public:
 	///
 	/// Checks that the cryptographic parameters are valid.
 	///
-	auto valid() const -> bool;
+	[[nodiscard]] auto valid() const -> bool;
 
-	auto salt() const -> std::vector<uint8_t> const&;
+	[[nodiscard]] auto salt() const -> std::vector<uint8_t> const&;
 
-	auto iv() const -> std::vector<uint8_t> const&;
+	[[nodiscard]] auto iv() const -> std::vector<uint8_t> const&;
 
-	auto blinded_url() const -> std::vector<uint8_t> const&;
+	[[nodiscard]] auto blinded_url() const -> std::vector<uint8_t> const&;
+
+	///
+	/// Change the number of PBKDF2 rounds.
+	///
+	void mutate_pbkdf2_rounds(size_t pbkdf2_rounds);
 };
 
 } // namespace private_url

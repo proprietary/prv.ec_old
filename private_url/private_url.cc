@@ -50,20 +50,21 @@ namespace private_url {
 
 PrivateURL::PrivateURL(std::vector<uint8_t>&& salt, std::vector<uint8_t>&& iv,
 		       std::vector<uint8_t>&& blinded_url)
-    : salt_{std::move(salt)}, iv_{std::move(iv)}, blinded_url_{std::move(blinded_url)} {
-	assert(::ec_prv::private_url::PrivateURL::AES_GCM_BLOCK_SIZE ==
-	       EVP_CIPHER_block_size(EVP_aes_256_gcm()));
+    : salt_{std::move(salt)}, iv_{std::move(iv)}, blinded_url_{std::move(blinded_url)},
+      crypto_params_{crypto_params_v1} {
+	assert(crypto_params_.AES_GCM_BLOCK_SIZE == EVP_CIPHER_block_size(EVP_aes_256_gcm()));
 }
 
 auto PrivateURL::valid() const -> bool {
-	return blinded_url_.size() > 0 && iv_.size() == IV_BYTES && salt_.size() == SALT_BYTES;
+	return !blinded_url_.empty() && iv_.size() == crypto_params_.iv_bytes &&
+	       salt_.size() == crypto_params_.salt_bytes;
 }
 
 auto PrivateURL::encrypt(std::vector<uint8_t>&& key, std::vector<uint8_t>& iv,
 			 std::string const& plaintext) noexcept
     -> std::optional<std::vector<uint8_t>> {
-	assert(key.size() == KEY_LEN);
-	assert(iv.size() == IV_BYTES);
+	assert(key.size() == crypto_params_v1.key_len);
+	assert(iv.size() == crypto_params_v1.iv_bytes);
 	std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)> ctx{EVP_CIPHER_CTX_new(),
 									    EVP_CIPHER_CTX_free};
 	if (!ctx) {
@@ -71,11 +72,11 @@ auto PrivateURL::encrypt(std::vector<uint8_t>&& key, std::vector<uint8_t>& iv,
 		return {};
 	}
 	// No need to set IV length because it is the default for AES-GCM: 96-bits
-	assert(IV_BYTES == 12);
+	static_assert(crypto_params_v1.iv_bytes == 12);
 	// No need to set tag length because it is already configured to the default for AES-GCM:
 	// 128-bits
-	assert(TAG_BYTES == 16);
-	auto const out_sz = plaintext.size() + AES_GCM_BLOCK_SIZE - 1;
+	static_assert(crypto_params_v1.tag_bytes == 16);
+	auto const out_sz = plaintext.size() + CryptoParams::AES_GCM_BLOCK_SIZE - 1;
 	std::vector<uint8_t> out(out_sz, 0);
 	auto err = EVP_EncryptInit_ex(ctx.get(), EVP_aes_256_gcm(), nullptr, key.data(), iv.data());
 	if (err != 1) {
@@ -85,12 +86,13 @@ auto PrivateURL::encrypt(std::vector<uint8_t>&& key, std::vector<uint8_t>& iv,
 	int len = 0; // outvar for written length; changes after every EVP_* call that uses it
 		     // insert AAD data (well-known plaintext)
 	err = EVP_EncryptUpdate(ctx.get(), nullptr, &len,
-				reinterpret_cast<uint8_t const*>(AAD_DATA.data()), AAD_DATA.size());
+				reinterpret_cast<uint8_t const*>(crypto_params_v1.aad_data.data()),
+				crypto_params_v1.aad_data.size());
 	if (err != 1) {
 		handle_openssl_error_nothrow();
 		return {};
 	}
-	assert(len == AAD_DATA.size());
+	assert(len == crypto_params_v1.aad_data.size());
 	err =
 	    EVP_EncryptUpdate(ctx.get(), out.data(), &len,
 			      reinterpret_cast<uint8_t const*>(plaintext.data()), plaintext.size());
@@ -116,12 +118,12 @@ auto PrivateURL::encrypt(std::vector<uint8_t>&& key, std::vector<uint8_t>& iv,
 
 auto PrivateURL::derive_secret_key(std::vector<uint8_t>&& pass, std::vector<uint8_t>& salt) noexcept
     -> std::optional<std::vector<uint8_t>> {
-	assert(pass.size() == PASS_BYTES);
-	assert(salt.size() == SALT_BYTES);
-	std::vector<uint8_t> out(KEY_LEN);
-	auto err =
-	    PKCS5_PBKDF2_HMAC(reinterpret_cast<char*>(pass.data()), pass.size(), salt.data(),
-			      salt.size(), PBKDF2_ROUNDS, EVP_sha256(), out.size(), out.data());
+	assert(pass.size() == crypto_params_v1.pass_bytes);
+	assert(salt.size() == crypto_params_v1.salt_bytes);
+	std::vector<uint8_t> out(crypto_params_v1.key_len);
+	auto err = PKCS5_PBKDF2_HMAC(reinterpret_cast<char*>(pass.data()), pass.size(), salt.data(),
+				     salt.size(), crypto_params_v1.pbkdf2_rounds, EVP_sha256(),
+				     out.size(), out.data());
 	if (err == 0) {
 		handle_openssl_error_nothrow();
 		return {};
@@ -131,11 +133,11 @@ auto PrivateURL::derive_secret_key(std::vector<uint8_t>&& pass, std::vector<uint
 
 auto PrivateURL::decrypt(std::vector<uint8_t>&& key, std::vector<uint8_t>& ciphertext,
 			 std::vector<uint8_t>& iv) noexcept -> std::optional<std::vector<uint8_t>> {
-	assert(static_cast<decltype(::ec_prv::private_url::PrivateURL::KEY_LEN)>(key.size()) ==
-	       ::ec_prv::private_url::PrivateURL::KEY_LEN);
-	assert(iv.size() == IV_BYTES);
+	assert(static_cast<decltype(crypto_params_v1.key_len)>(key.size()) ==
+	       crypto_params_v1.key_len);
+	assert(iv.size() == crypto_params_v1.iv_bytes);
 
-	std::vector<uint8_t> out(ciphertext.size() + AES_GCM_BLOCK_SIZE, 0);
+	std::vector<uint8_t> out(ciphertext.size() + CryptoParams::AES_GCM_BLOCK_SIZE, 0);
 	std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)> ctx{EVP_CIPHER_CTX_new(),
 									    EVP_CIPHER_CTX_free};
 	if (!ctx) {
@@ -148,20 +150,21 @@ auto PrivateURL::decrypt(std::vector<uint8_t>&& key, std::vector<uint8_t>& ciphe
 	}
 	// No need to set IV length because it is already configured to the default for AES-GCM: 96
 	// bits
-	assert(IV_BYTES == 12);
+	static_assert(crypto_params_v1.iv_bytes == 12);
 	// No need to set tag length because it is already configured to the default for AES-GCM:
 	// 128 bits
-	assert(TAG_BYTES == 16);
+	static_assert(crypto_params_v1.tag_bytes == 16);
 	// outvar for written length; changes after every EVP_* call that uses it
 	int len = 0;
 	// provide AAD data
 	err = EVP_DecryptUpdate(ctx.get(), nullptr, &len,
-				reinterpret_cast<uint8_t const*>(AAD_DATA.data()), AAD_DATA.size());
+				reinterpret_cast<uint8_t const*>(crypto_params_v1.aad_data.data()),
+				crypto_params_v1.aad_data.size());
 	if (err != 1) {
 		handle_openssl_error_nothrow();
 		return {};
 	}
-	assert(len == AAD_DATA.size());
+	assert(len == crypto_params_v1.aad_data.size());
 	int plaintext_len = 0;
 	// process block cipher
 	{
@@ -185,8 +188,8 @@ auto PrivateURL::decrypt(std::vector<uint8_t>&& key, std::vector<uint8_t>& ciphe
 			plaintext_len += len;
 		}
 	}
-	if (plaintext_len + KEY_LEN > out.size()) {
-		out.resize(plaintext_len + KEY_LEN);
+	if (plaintext_len + crypto_params_v1.key_len > out.size()) {
+		out.resize(plaintext_len + crypto_params_v1.key_len);
 	}
 	(void)EVP_DecryptFinal_ex(ctx.get(), out.data() + plaintext_len, &len);
 	plaintext_len += len;
@@ -202,9 +205,9 @@ auto PrivateURL::decrypt_using_pass(std::vector<uint8_t>&& pass, std::vector<uin
 				    std::vector<uint8_t>& ciphertext,
 				    std::vector<uint8_t>& iv) noexcept
     -> std::optional<std::vector<uint8_t>> {
-	assert(pass.size() == PASS_BYTES);
-	assert(salt.size() == SALT_BYTES);
-	assert(iv.size() == IV_BYTES);
+	assert(pass.size() == crypto_params_v1.pass_bytes);
+	assert(salt.size() == crypto_params_v1.salt_bytes);
+	assert(iv.size() == crypto_params_v1.iv_bytes);
 	auto secret_key = PrivateURL::derive_secret_key(std::move(pass), salt);
 	if (!secret_key) {
 		return {};
@@ -233,9 +236,9 @@ auto PrivateURL::get_plaintext(std::string_view pass) noexcept -> std::string {
 
 auto PrivateURL::generate(std::string const& plaintext_url) noexcept
     -> std::optional<std::tuple<PrivateURL, std::string>> {
-	auto pass = std::vector<uint8_t>(PASS_BYTES, 0);
-	auto salt = std::vector<uint8_t>(SALT_BYTES, 0);
-	auto iv = std::vector<uint8_t>(IV_BYTES, 0);
+	auto pass = std::vector<uint8_t>(crypto_params_v1.pass_bytes, 0);
+	auto salt = std::vector<uint8_t>(crypto_params_v1.salt_bytes, 0);
+	auto iv = std::vector<uint8_t>(crypto_params_v1.iv_bytes, 0);
 	::fill_random(pass);
 	::fill_random(salt);
 	::fill_random(iv);
@@ -258,6 +261,10 @@ auto PrivateURL::iv() const -> std::vector<uint8_t> const& { return iv_; }
 auto PrivateURL::salt() const -> std::vector<uint8_t> const& { return salt_; }
 
 auto PrivateURL::blinded_url() const -> std::vector<uint8_t> const& { return blinded_url_; }
+
+void PrivateURL::mutate_pbkdf2_rounds(size_t pbkdf2_rounds) {
+	crypto_params_.pbkdf2_rounds = pbkdf2_rounds;
+}
 
 } // namespace private_url
 } // namespace ec_prv
