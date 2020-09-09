@@ -9,7 +9,7 @@ import {
 	SALT_BYTES_V1,
 } from '../crypto';
 import { fromByteArray, toByteArray, fromURLSafeBase64 } from '../util';
-import {ec_prv as private_url} from '../fbs/private_url_generated';
+import {ec_prv as private_url} from './../fbs/private_url_generated';
 import { flatbuffers }  from '../vendor/flatbuffers/flatbuffers';
 
 export class ShortenerClient {

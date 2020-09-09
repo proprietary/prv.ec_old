@@ -1,13 +1,9 @@
-import * as shortening_request from '../fbs/shortening_request_generated';
-import * as shortening_response from '../fbs/shortening_response_generated';
-import * as private_url from '../fbs/private_url_generated';
-const { ShorteningRequestT, ShorteningRequest } = shortening_request.ec_prv.fbs;
-const {
-	ShorteningResponseT,
-	ShorteningResponse,
-} = shortening_response.ec_prv.fbs;
-const { PrivateURL, PrivateURLT } = private_url.ec_prv.fbs;
-import {flatbuffers} from '../vendor/flatbuffers/flatbuffers';
+import * as shortening_request from './../fbs/shortening_request_generated';
+import * as shortening_response from './../fbs/shortening_response_generated';
+import * as private_url from './../fbs/private_url_generated';
+const { ShorteningRequest } = shortening_request.ec_prv.fbs;
+const { ShorteningResponse } = shortening_response.ec_prv.fbs;
+import { flatbuffers } from '../vendor/flatbuffers/flatbuffers';
 import { post } from './common';
 import { toLong } from '../util';
 
@@ -25,8 +21,8 @@ export async function shorteningRequestV1(
 	expiry: Date,
 ): Promise<string> {
 	const fbb = new flatbuffers.Builder();
-	
-	const expiryAsSeconds = toLong(Math.floor(expiry.getTime()/1000));
+
+	const expiryAsSeconds = toLong(Math.floor(expiry.getTime() / 1000));
 	const saltVec = ShorteningRequest.createSaltVector(fbb, salt);
 	const ivVec = ShorteningRequest.createIvVector(fbb, iv);
 	const blindedUrlVector = ShorteningRequest.createBlindedUrlVector(

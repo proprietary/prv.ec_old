@@ -1,25 +1,6 @@
-package(default_visibility = ["//visibility:public"])
-
 load("@npm//webpack-cli:index.bzl", webpack = "webpack_cli")
 
-# load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-
-# genrule(
-#     name = "bundle",
-#     outs = ["dist/index.html"],
-#     srcs = [
-#         "webpack.config.js",
-#         "public/index.html",
-#         "tsconfig.json",
-#         "package.json",
-#     ] + glob([
-#         "**/*.ts",
-#         "vendor/**/*.js",
-#     ]),
-#     cmd = """
-#     $(excecpath 
-#     """
-# )
+package(default_visibility = ["//visibility:public"])
 
 filegroup(
     name = "bundle_srcs",
@@ -28,6 +9,7 @@ filegroup(
         "**/*.ts",
         "vendor/**/*.js",
         "public/*",
+        "fbs/*",
     ]),
 )
 
@@ -44,5 +26,10 @@ webpack(
         "$@",
         # "--mode", "development",
     ],
-    data = ["@npm//:node_modules", ":bundle_srcs", "webpack.config.js", "tsconfig.json"],
+    data = [
+        "tsconfig.json",
+        "webpack.config.js",
+        ":bundle_srcs",
+        "@npm//:node_modules",
+    ],
 )
