@@ -1,4 +1,5 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("//third_party/strliteral:build_defs.bzl", "embed_file")
 package(default_visibility = ["//visibility:public"])
 
 cc_binary(
@@ -37,11 +38,14 @@ cc_library(
         ":shortening_service",
         "//b64:b64",
         "//b66:b66",
+        ":index_html",
+        ":bundle_js",
         "//idl:all_generated_flatbuffers",
         "@com_github_google_flatbuffers//:flatbuffers",
         "@com_github_unetworking_uwebsockets//:uWebSockets",
     ],
 )
+
 
 cc_library(
     name = "shortening_service",
@@ -107,3 +111,21 @@ cc_library(
 
 # TODO: Make sure rocksdb builds as static lib
 
+
+# Frontend files
+
+embed_file(
+    name = "index_html",
+    srcs = ["//web_client/public:index.html"],
+    outs = ["index.html_generated.h"],
+    identifier = "index_html",
+    visibility = ["//visibility:public"],
+)
+
+embed_file(
+    name = "bundle_js",
+    srcs = ["//web_client:bundle"],
+    outs = ["bundle.js_generated.h"],
+    identifier = "bundle_js",
+    visibility = ["//visibility:public"],
+)

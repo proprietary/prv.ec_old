@@ -2,6 +2,8 @@
 #include "b64/b64.h"
 #include "b66/marshal_int.h"
 #include "url_index/url_index.h"
+#include "server/index.html_generated.h"
+#include "server/bundle.js_generated.h"
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -53,33 +55,33 @@ auto parse_http_basic_auth_header(std::string_view authorization_header)
 	return std::make_pair(user, pass);
 }
 
-auto parse_shorturl(std::string_view url) -> std::string_view {
-	auto it = url.begin();
-	if (*(it++) != '/') {
-		// unexpected
-		assert(false);
-		return {};
-	}
-	auto shorturl_start = it;
-	while (it != url.end()) {
-		// validate that all characters exist in base64 alphabet
-		auto i = sizeof(BASE_66_CHARS);
-		while (i > 0) {
-			if (BASE_66_CHARS[i] == *it) {
-				break;
-			}
-			i--;
-		}
-		if (i == 0) {
-			// fail
-			// character not found in base64 alphabet
-			return {};
-		}
-		it++;
-	}
-	auto shorturl_end = it;
-	return std::string_view(shorturl_start, shorturl_end);
-}
+// auto parse_shorturl(std::string_view url) -> std::string_view {
+// 	auto it = url.begin();
+// 	if (*(it++) != '/') {
+// 		// unexpected
+// 		assert(false);
+// 		return {};
+// 	}
+// 	auto shorturl_start = it;
+// 	while (it != url.end()) {
+// 		// validate that all characters exist in base64 alphabet
+// 		auto i = sizeof(BASE_66_CHARS);
+// 		while (i > 0) {
+// 			if (BASE_66_CHARS[i] == *it) {
+// 				break;
+// 			}
+// 			i--;
+// 		}
+// 		if (i == 0) {
+// 			// fail
+// 			// character not found in base64 alphabet
+// 			return {};
+// 		}
+// 		it++;
+// 	}
+// 	auto shorturl_end = it;
+// 	return std::string_view(shorturl_start, shorturl_end);
+// }
 
 } // namespace
 
@@ -102,10 +104,17 @@ Server::Server(int const port)
 void Server::run() {
 	using namespace std::literals;
 	uWS::App()
+		.get("/dist/bundle.js", [](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) -> void {
+			res->onAborted([]() -> void {});
+			res->writeHeader("Content-Type", "text/html");
+			res->end(std::string_view{reinterpret_cast<const char*>(&bundle_js[0]), bundle_js_len});
+		})
 	    .get("/",
-		 [](auto* res, auto* req) {
-			 res->end("<!doctype html><html><body><h1>prv.ec</h1></body></html>");
-		 })
+			 [](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) -> void {
+				 res->onAborted([]() -> void {});
+				 res->writeHeader("Content-Type", "text/html");
+				 res->end(std::string_view{reinterpret_cast<const char*>(&index_html[0]), index_html_len});
+			 })
 	    .post("/accept",
 		  [this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) -> void {
 			  // TODO: cork sockets
@@ -228,47 +237,50 @@ void Server::run() {
 			buf->reserve(1 << 20);
 			accept_rpc<::ec_prv::fbs::TrustedLookupRequest, false>(res, req, buf);
 		})
-		.get("/*", [this](auto* res, auto* req) -> void {
+		.get("/*", [](auto* res, auto* req) -> void {
 			res->onAborted([]() -> void {});
-			auto url = req->getUrl();
-			auto identifier = parse_shorturl(url);
-			uint32_t identifier_parsed = ec_prv::b66::unmarshal(identifier);
-			if (identifier_parsed == 0) {
-				res->cork([res]() -> void {
-					res->writeStatus("302 Found");
-					res->writeHeader("location", "https://prv.ec");
-					res->end();
-				});
-				return;
-			}
-			auto ui = url_index::URLIndex::from_integer(identifier_parsed);
-			// lookup in rocksdb
-			rocksdb::PinnableSlice o;
-			auto status = this->store_.get(o, ui);
-			if (!status.ok() || o.empty()) {
-				res->cork([res]() -> void {
-					res->writeStatus("302 Found");
-					res->writeHeader("location", "https://prv.ec");
-					res->end();
-				});
-				return;
-			}
-			FlatBufferBuilder resp_fbb;
-			::ec_prv::fbs::LookupResponseBuilder lrb{resp_fbb};
-			lrb.add_version(1);
-			lrb.add_error(false);
-			lrb.add_data(resp_fbb.CreateVector(reinterpret_cast<uint8_t const*>(o.data()), o.size()));
-			resp_fbb.Finish(lrb.Finish());
-			auto const encoded = enc(std::span{reinterpret_cast<uint8_t*>(resp_fbb.GetBufferPointer()), resp_fbb.GetSize()});
-			res->cork([res, &encoded]() -> void {
-				res->writeStatus("200 OK");
-				res->writeHeader("content-type", "text/html");
-				res->write(R"(<!doctype html><html><body><script>var a=")");
-				res->write(encoded);
-				// TODO(zds): write template abstraction
-				res->write(R"("; window.addEventListener('DOMContentLoaded', function() { window.location.replace(decryptLookupResponse(a)); });</script></body></html>)");
-				res->end();
-			});
+			// serve index.html always, SPA-style
+			res->writeHeader("Content-Type", "text/html");
+			res->end(std::string_view{reinterpret_cast<const char*>(&index_html[0]), index_html_len});
+			// auto url = req->getUrl();
+			// auto identifier = parse_shorturl(url);
+			// uint32_t identifier_parsed = ec_prv::b66::unmarshal(identifier);
+			// if (identifier_parsed == 0) {
+			// 	res->cork([res]() -> void {
+			// 		res->writeStatus("302 Found");
+			// 		res->writeHeader("location", "https://prv.ec");
+			// 		res->end();
+			// 	});
+			// 	return;
+			// }
+			// auto ui = url_index::URLIndex::from_integer(identifier_parsed);
+			// // lookup in rocksdb
+			// rocksdb::PinnableSlice o;
+			// auto status = this->store_.get(o, ui);
+			// if (!status.ok() || o.empty()) {
+			// 	res->cork([res]() -> void {
+			// 		res->writeStatus("302 Found");
+			// 		res->writeHeader("location", "https://prv.ec");
+			// 		res->end();
+			// 	});
+			// 	return;
+			// }
+			// FlatBufferBuilder resp_fbb;
+			// ::ec_prv::fbs::LookupResponseBuilder lrb{resp_fbb};
+			// lrb.add_version(1);
+			// lrb.add_error(false);
+			// lrb.add_data(resp_fbb.CreateVector(reinterpret_cast<uint8_t const*>(o.data()), o.size()));
+			// resp_fbb.Finish(lrb.Finish());
+			// auto const encoded = enc(std::span{reinterpret_cast<uint8_t*>(resp_fbb.GetBufferPointer()), resp_fbb.GetSize()});
+			// res->cork([res, &encoded]() -> void {
+			// 	res->writeStatus("200 OK");
+			// 	res->writeHeader("content-type", "text/html");
+			// 	res->write(R"(<!doctype html><html><body><script>var a=")");
+			// 	res->write(encoded);
+			// 	// TODO(zds): write template abstraction
+			// 	res->write(R"("; window.addEventListener('DOMContentLoaded', function() { window.location.replace(decryptLookupResponse(a)); });</script></body></html>)");
+			// 	res->end();
+			// });
 		})
 	    .listen(8000,
 		    [](auto* token) {

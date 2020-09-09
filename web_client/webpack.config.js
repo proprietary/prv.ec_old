@@ -1,10 +1,11 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const InlineChunkHtmlPlugin = require('./vendor/InlineChunkHtmlPlugin.js');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const InlineChunkHtmlPlugin = require('./vendor/InlineChunkHtmlPlugin.js');
 
 module.exports = {
-	mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
-	entry: './index.ts',
+	// mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+	mode: 'development',
+	entry: path.join(__dirname, 'index.ts'),
 	module: {
 		rules: [
 			{
@@ -35,15 +36,14 @@ module.exports = {
 	output: {
 		filename: 'bundle.js',
 		path: path.resolve(__dirname, 'dist'),
-		publicPath: 'dist/',
 	},
-	plugins: [
-		new HtmlWebpackPlugin({
-			inject: true,
-			template: path.resolve('./public/index.html'),
-		}),
-		new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/\.(js|css)$/]),
-	],
+	// plugins: [
+	// 	new HtmlWebpackPlugin({
+	// 		inject: true,
+	// 		template: path.join(__dirname, 'public/index.html'),
+	// 	}),
+	// 	new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/\.(js|css)$/]),
+	// ],
 	devServer: {
 		contentBase: path.join(__dirname, 'dist/'),
 		publicPath: 'http://127.0.0.1:8000/dist/',

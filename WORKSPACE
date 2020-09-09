@@ -101,3 +101,41 @@ http_archive(
    strip_prefix = "curl-7.69.1",
    url = "https://curl.haxx.se/download/curl-7.69.1.tar.gz",
 )
+
+http_archive(
+    name = "build_bazel_rules_nodejs",
+    sha256 = "10fffa29f687aa4d8eb6dfe8731ab5beb63811ab00981fc84a93899641fd4af1",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/2.0.3/rules_nodejs-2.0.3.tar.gz"],
+)
+
+
+
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
+
+node_repositories(
+    node_repositories = {
+        "14.9.0-linux_amd64": ("node-v14.9.0-linux-x64.tar.xz", "node-v14.9.0-linux-x64", "ded70899f43cf8138f88b838aecff5045e763bcab91c4b7f57fe5b69c6722df4"),
+        "14.9.0-darwin_amd64": ("node-v14.9.0-darwin-x64.tar.gz", "node-v14.9.0-darwin-x64", "8427e07e3ca70d6ccf5274dde535c9a42b7f873f5a086323eaf2406cdb324daf"),
+        "14.9.0-windows_amd64": ("node-v14.9.0-win-x64.zip", "node-v14.9.0-win-x64", "bcd3fc61739e7ac9a4b6103da3fe5f8c9e310b7b0f1b1f0200d5a4b5dd65d723"),
+    },
+    yarn_repositories = {
+        "1.22.5": ("yarn-v1.22.5.tar.gz", "yarn-v1.22.5", "c664fb4692e4dfea750a37a533780834b40198c00cef4bbc5e8c14abab2ac141"),
+    },
+    yarn_urls = ["https://github.com/yarnpkg/yarn/releases/download/v{version}/{filename}"],
+    node_urls = ["https://nodejs.org/dist/v{version}/{filename}"],
+    node_version = "14.9.0",
+    yarn_version = "1.22.5",
+    package_json = ["//web_client:package.json"],
+)
+
+# npm_install(
+#     name = "npm",
+#     package_json = "//web_client:package.json",
+#     package_lock_json = "//web_client:package-lock.json",
+# )
+
+yarn_install(
+    name = "npm",
+    package_json = "//web_client:package.json",
+    yarn_lock = "//web_client:yarn.lock",
+)
