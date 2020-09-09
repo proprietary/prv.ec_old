@@ -1,5 +1,26 @@
 import { ShortenerClient, LookupClient } from './client';
 
+function showLoading() {
+	const el = document.querySelector('#progressSection') as HTMLElement;
+	el.style.visibility = 'visible';
+	const timer = window.setInterval(() => {
+		let loadingBar = document.querySelector('progress#loadingBar') as HTMLProgressElement;
+		const val = +loadingBar.value;
+		if (val == 100) {
+			loadingBar.value = 0;
+		} else {
+			loadingBar.value = val + 1;
+		}
+	}, 100);
+	return timer;
+}
+
+function hideLoading(timer: number) {
+	window.clearInterval(timer);
+	const el = document.querySelector('#progressSection') as HTMLElement;
+	el.style.visibility = 'hidden';
+}
+
 (function () {
 	(document.querySelector('#urlForm') as HTMLFormElement).addEventListener(
 		'submit',
@@ -14,9 +35,10 @@ import { ShortenerClient, LookupClient } from './client';
 			if (!/^(https?:\/\/)|(mailto:)/.test(url)) {
 				url = "https://" + url;
 			}
+			const timer = showLoading();
 			const client = new ShortenerClient();
-			// TODO: display progress bar
 			const shortened_url_route = await client.shorten(url);
+			hideLoading(timer);
 			const shortened_url =
 				window.location.protocol +
 				'//' +
@@ -39,9 +61,10 @@ import { ShortenerClient, LookupClient } from './client';
 				if (identifier.length === 0  || pass.length === 0) {
 					return;
 				}
+				const timer = showLoading();
 				const client = new LookupClient(identifier, pass);
-				// TODO: display progress bar while deriving key
 				const urlPlaintext = await client.lookup();
+				hideLoading(timer);
 				console.info(`redirecting to: ${urlPlaintext}`);
 				window.location.replace(urlPlaintext);
 			} catch (e) {

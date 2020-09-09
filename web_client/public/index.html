@@ -71,6 +71,14 @@
 				font-size: 2em;
 			}
 
+			section#progressSection {
+				visibility: hidden;
+			}
+
+			progress#loadingBar {
+				width: 100%;
+			}
+
 			article#explainer {
 				line-height: 1.4;
 			}
@@ -118,6 +126,13 @@
 				</aside>
 			</header>
 		</section>
+
+		<section id="progressSection">
+			<p>Loading (be patient!)...</p>
+			<progress id="loadingBar" max="100" value="20">
+			</progress>
+		</section>
+
 		<section id="inputSection">
 			<main>
 				<div>
